@@ -52,8 +52,8 @@ The integration of the ML Filter results in exceptionally high win rates across 
 - **Higher Sensitivity (e.g., a=3):** Generates fewer, higher-conviction signals (approx. 500 trades) with win rates exceeding 95%.
 
 ### Data and Training
-- **Training Depth:** Limited by the Deriv API to approximately **30,000 to 35,000 candles** (roughly 104 to 121 days).
-- **Consistency:** 60-day interval analysis shows stable performance, with maximum consecutive losses typically restricted to 2-4 trades.
+- **Training Depth:** Optimized to use the maximum historical depth provided by the Deriv API, which is approximately **105,000 candles** (roughly **1 year** of data).
+- **Consistency:** 60-day interval analysis shows stable performance across different market cycles, with maximum consecutive losses typically restricted to 2-4 trades.
 
 ## 5. Technical Implementation Details
 

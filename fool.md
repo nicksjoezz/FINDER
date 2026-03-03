@@ -4,7 +4,7 @@ Imagine you have two friends helping you trade: **The Scout** and **The Smart Co
 
 ### 1. The Startup: Homework Time
 When you first turn the bot on, it doesn't start trading immediately. Instead, it spends a few seconds "doing its homework."
-- It looks at the last 4 months of market history.
+- It looks at the last **1 year** of market history (~105,000 candles).
 - It studies every time **The Scout** gave a signal and checks if it would have made money or lost money.
 - It builds a "cheat sheet" of which market conditions are good and which are bad.
 

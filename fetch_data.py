@@ -11,8 +11,9 @@ async def get_historical_data(symbol, start_time, end_time, granularity):
     all_candles = []
     current_end = end_time
 
-    # Target approx 2 years of 5m data = 2 * 365 * 24 * 60 / 5 = 210,240 candles
-    target_count = 211000
+    # Target approx 1 year of 5m data = 365 * 24 * 60 / 5 = 105,120 candles
+    # Note: Deriv API currently limits historical 5m candles to ~105,000 for synthetic indices.
+    target_count = 105500
 
     while len(all_candles) < target_count and current_end > start_time:
         sys.stderr.write(f"Fetching data for {symbol} up to {datetime.fromtimestamp(current_end)}\n")
@@ -44,6 +45,7 @@ async def get_historical_data(symbol, start_time, end_time, granularity):
             # The earliest candle in this batch
             new_end = candles[0]['epoch'] - 1
             if new_end >= current_end:
+                # We've reached the earliest possible candle provided by the API
                 break
             current_end = new_end
 
@@ -69,7 +71,7 @@ async def main():
     granularity = 300 # 5 minutes
 
     end_time = int(datetime.now().timestamp())
-    start_time = int((datetime.now() - timedelta(days=735)).timestamp())
+    start_time = int((datetime.now() - timedelta(days=366)).timestamp())
 
     os.makedirs('data', exist_ok=True)
 
