@@ -33,3 +33,8 @@
 2026-03-03 10:01:12,547 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
 2026-03-03 10:01:12,552  * Debugger is active!
 2026-03-03 10:01:12,554  * Debugger PIN: 410-907-091
+2026-03-03 11:30:45,360  * Detected change in '/app/final_strategies.py', reloading
+2026-03-03 11:30:48,977  * Restarting with stat
+2026-03-03 11:30:53,108 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2026-03-03 11:30:53,113  * Debugger is active!
+2026-03-03 11:30:53,115  * Debugger PIN: 410-907-091

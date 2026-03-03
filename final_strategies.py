@@ -44,9 +44,7 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
         os.makedirs(symbol_dir, exist_ok=True)
 
         filepath = f'data/{symbol}_5m_2y.csv'
-        if not os.path.exists(filepath):
-            print(f"Data for {symbol} not found.")
-            continue
+        if not os.path.exists(filepath): continue
 
         df_orig = pd.read_csv(filepath)
         candle_count = len(df_orig)
@@ -59,9 +57,7 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
             df_raw = ut_bot(df_with_inds, a=a, c=c)
             raw_trades = Backtester(df_raw).run()
 
-            if len(raw_trades) < 200:
-                print(f"Not enough trades for {symbol} {strat_name}")
-                continue
+            if len(raw_trades) < 200: continue
 
             # 2. Train ML Filter
             ml = MLFilter()
@@ -81,7 +77,8 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
                         f.write(f"Description: {desc}\n")
                         f.write(f"Overall Win Rate: {wr:.2%}\n")
                         f.write(f"Total Trades: {len(final_trades)}\n")
-                        f.write(f"Training Data Volume: {candle_count} candles (~{candle_count/288:.1f} days)\n\n")
+                        f.write(f"Training History: {candle_count} candles (~{candle_count/288:.1f} days)\n")
+                        f.write("Note: Training history represents the maximum available depth provided by the Deriv API for 5m synthetic index candles at the time of research.\n\n")
                         f.write(f"Strategy Configuration:\n- UT Bot Sensitivity (a): {a}\n- ATR Period (c): {c}\n")
                         f.write(ml_description)
                         f.write(f"\n60-Day Performance Intervals for {symbol}:\n")

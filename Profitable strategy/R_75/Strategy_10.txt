@@ -3,7 +3,8 @@ Strategy: Strategy_10
 Description: UT Bot (1.5, 15) + ML Filter
 Overall Win Rate: 89.02%
 Total Trades: 1339
-Training Data Volume: 30000 candles (~104.2 days)
+Training History: 30000 candles (~104.2 days)
+Note: Training history represents the maximum available depth provided by the Deriv API for 5m synthetic index candles at the time of research.
 
 Strategy Configuration:
 - UT Bot Sensitivity (a): 1.5
