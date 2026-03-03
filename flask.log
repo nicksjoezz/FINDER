@@ -1,17 +1,30 @@
-2026-03-03 08:06:35,598 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2026-03-03 08:39:36,743 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
  * Serving Flask app 'app'
  * Debug mode: on
-2026-03-03 08:06:35,617 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+2026-03-03 08:39:36,750 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.0.2:5000
-2026-03-03 08:06:35,618 [33mPress CTRL+C to quit[0m
-2026-03-03 08:06:35,618  * Restarting with stat
-2026-03-03 08:06:38,664 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
-2026-03-03 08:06:38,668  * Debugger is active!
-2026-03-03 08:06:38,670  * Debugger PIN: 410-907-091
-2026-03-03 08:07:40,020 127.0.0.1 - - [03/Mar/2026 08:07:40] "GET / HTTP/1.1" 200 -
-2026-03-03 08:07:40,703 127.0.0.1 - - [03/Mar/2026 08:07:40] "GET /socket.io/?EIO=4&transport=polling&t=PoolG-N HTTP/1.1" 200 -
-2026-03-03 08:07:40,712 127.0.0.1 - - [03/Mar/2026 08:07:40] "POST /socket.io/?EIO=4&transport=polling&t=PoolG-a&sid=a1gdbnz5pLfbJvAlAAAA HTTP/1.1" 200 -
-2026-03-03 08:07:40,774 127.0.0.1 - - [03/Mar/2026 08:07:40] "GET /socket.io/?EIO=4&transport=polling&t=PoolG_4&sid=a1gdbnz5pLfbJvAlAAAA HTTP/1.1" 200 -
-2026-03-03 08:07:42,232 127.0.0.1 - - [03/Mar/2026 08:07:42] "GET /socket.io/?EIO=4&transport=websocket&sid=a1gdbnz5pLfbJvAlAAAA HTTP/1.1" 200 -
+2026-03-03 08:39:36,751 [33mPress CTRL+C to quit[0m
+2026-03-03 08:39:36,751  * Restarting with stat
+2026-03-03 08:39:39,195 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2026-03-03 08:39:39,197  * Debugger is active!
+2026-03-03 08:39:39,198  * Debugger PIN: 410-907-091
+2026-03-03 08:39:39,213 127.0.0.1 - - [03/Mar/2026 08:39:39] "GET / HTTP/1.1" 200 -
+2026-03-03 08:39:39,350 127.0.0.1 - - [03/Mar/2026 08:39:39] "GET /socket.io/?EIO=4&transport=polling&t=PoosbPE HTTP/1.1" 200 -
+2026-03-03 08:39:39,358 127.0.0.1 - - [03/Mar/2026 08:39:39] "POST /socket.io/?EIO=4&transport=polling&t=PoosbPP&sid=NHZQ6iAPeZmBxJ3UAAAA HTTP/1.1" 200 -
+2026-03-03 08:39:39,363 127.0.0.1 - - [03/Mar/2026 08:39:39] "GET /socket.io/?EIO=4&transport=polling&t=PoosbPS&sid=NHZQ6iAPeZmBxJ3UAAAA HTTP/1.1" 200 -
+2026-03-03 08:39:40,677 127.0.0.1 - - [03/Mar/2026 08:39:40] "GET /socket.io/?EIO=4&transport=websocket&sid=NHZQ6iAPeZmBxJ3UAAAA HTTP/1.1" 200 -
+2026-03-03 08:41:15,801 127.0.0.1 - - [03/Mar/2026 08:41:15] "GET / HTTP/1.1" 200 -
+2026-03-03 08:41:15,988 127.0.0.1 - - [03/Mar/2026 08:41:15] "GET /socket.io/?EIO=4&transport=polling&t=Poosy_5 HTTP/1.1" 200 -
+2026-03-03 08:41:16,003 127.0.0.1 - - [03/Mar/2026 08:41:16] "POST /socket.io/?EIO=4&transport=polling&t=Poosy_P&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
+2026-03-03 08:41:16,011 127.0.0.1 - - [03/Mar/2026 08:41:16] "GET /socket.io/?EIO=4&transport=polling&t=Poosy_W&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
+2026-03-03 08:41:16,020 127.0.0.1 - - [03/Mar/2026 08:41:16] "GET /socket.io/?EIO=4&transport=polling&t=Poosy_l&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
+2026-03-03 08:41:18,368 127.0.0.1 - - [03/Mar/2026 08:41:18] "GET /socket.io/?EIO=4&transport=websocket&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
+2026-03-03 08:42:34,703 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET / HTTP/1.1" 200 -
+2026-03-03 08:42:34,866 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET /socket.io/?EIO=4&transport=polling&t=PootGFi HTTP/1.1" 200 -
+2026-03-03 08:42:34,878 127.0.0.1 - - [03/Mar/2026 08:42:34] "POST /socket.io/?EIO=4&transport=polling&t=PootGFs&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
+2026-03-03 08:42:34,880 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET /socket.io/?EIO=4&transport=polling&t=PootGFw&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
+2026-03-03 08:42:34,887 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET /socket.io/?EIO=4&transport=polling&t=PootGG4&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
+2026-03-03 08:42:44,458 127.0.0.1 - - [03/Mar/2026 08:42:44] "POST /run_backtest HTTP/1.1" 200 -
+2026-03-03 08:42:44,634 127.0.0.1 - - [03/Mar/2026 08:42:44] "GET /socket.io/?EIO=4&transport=websocket&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
