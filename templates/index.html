@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deriv UT Bot Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .sidebar { height: 100vh; background-color: #212529; color: white; position: fixed; width: 250px; }
+        .content { margin-left: 250px; padding: 20px; }
+        .card { border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); margin-bottom: 20px; }
+        .status-on { color: #198754; font-weight: bold; }
+        .status-off { color: #dc3545; font-weight: bold; }
+        .log-container { height: 400px; overflow-y: auto; background-color: #000; color: #0f0; padding: 10px; font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="sidebar d-flex flex-column p-3">
+        <h3>Deriv UT Bot</h3>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item"><a href="#" class="nav-link active" id="btn-dash">Dashboard</a></li>
+            <li><a href="#" class="nav-link text-white" id="btn-settings">Settings</a></li>
+        </ul>
+        <hr>
+        <div class="d-grid">
+            <button id="toggle-bot" class="btn btn-success">Start Bot</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Dashboard Section -->
+        <div id="section-dash">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h5>Status</h5>
+                        <p id="bot-status-text" class="status-off">Offline</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h5>Balance</h5>
+                        <p id="account-balance">$0.00</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h5>Trades</h5>
+                        <p id="total-trades">0 (W: 0 / L: 0)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-dark text-white">Live Logs</div>
+                <div id="logs" class="log-container"></div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="section-settings" style="display:none;">
+            <div class="card p-4">
+                <h4>Configuration</h4>
+                <form id="settings-form">
+                    <div class="mb-3">
+                        <label class="form-label">Deriv API Token</label>
+                        <input type="text" name="api_token" class="form-control" id="api_token" placeholder="Paste your token here">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Symbol</label>
+                            <select name="symbol" class="form-select" id="symbol-select">
+                                <option value="R_100">Volatility 100 Index</option>
+                                <option value="R_75">Volatility 75 Index</option>
+                                <option value="R_50">Volatility 50 Index</option>
+                                <option value="R_25">Volatility 25 Index</option>
+                                <option value="R_10">Volatility 10 Index</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Strategy</label>
+                            <select name="strategy" class="form-select" id="strategy-select">
+                                <option value="1">Strategy 1 (UT 1, 10 + ML)</option>
+                                <option value="2">Strategy 2 (UT 2, 20 + ML)</option>
+                                <option value="3">Strategy 3 (UT 3, 30 + ML)</option>
+                                <option value="4">Strategy 4 (UT 1, 20 + ML)</option>
+                                <option value="5">Strategy 5 (UT 2, 10 + ML)</option>
+                                <option value="6">Strategy 6 (UT 3, 20 + ML)</option>
+                                <option value="7">Strategy 7 (UT 1, 30 + ML)</option>
+                                <option value="8">Strategy 8 (UT 2, 30 + ML)</option>
+                                <option value="9">Strategy 9 (UT 3, 10 + ML)</option>
+                                <option value="10">Strategy 10 (UT 1.5, 15 + ML)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Trade Amount (% of balance)</label>
+                            <input type="number" name="trade_pc" class="form-control" value="1" step="0.1">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Account Mode</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_live" id="is_live">
+                                <label class="form-check-label" for="is_live">Live Account</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const logsDiv = document.getElementById('logs');
+
+        socket.on('log', function(msg) {
+            const p = document.createElement('p');
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logsDiv.appendChild(p);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        });
+
+        socket.on('status_update', function(data) {
+            document.getElementById('bot-status-text').innerText = data.active ? 'Running' : 'Offline';
+            document.getElementById('bot-status-text').className = data.active ? 'status-on' : 'status-off';
+            document.getElementById('toggle-bot').innerText = data.active ? 'Stop Bot' : 'Start Bot';
+            document.getElementById('toggle-bot').className = data.active ? 'btn btn-danger' : 'btn btn-success';
+            document.getElementById('account-balance').innerText = `$${data.balance}`;
+            document.getElementById('total-trades').innerText = `${data.total_trades} (W: ${data.wins} / L: ${data.losses})`;
+        });
+
+        document.getElementById('btn-dash').onclick = () => {
+            document.getElementById('section-dash').style.display = 'block';
+            document.getElementById('section-settings').style.display = 'none';
+            document.getElementById('btn-dash').classList.add('active');
+            document.getElementById('btn-settings').classList.remove('active');
+            document.getElementById('btn-settings').classList.add('text-white');
+        };
+
+        document.getElementById('btn-settings').onclick = () => {
+            document.getElementById('section-dash').style.display = 'none';
+            document.getElementById('section-settings').style.display = 'block';
+            document.getElementById('btn-settings').classList.add('active');
+            document.getElementById('btn-dash').classList.remove('active');
+            document.getElementById('btn-dash').classList.add('text-white');
+        };
+
+        document.getElementById('settings-form').onsubmit = (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.is_live = document.getElementById('is_live').checked;
+            fetch('/save_settings', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).then(() => alert('Settings Saved!'));
+        };
+
+        document.getElementById('toggle-bot').onclick = () => {
+            fetch('/toggle_bot', {method: 'POST'});
+        };
+    </script>
+</body>
+</html>
