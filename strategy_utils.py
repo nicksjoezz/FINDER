@@ -1,0 +1,155 @@
+import pandas as pd
+import numpy as np
+import ta
+from datetime import timedelta
+
+def ut_bot(df, a=1, c=10):
+    """
+    UT Bot Alerts implementation in Python
+    a: Key Value (Sensitivity)
+    c: ATR Period
+    """
+    df = df.copy()
+
+    # ATR
+    df['atr'] = ta.volatility.average_true_range(df['high'], df['low'], df['close'], window=c)
+    df['nLoss'] = a * df['atr']
+
+    # src = close
+    src = df['close']
+
+    # xATRTrailingStop
+    xATRTrailingStop = np.zeros(len(df))
+    for i in range(1, len(df)):
+        if src[i] > xATRTrailingStop[i-1] and src[i-1] > xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = max(xATRTrailingStop[i-1], src[i] - df['nLoss'][i])
+        elif src[i] < xATRTrailingStop[i-1] and src[i-1] < xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = min(xATRTrailingStop[i-1], src[i] + df['nLoss'][i])
+        elif src[i] > xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = src[i] - df['nLoss'][i]
+        else:
+            xATRTrailingStop[i] = src[i] + df['nLoss'][i]
+
+    df['xATRTrailingStop'] = xATRTrailingStop
+
+    # pos
+    pos = np.zeros(len(df))
+    for i in range(1, len(df)):
+        if src[i-1] < xATRTrailingStop[i-1] and src[i] > xATRTrailingStop[i-1]:
+            pos[i] = 1
+        elif src[i-1] > xATRTrailingStop[i-1] and src[i] < xATRTrailingStop[i-1]:
+            pos[i] = -1
+        else:
+            pos[i] = pos[i-1]
+
+    df['pos'] = pos
+
+    # ema 1 of src
+    df['ema1'] = ta.trend.ema_indicator(df['close'], window=1)
+
+    # crossover
+    df['above'] = (df['ema1'] > df['xATRTrailingStop']) & (df['ema1'].shift(1) <= df['xATRTrailingStop'].shift(1))
+    df['below'] = (df['ema1'] < df['xATRTrailingStop']) & (df['ema1'].shift(1) >= df['xATRTrailingStop'].shift(1))
+
+    df['buy'] = (df['close'] > df['xATRTrailingStop']) & df['above']
+    df['sell'] = (df['close'] < df['xATRTrailingStop']) & df['below']
+
+    return df
+
+class Backtester:
+    def __init__(self, df, exit_candles=3):
+        self.df = df
+        self.exit_candles = exit_candles
+
+    def run(self):
+        trades = []
+        df = self.df
+
+        for i in range(len(df) - self.exit_candles - 1):
+            if df['buy'].iloc[i]:
+                # Entry at next candle open
+                entry_idx = i + 1
+                exit_idx = i + self.exit_candles
+
+                entry_price = df['open'].iloc[entry_idx]
+                exit_price = df['close'].iloc[exit_idx]
+
+                profit = exit_price - entry_price
+                win = profit > 0
+
+                trades.append({
+                    'type': 'buy',
+                    'entry_time': df['epoch'].iloc[entry_idx],
+                    'entry_price': entry_price,
+                    'exit_time': df['epoch'].iloc[exit_idx],
+                    'exit_price': exit_price,
+                    'profit': profit,
+                    'win': win
+                })
+
+            elif df['sell'].iloc[i]:
+                # Entry at next candle open
+                entry_idx = i + 1
+                exit_idx = i + self.exit_candles
+
+                entry_price = df['open'].iloc[entry_idx]
+                exit_price = df['close'].iloc[exit_idx]
+
+                profit = entry_price - exit_price
+                win = profit > 0
+
+                trades.append({
+                    'type': 'sell',
+                    'entry_time': df['epoch'].iloc[entry_idx],
+                    'entry_price': entry_price,
+                    'exit_time': df['epoch'].iloc[exit_idx],
+                    'exit_price': exit_price,
+                    'profit': profit,
+                    'win': win
+                })
+
+        return pd.DataFrame(trades)
+
+def analyze_performance(trades_df, interval_days=60):
+    if trades_df.empty:
+        return pd.DataFrame()
+
+    trades_df['entry_time'] = pd.to_datetime(trades_df['entry_time'], unit='s')
+    trades_df = trades_df.sort_values('entry_time')
+
+    start_date = trades_df['entry_time'].min()
+    end_date = trades_df['entry_time'].max()
+
+    results = []
+    current_start = start_date
+    while current_start < end_date:
+        current_end = current_start + timedelta(days=interval_days)
+        period_trades = trades_df[(trades_df['entry_time'] >= current_start) & (trades_df['entry_time'] < current_end)]
+
+        if not period_trades.empty:
+            win_rate = period_trades['win'].mean()
+            total_trades = len(period_trades)
+            consecutive_losses = calculate_max_consecutive_losses(period_trades['win'])
+
+            results.append({
+                'start': current_start,
+                'end': current_end,
+                'win_rate': win_rate,
+                'total_trades': total_trades,
+                'max_consecutive_losses': consecutive_losses
+            })
+
+        current_start = current_end
+
+    return pd.DataFrame(results)
+
+def calculate_max_consecutive_losses(wins_series):
+    max_losses = 0
+    current_losses = 0
+    for win in wins_series:
+        if not win:
+            current_losses += 1
+            max_losses = max(max_losses, current_losses)
+        else:
+            current_losses = 0
+    return max_losses

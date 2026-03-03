@@ -1,0 +1,9 @@
+Strategy: Strategy_4
+Description: UT Bot (1, 20) + ML Filter
+Overall Win Rate: 85.37%
+Trades: 12890
+
+                start                 end  win_rate  total_trades  max_consecutive_losses
+0 2025-10-15 09:00:00 2025-12-14 09:00:00  0.846267          4742                       5
+1 2025-12-14 09:00:00 2026-02-12 09:00:00  0.857533          6226                       4
+2 2026-02-12 09:00:00 2026-04-13 09:00:00  0.859521          1922                       3
