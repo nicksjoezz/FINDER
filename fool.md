@@ -19,6 +19,12 @@ Before you actually spend any money, the **Smart Coach** stops the Scout and loo
 - If the Coach thinks the Scout is likely to be wrong based on what happened in the past, they say: **"No, stay out. This one looks like a loser."**
 - If the Coach agrees, the bot places the trade.
 
+#### Is every Coach the same?
+**No!** Even though all Coaches use the same tools (like RSI and MACD), each Coach is **custom-trained** for their specific Scout and Symbol.
+- A Coach for **Volatility 100** knows how that specific market behaves.
+- A Coach for **Strategy 1** learns the specific mistakes that Strategy 1 usually makes.
+- When you start the bot, it builds a **unique Coach** just for the combination you picked. It's like having a specialized trainer for every single sport!
+
 ### 4. The 15-Minute Rule (3-Candle Exit)
 Once the trade is placed, the bot doesn't get greedy or scared. It follows a very simple rule:
 - It waits for exactly **3 candles** (since each candle is 5 minutes, that's **15 minutes** total).
