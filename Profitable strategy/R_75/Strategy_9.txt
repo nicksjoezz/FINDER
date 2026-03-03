@@ -1,8 +1,9 @@
 Symbol: R_75
 Strategy: Strategy_9
 Description: UT Bot (3, 10) + ML Filter
-Win Rate: 97.44%
+Overall Win Rate: 97.44%
 Total Trades: 468
+Training Data Volume: 30000 candles (~104.2 days)
 
 Strategy Configuration:
 - UT Bot Sensitivity (a): 3

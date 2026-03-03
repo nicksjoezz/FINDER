@@ -28,3 +28,8 @@
 2026-03-03 08:42:34,887 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET /socket.io/?EIO=4&transport=polling&t=PootGG4&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
 2026-03-03 08:42:44,458 127.0.0.1 - - [03/Mar/2026 08:42:44] "POST /run_backtest HTTP/1.1" 200 -
 2026-03-03 08:42:44,634 127.0.0.1 - - [03/Mar/2026 08:42:44] "GET /socket.io/?EIO=4&transport=websocket&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
+2026-03-03 10:01:02,871  * Detected change in '/app/final_strategies.py', reloading
+2026-03-03 10:01:07,160  * Restarting with stat
+2026-03-03 10:01:12,547 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+2026-03-03 10:01:12,552  * Debugger is active!
+2026-03-03 10:01:12,554  * Debugger PIN: 410-907-091

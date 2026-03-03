@@ -20,7 +20,14 @@ When you start the bot for a specific symbol (e.g., Volatility 100) and strategy
 2.  **Model Fitting:** It trains a **Random Forest Classifier** specifically for that symbol and strategy.
 3.  **Pattern Recognition:** The model analyzes which base signals (from the fixed parameters) resulted in wins or losses based on the market conditions (RSI, ADX, MACD, etc.) at that time.
 
-## 3. Decision Making in Live Trading
+## 3. Training Data Volume
+
+To ensure the Machine Learning model is robust and has seen enough market cycles, the following data volume is used:
+- **Target History:** Approximately **2 years** of historical data.
+- **Candle Count:** Roughly **105,000 candles** per symbol (on the 5-minute timeframe).
+- **Minimum Requirement:** The bot requires at least **200 historical trade signals** from the selected UT Bot configuration to successfully train the ML filter. If insufficient data is available for a specific symbol/strategy pair, the ML filter will be disabled to avoid unreliable predictions.
+
+## 4. Decision Making in Live Trading
 
 Once the bot is monitoring the live 5m timeframe, the execution logic for every new candle is as follows:
 

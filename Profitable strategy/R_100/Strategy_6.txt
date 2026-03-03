@@ -1,8 +1,9 @@
 Symbol: R_100
 Strategy: Strategy_6
 Description: UT Bot (3, 20) + ML Filter
-Win Rate: 93.78%
+Overall Win Rate: 93.78%
 Total Trades: 595
+Training Data Volume: 35000 candles (~121.5 days)
 
 Strategy Configuration:
 - UT Bot Sensitivity (a): 3

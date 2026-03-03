@@ -1,8 +1,9 @@
 Symbol: R_50
 Strategy: Strategy_3
 Description: UT Bot (3, 30) + ML Filter
-Win Rate: 94.52%
+Overall Win Rate: 94.52%
 Total Trades: 547
+Training Data Volume: 35000 candles (~121.5 days)
 
 Strategy Configuration:
 - UT Bot Sensitivity (a): 3

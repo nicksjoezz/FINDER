@@ -49,6 +49,7 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
             continue
 
         df_orig = pd.read_csv(filepath)
+        candle_count = len(df_orig)
         df_with_inds = add_indicators(df_orig)
 
         for i, (a, c, desc) in enumerate(configs):
@@ -62,7 +63,7 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
                 print(f"Not enough trades for {symbol} {strat_name}")
                 continue
 
-            # 2. Train ML Filter on raw trades for THIS symbol
+            # 2. Train ML Filter
             ml = MLFilter()
             if ml.train(df_with_inds, raw_trades):
                 # 3. Apply ML Filter
@@ -78,8 +79,9 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
                         f.write(f"Symbol: {symbol}\n")
                         f.write(f"Strategy: {strat_name}\n")
                         f.write(f"Description: {desc}\n")
-                        f.write(f"Win Rate: {wr:.2%}\n")
-                        f.write(f"Total Trades: {len(final_trades)}\n\n")
+                        f.write(f"Overall Win Rate: {wr:.2%}\n")
+                        f.write(f"Total Trades: {len(final_trades)}\n")
+                        f.write(f"Training Data Volume: {candle_count} candles (~{candle_count/288:.1f} days)\n\n")
                         f.write(f"Strategy Configuration:\n- UT Bot Sensitivity (a): {a}\n- ATR Period (c): {c}\n")
                         f.write(ml_description)
                         f.write(f"\n60-Day Performance Intervals for {symbol}:\n")
