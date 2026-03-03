@@ -21,47 +21,71 @@ def run_optimized_strategies():
         (1.5, 15, "UT Bot (1.5, 15) + ML Filter")
     ]
 
-    output_dir = 'Profitable strategy'
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    ml_description = """
+Machine Learning Filter Definition:
+The ML Filter uses a Random Forest Classifier trained on the following technical features at the moment of the signal:
+1. RSI (14): Relative Strength Index to identify overbought/oversold conditions.
+2. MACD Histogram: Momentum difference to capture trend strength.
+3. ADX: Average Directional Index to filter out low-volatility/ranging markets.
+4. Bollinger Band %B (pband): Price position relative to volatility bands.
+5. EMA 200 Distance: Normalized distance from the long-term trend line.
 
-    for i, (a, c, desc) in enumerate(configs):
-        strat_name = f"Strategy_{i+1}"
-        # Skip if already exists
-        if os.path.exists(f'{output_dir}/{strat_name}.txt'):
+The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and automatically blocks signals where the predicted probability of a win is low.
+"""
+
+    base_output_dir = 'Profitable strategy'
+    if os.path.exists(base_output_dir):
+        import shutil
+        shutil.rmtree(base_output_dir)
+    os.makedirs(base_output_dir, exist_ok=True)
+
+    for symbol in symbols:
+        symbol_dir = f"{base_output_dir}/{symbol}"
+        os.makedirs(symbol_dir, exist_ok=True)
+
+        filepath = f'data/{symbol}_5m_2y.csv'
+        if not os.path.exists(filepath):
+            print(f"Data for {symbol} not found.")
             continue
 
-        all_trades = []
-        for symbol in symbols:
-            filepath = f'data/{symbol}_5m_2y.csv'
-            if not os.path.exists(filepath): continue
+        df_orig = pd.read_csv(filepath)
+        df_with_inds = add_indicators(df_orig)
 
-            df = pd.read_csv(filepath)
-            df = add_indicators(df)
-            df_raw = ut_bot(df, a=a, c=c)
+        for i, (a, c, desc) in enumerate(configs):
+            strat_name = f"Strategy_{i+1}"
+
+            # 1. Get raw UT Bot trades for training
+            df_raw = ut_bot(df_with_inds, a=a, c=c)
             raw_trades = Backtester(df_raw).run()
 
-            if len(raw_trades) < 200: continue
+            if len(raw_trades) < 200:
+                print(f"Not enough trades for {symbol} {strat_name}")
+                continue
 
+            # 2. Train ML Filter on raw trades for THIS symbol
             ml = MLFilter()
-            if ml.train(df, raw_trades):
+            if ml.train(df_with_inds, raw_trades):
+                # 3. Apply ML Filter
                 df_filtered = ml.filter_signals(df_raw)
+                # 4. Run final backtest
                 final_trades = Backtester(df_filtered).run()
+
                 if not final_trades.empty:
-                    final_trades['symbol'] = symbol
-                    all_trades.append(final_trades)
+                    wr = final_trades['win'].mean()
+                    perf = analyze_performance(final_trades)
 
-        if not all_trades:
-            print(f"{strat_name} Failed")
-            continue
+                    with open(f'{symbol_dir}/{strat_name}.txt', 'w') as f:
+                        f.write(f"Symbol: {symbol}\n")
+                        f.write(f"Strategy: {strat_name}\n")
+                        f.write(f"Description: {desc}\n")
+                        f.write(f"Win Rate: {wr:.2%}\n")
+                        f.write(f"Total Trades: {len(final_trades)}\n\n")
+                        f.write(f"Strategy Configuration:\n- UT Bot Sensitivity (a): {a}\n- ATR Period (c): {c}\n")
+                        f.write(ml_description)
+                        f.write(f"\n60-Day Performance Intervals for {symbol}:\n")
+                        f.write(perf.to_string())
 
-        full_trades = pd.concat(all_trades)
-        wr = full_trades['win'].mean()
-        perf = analyze_performance(full_trades)
-
-        with open(f'{output_dir}/{strat_name}.txt', 'w') as f:
-            f.write(f"Strategy: {strat_name}\nDescription: {desc}\nOverall Win Rate: {wr:.2%}\nTrades: {len(full_trades)}\n\n{perf.to_string()}")
-        print(f"{strat_name} Done. WR: {wr:.2%}")
+                    print(f"Generated {symbol} {strat_name}. WR: {wr:.2%}")
 
 if __name__ == "__main__":
     run_optimized_strategies()

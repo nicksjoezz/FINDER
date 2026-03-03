@@ -1,0 +1,25 @@
+Symbol: R_50
+Strategy: Strategy_2
+Description: UT Bot (2, 20) + ML Filter
+Win Rate: 96.13%
+Total Trades: 905
+
+Strategy Configuration:
+- UT Bot Sensitivity (a): 2
+- ATR Period (c): 20
+
+Machine Learning Filter Definition:
+The ML Filter uses a Random Forest Classifier trained on the following technical features at the moment of the signal:
+1. RSI (14): Relative Strength Index to identify overbought/oversold conditions.
+2. MACD Histogram: Momentum difference to capture trend strength.
+3. ADX: Average Directional Index to filter out low-volatility/ranging markets.
+4. Bollinger Band %B (pband): Price position relative to volatility bands.
+5. EMA 200 Distance: Normalized distance from the long-term trend line.
+
+The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and automatically blocks signals where the predicted probability of a win is low.
+
+60-Day Performance Intervals for R_50:
+                start                 end  win_rate  total_trades  max_consecutive_losses
+0 2025-11-01 17:40:00 2025-12-31 17:40:00  0.963519           466                       2
+1 2025-12-31 17:40:00 2026-03-01 17:40:00  0.958140           430                       1
+2 2026-03-01 17:40:00 2026-04-30 17:40:00  1.000000             9                       0
