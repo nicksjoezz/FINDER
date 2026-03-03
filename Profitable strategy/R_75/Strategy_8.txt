@@ -1,9 +1,9 @@
 Symbol: R_75
 Strategy: Strategy_8
 Description: UT Bot (2, 30) + ML Filter
-Overall Win Rate: 91.98%
-Total Trades: 910
-Training History: 30000 candles (~104.2 days)
+Overall Win Rate: 79.08%
+Total Trades: 3437
+Training History: 105117 candles (~365.0 days)
 Note: Training history represents the maximum available depth provided by the Deriv API for 5m synthetic index candles at the time of research.
 
 Strategy Configuration:
@@ -22,5 +22,10 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
 
 60-Day Performance Intervals for R_75:
                 start                 end  win_rate  total_trades  max_consecutive_losses
-0 2025-11-19 09:45:00 2026-01-18 09:45:00  0.927342           523                       2
-1 2026-01-18 09:45:00 2026-03-19 09:45:00  0.909561           387                       2
+0 2025-03-03 23:45:00 2025-05-02 23:45:00  0.836007           561                       3
+1 2025-05-02 23:45:00 2025-07-01 23:45:00  0.800360           556                       3
+2 2025-07-01 23:45:00 2025-08-30 23:45:00  0.800705           567                       5
+3 2025-08-30 23:45:00 2025-10-29 23:45:00  0.773585           583                       3
+4 2025-10-29 23:45:00 2025-12-28 23:45:00  0.752244           557                       5
+5 2025-12-28 23:45:00 2026-02-26 23:45:00  0.779130           575                       4
+6 2026-02-26 23:45:00 2026-04-27 23:45:00  0.842105            38                       2

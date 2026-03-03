@@ -4,10 +4,12 @@ This document provides a comprehensive overview of the research findings and obs
 
 ## 1. Directory Structure and Overview
 
-The `Profitable strategy/` directory contains backtesting results for three synthetic index symbols:
+The `Profitable strategy/` directory contains backtesting results for five synthetic index symbols:
 - **R_100 (Volatility 100 Index)**
-- **R_50 (Volatility 50 Index)**
 - **R_75 (Volatility 75 Index)**
+- **R_50 (Volatility 50 Index)**
+- **R_25 (Volatility 25 Index)**
+- **R_10 (Volatility 10 Index)**
 
 Each sub-directory contains up to 10 strategy files (`Strategy_1.txt` to `Strategy_10.txt`), documenting optimized parameters and their performance metrics.
 
@@ -42,10 +44,10 @@ Based on the source code (`strategy_utils.py`), the backtesting and live trading
 ## 4. Observations and Performance Metrics
 
 ### Win Rate Highlights
-The integration of the ML Filter results in exceptionally high win rates across the board:
-- **R_75 Strategy 1:** 92.63% Win Rate (1,926 trades)
-- **R_100 Strategy 10:** 91.85% Win Rate (1,386 trades)
-- **R_50 Strategy 9:** 97.06% Win Rate (510 trades)
+The integration of the ML Filter results in stable and profitable win rates over a full 1-year period:
+- **R_10 Strategy 9:** 94.10% Win Rate (1,322 trades)
+- **R_50 Strategy 9:** 92.21% Win Rate (1,489 trades)
+- **R_100 Strategy 10:** 80.13% Win Rate (4,272 trades)
 
 ### Trade Frequency vs. Sensitivity
 - **Lower Sensitivity (e.g., a=1):** Generates more signals (2,400+ trades) but may have slightly lower win rates.
