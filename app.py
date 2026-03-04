@@ -99,15 +99,36 @@ def run_bt():
         (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)
     ]
 
+    from ml_filter import MLFilter
+
     for i, (a, c) in enumerate(strat_params):
         df_sig = ut_bot(df, a=a, c=c)
-        trades = Backtester(df_sig).run()
-        if not trades.empty:
+
+        # 1. Get raw trades for ML training
+        raw_trades = Backtester(df_sig).run()
+
+        final_trades = pd.DataFrame()
+        ml_active = False
+
+        # 2. Train and Apply ML Filter
+        if len(raw_trades) >= 200:
+            ml = MLFilter()
+            if ml.train(df, raw_trades):
+                df_filtered = ml.filter_signals(df_sig)
+                final_trades = Backtester(df_filtered).run()
+                ml_active = True
+
+        # Fallback to raw if ML couldn't train (less than 200 signals)
+        if final_trades.empty:
+            final_trades = raw_trades
+
+        if not final_trades.empty:
             results.append({
                 'name': f"Strategy {i+1}",
-                'win_rate': trades['win'].mean(),
-                'trades': len(trades),
-                'max_losses': int(calculate_max_consecutive_losses(trades['win']))
+                'win_rate': final_trades['win'].mean(),
+                'trades': len(final_trades),
+                'max_losses': int(calculate_max_consecutive_losses(final_trades['win'])),
+                'ml_active': ml_active
             })
 
     return jsonify({'results': results})

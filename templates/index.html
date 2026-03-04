@@ -179,6 +179,7 @@
                             <thead>
                                 <tr>
                                     <th>Strategy</th>
+                                    <th>ML Filter</th>
                                     <th>Win Rate</th>
                                     <th>Trades</th>
                                     <th>Max Consec. Losses</th>
@@ -275,7 +276,8 @@
             tbody.innerHTML = '';
             data.results.forEach(r => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${r.name}</td><td>${(r.win_rate*100).toFixed(2)}%</td><td>${r.trades}</td><td>${r.max_losses}</td>`;
+                const mlBadge = r.ml_active ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Bypassed (<200 signals)</span>';
+                tr.innerHTML = `<td>${r.name}</td><td>${mlBadge}</td><td>${(r.win_rate*100).toFixed(2)}%</td><td>${r.trades}</td><td>${r.max_losses}</td>`;
                 tbody.appendChild(tr);
             });
             document.getElementById('bt-results').style.display = 'block';

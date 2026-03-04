@@ -1,40 +1,20 @@
-2026-03-03 08:39:36,743 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
- * Serving Flask app 'app'
- * Debug mode: on
-2026-03-03 08:39:36,750 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:5000
- * Running on http://192.168.0.2:5000
-2026-03-03 08:39:36,751 [33mPress CTRL+C to quit[0m
-2026-03-03 08:39:36,751  * Restarting with stat
-2026-03-03 08:39:39,195 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
-2026-03-03 08:39:39,197  * Debugger is active!
-2026-03-03 08:39:39,198  * Debugger PIN: 410-907-091
-2026-03-03 08:39:39,213 127.0.0.1 - - [03/Mar/2026 08:39:39] "GET / HTTP/1.1" 200 -
-2026-03-03 08:39:39,350 127.0.0.1 - - [03/Mar/2026 08:39:39] "GET /socket.io/?EIO=4&transport=polling&t=PoosbPE HTTP/1.1" 200 -
-2026-03-03 08:39:39,358 127.0.0.1 - - [03/Mar/2026 08:39:39] "POST /socket.io/?EIO=4&transport=polling&t=PoosbPP&sid=NHZQ6iAPeZmBxJ3UAAAA HTTP/1.1" 200 -
-2026-03-03 08:39:39,363 127.0.0.1 - - [03/Mar/2026 08:39:39] "GET /socket.io/?EIO=4&transport=polling&t=PoosbPS&sid=NHZQ6iAPeZmBxJ3UAAAA HTTP/1.1" 200 -
-2026-03-03 08:39:40,677 127.0.0.1 - - [03/Mar/2026 08:39:40] "GET /socket.io/?EIO=4&transport=websocket&sid=NHZQ6iAPeZmBxJ3UAAAA HTTP/1.1" 200 -
-2026-03-03 08:41:15,801 127.0.0.1 - - [03/Mar/2026 08:41:15] "GET / HTTP/1.1" 200 -
-2026-03-03 08:41:15,988 127.0.0.1 - - [03/Mar/2026 08:41:15] "GET /socket.io/?EIO=4&transport=polling&t=Poosy_5 HTTP/1.1" 200 -
-2026-03-03 08:41:16,003 127.0.0.1 - - [03/Mar/2026 08:41:16] "POST /socket.io/?EIO=4&transport=polling&t=Poosy_P&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
-2026-03-03 08:41:16,011 127.0.0.1 - - [03/Mar/2026 08:41:16] "GET /socket.io/?EIO=4&transport=polling&t=Poosy_W&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
-2026-03-03 08:41:16,020 127.0.0.1 - - [03/Mar/2026 08:41:16] "GET /socket.io/?EIO=4&transport=polling&t=Poosy_l&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
-2026-03-03 08:41:18,368 127.0.0.1 - - [03/Mar/2026 08:41:18] "GET /socket.io/?EIO=4&transport=websocket&sid=HXnj2BmNe7vF4wtOAAAC HTTP/1.1" 200 -
-2026-03-03 08:42:34,703 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET / HTTP/1.1" 200 -
-2026-03-03 08:42:34,866 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET /socket.io/?EIO=4&transport=polling&t=PootGFi HTTP/1.1" 200 -
-2026-03-03 08:42:34,878 127.0.0.1 - - [03/Mar/2026 08:42:34] "POST /socket.io/?EIO=4&transport=polling&t=PootGFs&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
-2026-03-03 08:42:34,880 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET /socket.io/?EIO=4&transport=polling&t=PootGFw&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
-2026-03-03 08:42:34,887 127.0.0.1 - - [03/Mar/2026 08:42:34] "GET /socket.io/?EIO=4&transport=polling&t=PootGG4&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
-2026-03-03 08:42:44,458 127.0.0.1 - - [03/Mar/2026 08:42:44] "POST /run_backtest HTTP/1.1" 200 -
-2026-03-03 08:42:44,634 127.0.0.1 - - [03/Mar/2026 08:42:44] "GET /socket.io/?EIO=4&transport=websocket&sid=fDB6XVJV5NyYNe2PAAAE HTTP/1.1" 200 -
-2026-03-03 10:01:02,871  * Detected change in '/app/final_strategies.py', reloading
-2026-03-03 10:01:07,160  * Restarting with stat
-2026-03-03 10:01:12,547 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
-2026-03-03 10:01:12,552  * Debugger is active!
-2026-03-03 10:01:12,554  * Debugger PIN: 410-907-091
-2026-03-03 11:30:45,360  * Detected change in '/app/final_strategies.py', reloading
-2026-03-03 11:30:48,977  * Restarting with stat
-2026-03-03 11:30:53,108 Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
-2026-03-03 11:30:53,113  * Debugger is active!
-2026-03-03 11:30:53,115  * Debugger PIN: 410-907-091
+2026-03-04 08:13:12,158  * Restarting with stat
+2026-03-04 08:13:14,593  * Debugger is active!
+2026-03-04 08:13:14,593  * Debugger PIN: 528-207-680
+(39845) wsgi starting up on http://0.0.0.0:5000
+(39845) accepted ('127.0.0.1', 46464)
+127.0.0.1 - - [04/Mar/2026 08:13:15] "GET / HTTP/1.1" 200 14644 0.006999
+127.0.0.1 - - [04/Mar/2026 08:13:15] "GET /socket.io/?EIO=4&transport=polling&t=Potw8VV HTTP/1.1" 200 300 0.000510
+127.0.0.1 - - [04/Mar/2026 08:13:15] "POST /socket.io/?EIO=4&transport=polling&t=Potw8Vg&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 219 0.001189
+(39845) accepted ('127.0.0.1', 46470)
+(39845) accepted ('127.0.0.1', 46480)
+127.0.0.1 - - [04/Mar/2026 08:13:15] "GET /socket.io/?EIO=4&transport=polling&t=Potw8Vi&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 181 0.000227
+127.0.0.1 - - [04/Mar/2026 08:13:15] "GET /socket.io/?EIO=4&transport=polling&t=Potw8Vq&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 181 0.000226
+127.0.0.1 - - [04/Mar/2026 08:14:11] "POST /run_backtest HTTP/1.1" 200 1614 55.533947
+127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=polling&t=PotwJs0 HTTP/1.1" 200 300 0.000404
+127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=websocket&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 0 55.770396
+127.0.0.1 - - [04/Mar/2026 08:14:11] "POST /socket.io/?EIO=4&transport=polling&t=PotwM7E&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 219 0.000784
+(39845) accepted ('127.0.0.1', 39518)
+127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=polling&t=PotwM7F&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 213 0.000190
+127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=polling&t=PotwM7R&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 181 0.000160
+127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=websocket&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 0 0.429429
