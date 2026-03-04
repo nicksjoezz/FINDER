@@ -61,7 +61,8 @@ The integration of the ML Filter results in stable and profitable win rates over
 
 The system is designed for robustness:
 - **Centralized Model Management:** A dedicated `ModelManager` maintains 50 pre-trained models in memory, ensuring consistency between backtesting and live trading.
-- **Continuous Learning:** The system automatically fetches fresh data and retrains all models every 24 hours at 00:05 UTC.
+- **Continuous Learning:** The system automatically performs incremental data updates and retrains all models every 24 hours at 00:05 UTC.
+- **Incremental Caching:** To optimize API usage, the bot only downloads the missing candles since its last successful update, maintaining a rolling 1-year window in the local CSV files.
 - **Thresholds:** A minimum of **200 historical signals** is required to train the ML filter, ensuring statistical significance.
 - **Environment:** Backtesting and logs indicate a reference system clock in the year **2026**.
 

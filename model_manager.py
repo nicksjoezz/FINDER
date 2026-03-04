@@ -78,20 +78,12 @@ class ModelManager:
 
             self.log("Starting daily retraining with updated data...")
 
-            # 1. Update data files using logic from fetch_data.py
-            from fetch_data import get_historical_data
-            granularity = 300
-            end_time = int(time.time())
-            start_time = int((datetime.now() - timedelta(days=366)).timestamp())
+            # 1. Incrementally update data files
+            from fetch_data import update_symbol_data
 
             for symbol in self.symbols:
-                self.log(f"Fetching latest data for {symbol}...")
-                df_new = await get_historical_data(symbol, start_time, end_time, granularity)
-                if not df_new.empty:
-                    df_new.to_csv(os.path.join(self.data_dir, f"{symbol}_5m_2y.csv"), index=False)
-                    self.log(f"Updated data file for {symbol}.")
-                else:
-                    self.log(f"Failed to update data for {symbol}.")
+                self.log(f"Checking for updates for {symbol}...")
+                await update_symbol_data(symbol, data_dir=self.data_dir)
 
             # 2. Retrain all 50 models
             await self.train_all_models()

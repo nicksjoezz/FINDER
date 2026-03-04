@@ -66,22 +66,57 @@ async def get_historical_data(symbol, start_time, end_time, granularity):
     df = df.drop_duplicates(subset=['epoch']).sort_values('epoch')
     return df
 
+async def update_symbol_data(symbol, data_dir='data'):
+    """
+    Incrementally updates the symbol's CSV file with latest data.
+    Maintains approx 1 year of history (~105k candles).
+    """
+    filepath = os.path.join(data_dir, f"{symbol}_5m_2y.csv")
+    granularity = 300
+    end_time = int(datetime.now().timestamp())
+
+    # 1. Read existing data
+    df_old = pd.DataFrame()
+    last_epoch = 0
+    if os.path.exists(filepath):
+        try:
+            df_old = pd.read_csv(filepath)
+            if not df_old.empty:
+                last_epoch = int(df_old['epoch'].max())
+        except Exception as e:
+            sys.stderr.write(f"Error reading {filepath}: {e}\n")
+
+    # 2. Fetch missing data
+    # We fetch from last_epoch + granularity to avoid overlap
+    start_time = last_epoch + granularity if last_epoch > 0 else int((datetime.now() - timedelta(days=366)).timestamp())
+
+    if end_time - start_time < granularity:
+        sys.stderr.write(f"Data for {symbol} is already up to date.\n")
+        return df_old
+
+    sys.stderr.write(f"Updating {symbol} from {datetime.fromtimestamp(start_time)} to {datetime.fromtimestamp(end_time)}\n")
+    df_new = await get_historical_data(symbol, start_time, end_time, granularity)
+
+    if df_new.empty:
+        return df_old
+
+    # 3. Merge and prune
+    df_combined = pd.concat([df_old, df_new]).drop_duplicates(subset=['epoch']).sort_values('epoch')
+
+    # Keep only the last 106,000 candles (~1 year)
+    if len(df_combined) > 106000:
+        df_combined = df_combined.tail(106000)
+
+    # 4. Save
+    os.makedirs(data_dir, exist_ok=True)
+    df_combined.to_csv(filepath, index=False)
+    sys.stderr.write(f"Saved {len(df_combined)} total candles for {symbol} (Added {len(df_new)})\n")
+    return df_combined
+
 async def main():
     symbols = ['R_100', 'R_75', 'R_50', 'R_25', 'R_10']
-    granularity = 300 # 5 minutes
-
-    end_time = int(datetime.now().timestamp())
-    start_time = int((datetime.now() - timedelta(days=366)).timestamp())
-
-    os.makedirs('data', exist_ok=True)
-
     for symbol in symbols:
-        df = await get_historical_data(symbol, start_time, end_time, granularity)
-        if not df.empty:
-            df.to_csv(f'data/{symbol}_5m_2y.csv', index=False)
-            sys.stderr.write(f"Saved {len(df)} candles for {symbol}\n")
-        else:
-            sys.stderr.write(f"Failed to fetch data for {symbol}\n")
+        await update_symbol_data(symbol)
 
 if __name__ == "__main__":
     asyncio.run(main())

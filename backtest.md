@@ -40,10 +40,13 @@ You won't see `.pkl` or `.model` files in the folder. This is intentional:
 ## 5. Technical Implementation
 
 ### Data Retrieval and Caching
-To ensure speed and efficiency, the backtester uses a **1-hour caching mechanism**:
-- When a backtest is requested, the bot checks `data/cache_[symbol]_[days]d.csv`.
-- If the file exists and is less than 1 hour old, it is reused.
-- Otherwise, the bot fetches fresh 5-minute candles from the Deriv API.
+The backtester uses an intelligent, two-tier caching system for maximum efficiency:
+
+1.  **UI Level Cache (Short-term):** For quick results, backtests requested via the UI use a **1-hour temporary cache** (`data/cache_[symbol]_[days]d.csv`).
+2.  **Model Manager Cache (Long-term Archive):** The core 1-year historical data is stored in `data/[symbol]_5m_2y.csv`. Instead of downloading the full archive every day, the bot performs **Incremental Updates**:
+    - It reads the CSV to see when the last candle was recorded.
+    - It only fetches the specific candles that occurred between then and "now."
+    - It merges the new data and removes the oldest candles to maintain a perfect 1-year sliding window.
 
 ### Processing Logic
 1.  **Indicator Calculation:** The bot adds RSI, MACD, ADX, and other technical indicators to the historical data.

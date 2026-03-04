@@ -43,3 +43,13 @@
 2026-03-04 09:01:41,080  * Debugger is active!
 2026-03-04 09:01:41,081  * Debugger PIN: 528-207-680
 (48003) wsgi starting up on http://0.0.0.0:5000
+2026-03-04 10:40:56,775  * Detected change in '/app/fetch_data.py', reloading
+2026-03-04 10:41:01,501  * Restarting with stat
+2026-03-04 10:41:06,521  * Debugger is active!
+2026-03-04 10:41:06,524  * Debugger PIN: 528-207-680
+(55384) wsgi starting up on http://0.0.0.0:5000
+2026-03-04 10:42:30,032  * Detected change in '/app/model_manager.py', reloading
+2026-03-04 10:42:30,495  * Restarting with stat
+2026-03-04 10:42:33,712  * Debugger is active!
+2026-03-04 10:42:33,713  * Debugger PIN: 528-207-680
+(55840) wsgi starting up on http://0.0.0.0:5000
