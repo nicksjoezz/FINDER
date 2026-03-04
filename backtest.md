@@ -11,6 +11,8 @@ The backtester provides a "sandbox" environment where all strategies are execute
 From the **Backtest** section in the UI, users can configure:
 - **Days to Backtest:** The lookback period (e.g., 7 days, 30 days, 365 days).
 - **Symbol:** The Volatility Index to test (R_10, R_25, R_50, R_75, R_100).
+- **Initial Balance ($):** Your starting account capital for the simulation.
+- **Risk per Trade (%):** The percentage of your current balance to stake on every trade.
 
 ## 3. Metrics and Results
 
@@ -22,7 +24,16 @@ The system processes the data and displays a comparison table with the following
 | **ML Filter** | Shows if the Random Forest filter was active. It requires at least **200 historical signals** to train successfully. |
 | **Win Rate** | The percentage of trades that resulted in a profit. |
 | **Trades** | The total number of signals confirmed by both UT Bot and the ML Filter. |
+| **Final Balance** | The simulated account balance after all trades are completed. |
+| **Total Profit** | The net gain or loss in dollars. |
 | **Max Consec. Losses** | The longest "losing streak" observed during the period. |
+
+## 4. Financial Simulation Logic (Rise/Fall)
+
+The backtester provides a realistic simulation of Deriv Rise/Fall options using the following logic:
+- **Win Payout (+95%):** For every winning trade, the profit is calculated as 95% of the stake.
+- **Loss (-100%):** For every losing trade, the entire stake is lost.
+- **Dynamic Staking:** The stake for each trade is calculated as a percentage of the **current** account balance at that moment, simulating compounding growth or decline.
 
 ## 4. How Machine Learning works in Backtesting
 

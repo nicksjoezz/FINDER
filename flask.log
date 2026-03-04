@@ -1,55 +1,13 @@
-2026-03-04 08:13:12,158  * Restarting with stat
-2026-03-04 08:13:14,593  * Debugger is active!
-2026-03-04 08:13:14,593  * Debugger PIN: 528-207-680
-(39845) wsgi starting up on http://0.0.0.0:5000
-(39845) accepted ('127.0.0.1', 46464)
-127.0.0.1 - - [04/Mar/2026 08:13:15] "GET / HTTP/1.1" 200 14644 0.006999
-127.0.0.1 - - [04/Mar/2026 08:13:15] "GET /socket.io/?EIO=4&transport=polling&t=Potw8VV HTTP/1.1" 200 300 0.000510
-127.0.0.1 - - [04/Mar/2026 08:13:15] "POST /socket.io/?EIO=4&transport=polling&t=Potw8Vg&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 219 0.001189
-(39845) accepted ('127.0.0.1', 46470)
-(39845) accepted ('127.0.0.1', 46480)
-127.0.0.1 - - [04/Mar/2026 08:13:15] "GET /socket.io/?EIO=4&transport=polling&t=Potw8Vi&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 181 0.000227
-127.0.0.1 - - [04/Mar/2026 08:13:15] "GET /socket.io/?EIO=4&transport=polling&t=Potw8Vq&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 181 0.000226
-127.0.0.1 - - [04/Mar/2026 08:14:11] "POST /run_backtest HTTP/1.1" 200 1614 55.533947
-127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=polling&t=PotwJs0 HTTP/1.1" 200 300 0.000404
-127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=websocket&sid=NbsZcEFDDhFAUCplAAAA HTTP/1.1" 200 0 55.770396
-127.0.0.1 - - [04/Mar/2026 08:14:11] "POST /socket.io/?EIO=4&transport=polling&t=PotwM7E&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 219 0.000784
-(39845) accepted ('127.0.0.1', 39518)
-127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=polling&t=PotwM7F&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 213 0.000190
-127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=polling&t=PotwM7R&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 181 0.000160
-127.0.0.1 - - [04/Mar/2026 08:14:11] "GET /socket.io/?EIO=4&transport=websocket&sid=T4HyYVwoT8KphPeVAAAC HTTP/1.1" 200 0 0.429429
-2026-03-04 08:48:11,810  * Detected change in '/app/app.py', reloading
-2026-03-04 08:48:16,762  * Restarting with stat
-2026-03-04 08:48:21,048  * Debugger is active!
-2026-03-04 08:48:21,050  * Debugger PIN: 528-207-680
-(43836) wsgi starting up on http://0.0.0.0:5000
-2026-03-04 08:51:32,828  * Detected change in '/app/trading_bot.py', reloading
-2026-03-04 08:51:33,213  * Restarting with stat
-2026-03-04 08:51:36,181  * Debugger is active!
-2026-03-04 08:51:36,182  * Debugger PIN: 528-207-680
-(44882) wsgi starting up on http://0.0.0.0:5000
-2026-03-04 09:00:12,315  * Detected change in '/app/app.py', reloading
-2026-03-04 09:00:13,413  * Restarting with stat
-2026-03-04 09:00:16,162  * Debugger is active!
-2026-03-04 09:00:16,164  * Debugger PIN: 528-207-680
-(47481) wsgi starting up on http://0.0.0.0:5000
-2026-03-04 09:00:18,580  * Detected change in '/app/trading_bot.py', reloading
-2026-03-04 09:00:18,951  * Restarting with stat
-2026-03-04 09:00:21,532  * Debugger is active!
-2026-03-04 09:00:21,533  * Debugger PIN: 528-207-680
-(47500) wsgi starting up on http://0.0.0.0:5000
-2026-03-04 09:01:38,170  * Detected change in '/app/model_manager.py', reloading
-2026-03-04 09:01:38,550  * Restarting with stat
-2026-03-04 09:01:41,080  * Debugger is active!
-2026-03-04 09:01:41,081  * Debugger PIN: 528-207-680
-(48003) wsgi starting up on http://0.0.0.0:5000
-2026-03-04 10:40:56,775  * Detected change in '/app/fetch_data.py', reloading
-2026-03-04 10:41:01,501  * Restarting with stat
-2026-03-04 10:41:06,521  * Debugger is active!
-2026-03-04 10:41:06,524  * Debugger PIN: 528-207-680
-(55384) wsgi starting up on http://0.0.0.0:5000
-2026-03-04 10:42:30,032  * Detected change in '/app/model_manager.py', reloading
-2026-03-04 10:42:30,495  * Restarting with stat
-2026-03-04 10:42:33,712  * Debugger is active!
-2026-03-04 10:42:33,713  * Debugger PIN: 528-207-680
-(55840) wsgi starting up on http://0.0.0.0:5000
+2026-03-04 11:58:39,675  * Restarting with stat
+2026-03-04 11:58:42,177  * Debugger is active!
+2026-03-04 11:58:42,178  * Debugger PIN: 528-207-680
+(70211) wsgi starting up on http://0.0.0.0:5000
+(70211) accepted ('127.0.0.1', 50084)
+127.0.0.1 - - [04/Mar/2026 11:58:57] "GET / HTTP/1.1" 200 15677 0.024314
+127.0.0.1 - - [04/Mar/2026 11:58:58] "GET /socket.io/?EIO=4&transport=polling&t=PoujonS HTTP/1.1" 200 300 0.005912
+127.0.0.1 - - [04/Mar/2026 11:58:58] "POST /socket.io/?EIO=4&transport=polling&t=Poujono&sid=gZ4KSvmmMiu0hk8CAAAA HTTP/1.1" 200 219 0.000825
+(70211) accepted ('127.0.0.1', 50098)
+(70211) accepted ('127.0.0.1', 50110)
+127.0.0.1 - - [04/Mar/2026 11:58:58] "GET /socket.io/?EIO=4&transport=polling&t=Poujonr&sid=gZ4KSvmmMiu0hk8CAAAA HTTP/1.1" 200 213 0.000193
+127.0.0.1 - - [04/Mar/2026 11:58:58] "GET /socket.io/?EIO=4&transport=polling&t=Poujoo8&sid=gZ4KSvmmMiu0hk8CAAAA HTTP/1.1" 200 181 0.000257
+127.0.0.1 - - [04/Mar/2026 11:58:58] "GET /socket.io/?EIO=4&transport=websocket&sid=gZ4KSvmmMiu0hk8CAAAA HTTP/1.1" 200 0 0.275313

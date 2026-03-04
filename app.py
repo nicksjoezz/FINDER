@@ -9,7 +9,7 @@ from model_manager import model_manager
 import pandas as pd
 from datetime import datetime, timedelta
 from deriv_api import DerivAPI
-from strategy_utils import ut_bot, Backtester, calculate_max_consecutive_losses
+from strategy_utils import ut_bot, Backtester, calculate_max_consecutive_losses, simulate_financials
 from indicators import add_indicators
 
 app = Flask(__name__)
@@ -88,6 +88,8 @@ def run_bt():
     data = request.json
     days = data['days']
     symbol = data['symbol']
+    initial_balance = float(data.get('balance', 1000))
+    risk_pc = float(data.get('risk', 1))
 
     # 1. Fetch the "Test Period" data (the window the user wants to see)
     future = asyncio.run_coroutine_threadsafe(get_bt_data(symbol, days), bot_loop)
@@ -122,12 +124,16 @@ def run_bt():
             final_trades = raw_trades_test
 
         if not final_trades.empty:
+            final_balance, total_profit = simulate_financials(final_trades, initial_balance, risk_pc)
+
             results.append({
                 'name': f"Strategy {i+1}",
                 'win_rate': final_trades['win'].mean(),
                 'trades': len(final_trades),
                 'max_losses': int(calculate_max_consecutive_losses(final_trades['win'])),
-                'ml_active': ml_active
+                'ml_active': ml_active,
+                'final_balance': final_balance,
+                'total_profit': total_profit
             })
 
     return jsonify({'results': results})

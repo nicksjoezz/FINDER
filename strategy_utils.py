@@ -153,3 +153,23 @@ def calculate_max_consecutive_losses(wins_series):
         else:
             current_losses = 0
     return max_losses
+
+def simulate_financials(trades_df, initial_balance=1000, risk_pc=1, win_payout=0.95):
+    """
+    Simulates account growth based on trades.
+    """
+    if trades_df.empty:
+        return initial_balance, 0
+
+    balance = initial_balance
+    risk_pc = risk_pc / 100.0
+
+    for win in trades_df['win']:
+        stake = balance * risk_pc
+        if win:
+            balance += stake * win_payout
+        else:
+            balance -= stake
+
+    total_profit = balance - initial_balance
+    return balance, total_profit
