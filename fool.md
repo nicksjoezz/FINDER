@@ -23,7 +23,9 @@ Before you actually spend any money, the **Smart Coach** stops the Scout and loo
 **No!** Even though all Coaches use the same tools (like RSI and MACD), each Coach is **custom-trained** for their specific Scout and Symbol.
 - A Coach for **Volatility 100** knows how that specific market behaves.
 - A Coach for **Strategy 1** learns the specific mistakes that Strategy 1 usually makes.
-- When you start the bot, it builds a **unique Coach** just for the combination you picked. It's like having a specialized trainer for every single sport!
+- When you start the bot, it builds **unique Coaches** for every symbol and strategy. No matter what you pick, a specialized trainer is ready!
+- **Continuous Improvement:** Every **24 hours**, the bot fetches the newest data and makes every Coach "go back to school" to refresh their memory. This keeps them updated on any new tricks the market might be playing.
+- **Model Retention:** The bot keeps these Coaches in its memory, so they are always ready to help you instantly, whether you are trading live or just testing a strategy.
 
 ### 4. Meet the "Coach's Panel" (How ML Actually Operates)
 To be really sure about a trade, the **Smart Coach** doesn't just look at one thing. They actually use a **"Random Forest"**—which is just a fancy way of saying they have a panel of **100 Mini-Coaches**.

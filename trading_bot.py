@@ -5,7 +5,7 @@ import time
 from deriv_api import DerivAPI
 from strategy_utils import ut_bot
 from indicators import add_indicators
-from ml_filter import MLFilter
+from model_manager import model_manager
 import logging
 
 class TradingBot:
@@ -46,29 +46,13 @@ class TradingBot:
             self.log(f"Connection error: {e}")
             return False
 
-    async def get_ml_filter(self, symbol, a, c):
-        key = f"{symbol}_{a}_{c}"
-        if key in self.ml_filters:
-            return self.ml_filters[key]
-
-        self.log(f"Training ML filter for {symbol} (Strategy a={a}, c={c})...")
-        # Fetch some history for training if needed, or use existing csv
-        filepath = f'data/{symbol}_5m_2y.csv'
-        if not os.path.exists(filepath):
-            # In a real bot, we'd fetch fresh history here
-            return None
-
-        df = pd.read_csv(filepath)
-        df = add_indicators(df)
-        df_raw = ut_bot(df, a=a, c=c)
-        from strategy_utils import Backtester
-        raw_trades = Backtester(df_raw).run()
-
-        ml = MLFilter()
-        if ml.train(df, raw_trades):
-            self.ml_filters[key] = ml
-            self.log(f"ML filter ready for {symbol}")
+    async def get_ml_filter(self, symbol, strategy_idx):
+        # The ModelManager handles model lifecycle (training and retraining)
+        ml = model_manager.get_model(symbol, strategy_idx)
+        if ml:
             return ml
+
+        self.log(f"Waiting for ML model for {symbol} Strategy {strategy_idx} to be ready...")
         return None
 
     async def start(self, config):
@@ -95,7 +79,7 @@ class TradingBot:
         ]
         a, c = strat_params[strategy_idx-1]
 
-        ml = await self.get_ml_filter(symbol, a, c)
+        ml = await self.get_ml_filter(symbol, strategy_idx)
 
         self.log(f"Bot monitoring {symbol} with Strategy {strategy_idx}...")
 
@@ -117,6 +101,9 @@ class TradingBot:
                     # New candle formed
                     self.last_candle_epoch = current_candle['epoch']
                     self.log(f"New candle at {time.ctime(current_candle['epoch'])}")
+
+                    # Always fetch the latest model from manager (handles daily retraining)
+                    ml = await self.get_ml_filter(symbol, strategy_idx)
 
                     # Apply UT Bot
                     df_signals = ut_bot(df, a=a, c=c)

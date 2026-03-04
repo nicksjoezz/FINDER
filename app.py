@@ -5,6 +5,7 @@ import os
 import asyncio
 import threading
 from trading_bot import TradingBot
+from model_manager import model_manager
 import pandas as pd
 from datetime import datetime, timedelta
 from deriv_api import DerivAPI
@@ -88,39 +89,37 @@ def run_bt():
     days = data['days']
     symbol = data['symbol']
 
-    # Run async data fetch in the bot loop
+    # 1. Fetch the "Test Period" data (the window the user wants to see)
     future = asyncio.run_coroutine_threadsafe(get_bt_data(symbol, days), bot_loop)
-    df = future.result()
+    df_test = future.result()
+    df_test = add_indicators(df_test)
 
-    df = add_indicators(df)
     results = []
     strat_params = [
         (1, 10), (2, 20), (3, 30), (1, 20), (2, 10),
         (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)
     ]
 
-    from ml_filter import MLFilter
-
     for i, (a, c) in enumerate(strat_params):
-        df_sig = ut_bot(df, a=a, c=c)
-
-        # 1. Get raw trades for ML training
-        raw_trades = Backtester(df_sig).run()
+        strat_idx = i + 1
+        # A. Signals for the Test Period
+        df_sig_test = ut_bot(df_test, a=a, c=c)
+        raw_trades_test = Backtester(df_sig_test).run()
 
         final_trades = pd.DataFrame()
         ml_active = False
 
-        # 2. Train and Apply ML Filter
-        if len(raw_trades) >= 200:
-            ml = MLFilter()
-            if ml.train(df, raw_trades):
-                df_filtered = ml.filter_signals(df_sig)
-                final_trades = Backtester(df_filtered).run()
-                ml_active = True
+        # B. Use Pre-Trained Deep ML model from ModelManager
+        ml = model_manager.get_model(symbol, strat_idx)
+        if ml:
+            # C. Apply the pre-trained model to the "Test Period"
+            df_filtered_test = ml.filter_signals(df_sig_test)
+            final_trades = Backtester(df_filtered_test).run()
+            ml_active = True
 
         # Fallback to raw if ML couldn't train (less than 200 signals)
         if final_trades.empty:
-            final_trades = raw_trades
+            final_trades = raw_trades_test
 
         if not final_trades.empty:
             results.append({
@@ -135,9 +134,16 @@ def run_bt():
 
 def start_bot_loop(loop):
     asyncio.set_event_loop(loop)
+
+    # 1. Start Initial Model Training
+    loop.create_task(model_manager.train_all_models())
+    # 2. Start Daily Retraining Cycle
+    loop.create_task(model_manager.daily_update_loop())
+
     loop.run_forever()
 
 if __name__ == '__main__':
+    model_manager.socketio = socketio # Inject socketio for logs
     bot_loop = asyncio.new_event_loop()
     t = threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True)
     t.start()

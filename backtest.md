@@ -26,11 +26,11 @@ The system processes the data and displays a comparison table with the following
 
 ## 4. How Machine Learning works in Backtesting
 
-### Dynamic Training
-The bot does **not** use a static, pre-saved model file. Instead, it handles everything in the background:
-- **Every time you run a backtest**, the bot creates a fresh **ML Coach** (Random Forest Classifier).
-- It "trains" this coach using the specific historical data you requested.
-- This ensures that the coach's "cheat sheet" is perfectly tailored to the most recent patterns in the market you are studying.
+### Deep Training & Model Retention Architecture
+The system uses a centralized `ModelManager` to ensure that backtesting and live trading are perfectly synchronized:
+- **Pre-Trained Knowledge Base:** On startup, the bot automatically trains all 50 possible models (5 symbols × 10 strategies) using the **full 1-year historical archive** (~105,000 candles).
+- **Faithful Simulation:** When you run a backtest in the UI, the system uses the **exact same trained model** that the live bot is using. This allows you to see precisely how the ML-enhanced strategy would have performed in your selected window.
+- **Continuous Daily Retraining:** Every 24 hours (at 00:05 UTC), the bot fetches the previous day's closed data and **retrains every model**. This ensures the "Smart Coach" is always updated with the latest market shifts while retaining its long-term memory.
 
 ### Why no model files?
 You won't see `.pkl` or `.model` files in the folder. This is intentional:

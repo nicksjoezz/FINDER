@@ -60,7 +60,8 @@ The integration of the ML Filter results in stable and profitable win rates over
 ## 5. Technical Implementation Details
 
 The system is designed for robustness:
-- **Automatic Training:** The ML model is re-trained specifically for each symbol upon bot startup.
+- **Centralized Model Management:** A dedicated `ModelManager` maintains 50 pre-trained models in memory, ensuring consistency between backtesting and live trading.
+- **Continuous Learning:** The system automatically fetches fresh data and retrains all models every 24 hours at 00:05 UTC.
 - **Thresholds:** A minimum of **200 historical signals** is required to train the ML filter, ensuring statistical significance.
 - **Environment:** Backtesting and logs indicate a reference system clock in the year **2026**.
 
