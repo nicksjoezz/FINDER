@@ -23,22 +23,23 @@
             --log-bg: #1a1a1a;
             --log-text: #00ffcc;
         }
-        body { background-color: var(--content-bg); color: var(--text-color); font-family: 'Inter', sans-serif; transition: all 0.3s; }
-        .sidebar { height: 100vh; background-color: var(--sidebar-bg); color: white; position: fixed; width: 250px; z-index: 1000; transition: margin 0.3s; }
-        .content { margin-left: 250px; padding: 20px; transition: margin 0.3s; }
-        .card { background-color: var(--card-bg); border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); margin-bottom: 20px; color: var(--text-color); }
-        .log-container { height: 400px; overflow-y: auto; background-color: var(--log-bg); color: var(--log-text); padding: 15px; font-family: 'Fira Code', monospace; font-size: 0.85rem; border-radius: 8px; }
-        .nav-link { color: rgba(255,255,255,0.7); }
+        body { background-color: var(--content-bg); color: var(--text-color); font-family: 'Inter', sans-serif; transition: all 0.3s; overflow-x: hidden; }
+        .sidebar { height: 100vh; background-color: var(--sidebar-bg); color: white; position: fixed; width: 250px; z-index: 1100; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); left: 0; }
+        .content { margin-left: 250px; padding: 20px; transition: all 0.3s; min-height: 100vh; }
+        .card { background-color: var(--card-bg); border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); margin-bottom: 20px; color: var(--text-color); border-radius: 12px; }
+        .log-container { height: 400px; overflow-y: auto; background-color: var(--log-bg); color: var(--log-text); padding: 15px; font-family: 'Fira Code', monospace; font-size: 0.85rem; border-radius: 8px; border: 1px solid #333; }
+        .nav-link { color: rgba(255,255,255,0.7); padding: 12px 15px; margin-bottom: 5px; border-radius: 8px; }
         .nav-link.active { background-color: #0d6efd !important; color: white !important; }
         .nav-link:hover { color: white; }
 
         #theme-toggle { cursor: pointer; font-size: 1.2rem; }
 
-        @media (max-width: 768px) {
-            .sidebar { margin-left: -250px; }
-            .sidebar.active { margin-left: 0; }
-            .content { margin-left: 0; }
-            .content.shifted { margin-left: 0; opacity: 0.5; }
+        @media (max-width: 992px) {
+            .sidebar { left: -250px; }
+            .sidebar.active { left: 0; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+            .content { margin-left: 0; padding: 15px; }
+            .content.shifted { opacity: 0.3; pointer-events: none; }
+            .log-container { height: 300px; }
         }
     </style>
 </head>
@@ -61,9 +62,10 @@
         </div>
     </div>
 
-    <button id="menu-toggle" class="btn btn-dark d-md-none m-2"><i class="fas fa-bars"></i></button>
+    <button id="menu-toggle" class="btn btn-primary d-lg-none m-2 position-fixed" style="z-index:1000; bottom:20px; right:20px; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"><i class="fas fa-bars fa-lg"></i></button>
 
     <div class="content" id="content">
+        <div id="mobile-overlay" class="d-lg-none" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1060;"></div>
         <!-- Dashboard -->
         <div id="section-dash">
             <div class="row g-3">
@@ -198,6 +200,9 @@
                             <tbody id="bt-tbody"></tbody>
                         </table>
                     </div>
+                    <div class="alert alert-info mt-3 d-lg-none">
+                        <i class="fas fa-info-circle me-2"></i> Swipe left on the table to see more results.
+                    </div>
                 </div>
             </div>
         </div>
@@ -218,12 +223,19 @@
         };
 
         // Mobile Menu
-        document.getElementById('menu-toggle').onclick = () => {
-            document.getElementById('sidebar').classList.add('active');
-        };
-        document.getElementById('menu-close').onclick = () => {
-            document.getElementById('sidebar').classList.remove('active');
-        };
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleMobileMenu(show) {
+            sidebar.classList.toggle('active', show);
+            content.classList.toggle('shifted', show);
+            overlay.style.display = show ? 'block' : 'none';
+        }
+
+        document.getElementById('menu-toggle').onclick = () => toggleMobileMenu(true);
+        document.getElementById('menu-close').onclick = () => toggleMobileMenu(false);
+        overlay.onclick = () => toggleMobileMenu(false);
 
         socket.on('log', (msg) => {
             const p = document.createElement('p');
@@ -244,43 +256,68 @@
 
         function showSection(id) {
             ['dash', 'settings', 'backtest'].forEach(s => {
-                document.getElementById(`section-${s}`).style.display = (s === id ? 'block' : 'none');
-                document.getElementById(`btn-${s}`).classList.toggle('active', s === id);
+                const el = document.getElementById(`section-${s}`);
+                if (el) el.style.display = (s === id ? 'block' : 'none');
+                const btn = document.getElementById(`btn-${s}`);
+                if (btn) btn.classList.toggle('active', s === id);
             });
-            document.getElementById('sidebar').classList.remove('active');
+            toggleMobileMenu(false);
         }
 
         document.getElementById('btn-dash').onclick = () => showSection('dash');
         document.getElementById('btn-settings').onclick = () => showSection('settings');
         document.getElementById('btn-backtest').onclick = () => showSection('backtest');
 
+        async function defSafeFetch(url, options) {
+            try {
+                const res = await fetch(url, options);
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                console.error(err);
+                alert(`Error: ${err.message}`);
+                return null;
+            }
+        }
+
         document.getElementById('settings-form').onsubmit = async (e) => {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(e.target));
             data.is_live = document.getElementById('is_live').checked;
-            await fetch('/save_settings', {
+            const res = await defSafeFetch('/save_settings', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data)
             });
-            alert('Settings Saved');
+            if (res) alert('Settings Saved');
         };
 
-        document.getElementById('toggle-bot').onclick = () => fetch('/toggle_bot', {method: 'POST'});
+        document.getElementById('toggle-bot').onclick = () => defSafeFetch('/toggle_bot', {method: 'POST'});
 
         document.getElementById('run-backtest').onclick = async () => {
             const btn = document.getElementById('run-backtest');
-            btn.disabled = true;
-            btn.innerText = 'Calculating...';
             const days = document.getElementById('bt-days').value;
             const symbol = document.getElementById('bt-symbol').value;
+            const balance = document.getElementById('bt-balance').value;
+            const risk = document.getElementById('bt-risk').value;
 
-            const res = await fetch('/run_backtest', {
+            if (!days || days < 1) { alert("Please enter valid days"); return; }
+            if (!balance || balance < 10) { alert("Min balance is $10"); return; }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Simulating...';
+
+            const data = await defSafeFetch('/run_backtest', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({days, symbol})
+                body: JSON.stringify({days, symbol, balance, risk})
             });
-            const data = await res.json();
+
+            if (!data) {
+                btn.disabled = false;
+                btn.innerText = 'Run Full Backtest with Financial Simulation';
+                return;
+            }
 
             const tbody = document.getElementById('bt-tbody');
             tbody.innerHTML = '';
