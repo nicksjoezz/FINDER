@@ -16,26 +16,37 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 bot = TradingBot(socketio)
 
-SETTINGS_FILE = 'settings.json'
+CONFIG_FILE = 'config.json'
 
-def load_settings():
-    if os.path.exists(SETTINGS_FILE):
-        with open(SETTINGS_FILE, 'r') as f:
+def load_config():
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, 'r') as f:
             return json.load(f)
-    return {}
+    return {
+        "api_token": "381klIwm4Mr8BTT",
+        "app_id": "62845",
+        "symbol": "R_100",
+        "strategy": "1",
+        "trade_pc": 1,
+        "is_live": false
+    }
 
-def save_settings(settings):
-    with open(SETTINGS_FILE, 'w') as f:
-        json.dump(settings, f)
+def save_config(config):
+    with open(CONFIG_FILE, 'w') as f:
+        json.dump(config, f, indent=4)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route('/get_config')
+def get_configs():
+    return jsonify(load_config())
+
 @app.route('/save_settings', methods=['POST'])
 def save_configs():
-    settings = request.json
-    save_settings(settings)
+    config = request.json
+    save_config(config)
     return jsonify({'status': 'success'})
 
 @app.route('/toggle_bot', methods=['POST'])
@@ -43,11 +54,17 @@ def toggle_bot():
     if bot.is_running:
         asyncio.run_coroutine_threadsafe(bot.stop(), bot_loop)
     else:
-        settings = load_settings()
-        if not settings.get('api_token'):
+        config = load_config()
+        if not config.get('api_token'):
             return jsonify({'status': 'error', 'message': 'Missing API Token'})
-        asyncio.run_coroutine_threadsafe(bot.start(settings), bot_loop)
+        asyncio.run_coroutine_threadsafe(bot.start(config), bot_loop)
     return jsonify({'status': 'success'})
+
+@app.route('/get_system_status')
+def get_sys_status():
+    return jsonify({
+        'is_initial_training': model_manager.is_initial_training
+    })
 
 async def get_bt_data(symbol, days):
     # Caching logic
@@ -57,7 +74,9 @@ async def get_bt_data(symbol, days):
         if (datetime.now().timestamp() - os.path.getmtime(cache_file)) < 3600:
             return pd.read_csv(cache_file)
 
-    api = DerivAPI(app_id=1089)
+    config = load_config()
+    app_id = config.get('app_id', '62845')
+    api = DerivAPI(app_id=app_id)
     end = int(datetime.now().timestamp())
     start = end - (int(days) * 86400)
 
@@ -109,18 +128,13 @@ def run_bt():
         raw_trades_test = Backtester(df_sig_test).run()
 
         final_trades = pd.DataFrame()
-        ml_active = False
+        ml_status = model_manager.get_model_status(symbol, strat_idx)
 
-        # B. Use Pre-Trained Deep ML model from ModelManager
-        ml = model_manager.get_model(symbol, strat_idx)
-        if ml:
-            # C. Apply the pre-trained model to the "Test Period"
+        if ml_status == 'ready':
+            ml = model_manager.get_model(symbol, strat_idx)
             df_filtered_test = ml.filter_signals(df_sig_test)
             final_trades = Backtester(df_filtered_test).run()
-            ml_active = True
-
-        # Fallback to raw if ML couldn't train (less than 200 signals)
-        if final_trades.empty:
+        else:
             final_trades = raw_trades_test
 
         if not final_trades.empty:
@@ -131,7 +145,7 @@ def run_bt():
                 'win_rate': final_trades['win'].mean(),
                 'trades': len(final_trades),
                 'max_losses': int(calculate_max_consecutive_losses(final_trades['win'])),
-                'ml_active': ml_active,
+                'ml_status': ml_status,
                 'final_balance': final_balance,
                 'total_profit': total_profit
             })
@@ -140,17 +154,17 @@ def run_bt():
 
 def start_bot_loop(loop):
     asyncio.set_event_loop(loop)
-
     # 1. Start Initial Model Training
     loop.create_task(model_manager.train_all_models())
     # 2. Start Daily Retraining Cycle
     loop.create_task(model_manager.daily_update_loop())
-
     loop.run_forever()
 
+# Initialize bot loop and background tasks globally so they start under WSGI/Gunicorn
+bot_loop = asyncio.new_event_loop()
+model_manager.socketio = socketio # Inject socketio for logs
+t = threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True)
+t.start()
+
 if __name__ == '__main__':
-    model_manager.socketio = socketio # Inject socketio for logs
-    bot_loop = asyncio.new_event_loop()
-    t = threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True)
-    t.start()
     socketio.run(app, host='0.0.0.0', port=5000, debug=True, allow_unsafe_werkzeug=True)

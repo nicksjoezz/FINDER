@@ -41,6 +41,7 @@ The backtester provides a realistic simulation of Deriv Rise/Fall options using 
 The system uses a centralized `ModelManager` to ensure that backtesting and live trading are perfectly synchronized:
 - **Pre-Trained Knowledge Base:** On startup, the bot automatically trains all 50 possible models (5 symbols × 10 strategies) using the **full 1-year historical archive** (~105,000 candles).
 - **Faithful Simulation:** When you run a backtest in the UI, the system uses the **exact same trained model** that the live bot is using. This allows you to see precisely how the ML-enhanced strategy would have performed in your selected window.
+- **State-Aware Backtesting:** If you trigger a backtest while the system is still in its startup training phase, the UI will clearly indicate which models are still "Training" or "Queued." In this case, results will show "baseline" performance until the model is ready.
 - **Continuous Daily Retraining:** Every 24 hours (at 00:05 UTC), the bot fetches the previous day's closed data and **retrains every model**. This ensures the "Smart Coach" is always updated with the latest market shifts while retaining its long-term memory.
 
 ### Why no model files?

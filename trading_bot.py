@@ -36,7 +36,8 @@ class TradingBot:
 
     async def connect(self):
         try:
-            self.api = DerivAPI(app_id=1089) # Or user provided app_id
+            app_id = self.config.get('app_id', '62845')
+            self.api = DerivAPI(app_id=app_id)
             auth = await self.api.authorize(self.config['api_token'])
             self.balance = float(auth['authorize']['balance'])
             self.log(f"Connected to Deriv. Balance: {self.balance}")

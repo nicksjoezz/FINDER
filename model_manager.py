@@ -11,7 +11,8 @@ import logging
 class ModelManager:
     def __init__(self, socketio=None):
         self.socketio = socketio
-        self.models = {} # {symbol: {strategy_idx: {'model': ml, 'last_trained': timestamp}}}
+        self.models = {} # {symbol: {strategy_idx: {'model': ml, 'last_trained': timestamp, 'status': str}}}
+        self.is_initial_training = True
         self.symbols = ['R_100', 'R_75', 'R_50', 'R_25', 'R_10']
         self.strat_params = [
             (1, 10), (2, 20), (3, 30), (1, 20), (2, 10),
@@ -26,20 +27,31 @@ class ModelManager:
             self.socketio.emit('log', f"[System] {message}")
 
     async def train_all_models(self):
-        self.log("Starting initial training for all symbols and strategies...")
+        self.is_initial_training = True
+        self.log("Starting model training phase for all symbols and strategies...")
+
+        # 0. Ensure data is available
+        from fetch_data import update_symbol_data
+        for symbol in self.symbols:
+            self.log(f"Checking data continuity for {symbol}...")
+            await update_symbol_data(symbol, data_dir=self.data_dir)
+
         for symbol in self.symbols:
             filepath = os.path.join(self.data_dir, f"{symbol}_5m_2y.csv")
             if not os.path.exists(filepath):
-                self.log(f"Data file for {symbol} not found. Skipping...")
+                self.log(f"Data file for {symbol} still missing. Skipping...")
                 continue
 
             df = pd.read_csv(filepath)
             df = add_indicators(df)
 
-            self.models[symbol] = {}
+            if symbol not in self.models:
+                self.models[symbol] = {}
+
             for i, (a, c) in enumerate(self.strat_params):
                 strat_idx = i + 1
-                self.log(f"Training {symbol} Strategy {strat_idx}...")
+                self.models[symbol][strat_idx] = {'status': 'training'}
+                self.log(f"Processing {symbol} Strategy {strat_idx} (a={a}, c={c})...")
 
                 df_raw = ut_bot(df, a=a, c=c)
                 raw_trades = Backtester(df_raw).run()
@@ -49,15 +61,26 @@ class ModelManager:
                     if ml.train(df, raw_trades):
                         self.models[symbol][strat_idx] = {
                             'model': ml,
-                            'last_trained': time.time()
+                            'last_trained': time.time(),
+                            'status': 'ready'
                         }
                         self.log(f"Successfully trained {symbol} Strategy {strat_idx}")
                     else:
+                        self.models[symbol][strat_idx] = {'status': 'failed'}
                         self.log(f"Failed to train {symbol} Strategy {strat_idx}")
                 else:
-                    self.log(f"Not enough signals for {symbol} Strategy {strat_idx} ({len(raw_trades)} signals)")
+                    self.models[symbol][strat_idx] = {'status': 'bypassed'}
+                    self.log(f"Bypassed {symbol} Strategy {strat_idx} (Insufficient signals: {len(raw_trades)})")
 
-        self.log("Initial training complete.")
+        self.is_initial_training = False
+        self.log("All models processed and ready.")
+
+    def get_model_status(self, symbol, strategy_idx):
+        symbol_models = self.models.get(symbol, {})
+        data = symbol_models.get(int(strategy_idx))
+        if data:
+            return data.get('status', 'pending')
+        return 'pending'
 
     def get_model(self, symbol, strategy_idx):
         symbol_models = self.models.get(symbol, {})

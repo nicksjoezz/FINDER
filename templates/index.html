@@ -66,6 +66,17 @@
 
     <div class="content" id="content">
         <div id="mobile-overlay" class="d-lg-none" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1060;"></div>
+
+        <div id="global-training-alert" class="alert alert-warning mb-4" style="display:none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div class="d-flex align-items-center">
+                <div class="spinner-border spinner-border-sm me-3" role="status"></div>
+                <div>
+                    <strong>System Initialization:</strong> Machine Learning models are currently being deep-trained in the background.
+                    Backtests run now will use baseline signals until training completes.
+                </div>
+            </div>
+        </div>
+
         <!-- Dashboard -->
         <div id="section-dash">
             <div class="row g-3">
@@ -102,9 +113,15 @@
             <div class="card p-4">
                 <h4><i class="fas fa-tools"></i> Configuration</h4>
                 <form id="settings-form">
-                    <div class="mb-3">
-                        <label class="form-label">Deriv API Token</label>
-                        <input type="password" name="api_token" class="form-control" id="api_token">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label">Deriv API Token</label>
+                            <input type="password" name="api_token" class="form-control" id="api_token">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Deriv App ID</label>
+                            <input type="text" name="app_id" class="form-control" id="app_id" value="62845">
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -245,6 +262,15 @@
             logsDiv.scrollTop = logsDiv.scrollHeight;
         });
 
+        async function updateSystemStatus() {
+            const data = await defSafeFetch('/get_system_status');
+            if (data) {
+                document.getElementById('global-training-alert').style.display = data.is_initial_training ? 'block' : 'none';
+            }
+        }
+        setInterval(updateSystemStatus, 10000); // Check every 10s
+        updateSystemStatus();
+
         socket.on('status_update', (data) => {
             document.getElementById('bot-status-text').innerText = data.active ? 'Running' : 'Offline';
             document.getElementById('bot-status-text').className = data.active ? 'text-success fw-bold' : 'text-danger fw-bold';
@@ -265,7 +291,18 @@
         }
 
         document.getElementById('btn-dash').onclick = () => showSection('dash');
-        document.getElementById('btn-settings').onclick = () => showSection('settings');
+        document.getElementById('btn-settings').onclick = async () => {
+            showSection('settings');
+            const config = await defSafeFetch('/get_config');
+            if (config) {
+                document.getElementById('api_token').value = config.api_token || '';
+                document.getElementById('app_id').value = config.app_id || '62845';
+                document.querySelector('select[name="symbol"]').value = config.symbol || 'R_100';
+                document.querySelector('select[name="strategy"]').value = config.strategy || '1';
+                document.querySelector('input[name="trade_pc"]').value = config.trade_pc || 1;
+                document.getElementById('is_live').checked = config.is_live || false;
+            }
+        };
         document.getElementById('btn-backtest').onclick = () => showSection('backtest');
 
         async function defSafeFetch(url, options) {
@@ -319,11 +356,24 @@
                 return;
             }
 
+            const isAnyTraining = data.results.some(r => r.ml_status === 'training' || r.ml_status === 'pending');
+            if (isAnyTraining) {
+                alert("ML models are still training in the background. Results shown are based on raw signals. Please re-run once training completes for ML-enhanced accuracy.");
+            }
+
             const tbody = document.getElementById('bt-tbody');
             tbody.innerHTML = '';
             data.results.forEach(r => {
                 const tr = document.createElement('tr');
-                const mlBadge = r.ml_active ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Bypassed (<200 signals)</span>';
+                let mlBadge = '';
+                switch(r.ml_status) {
+                    case 'ready': mlBadge = '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Active</span>'; break;
+                    case 'training': mlBadge = '<span class="badge bg-warning text-dark"><i class="fas fa-sync fa-spin me-1"></i> Training...</span>'; break;
+                    case 'pending': mlBadge = '<span class="badge bg-info"><i class="fas fa-clock me-1"></i> Queued</span>'; break;
+                    case 'bypassed': mlBadge = '<span class="badge bg-secondary">Bypassed (<200 signals)</span>'; break;
+                    case 'failed': mlBadge = '<span class="badge bg-danger">Training Failed</span>'; break;
+                    default: mlBadge = '<span class="badge bg-light text-dark">Unknown</span>';
+                }
                 const profitClass = r.total_profit >= 0 ? 'text-success' : 'text-danger';
                 tr.innerHTML = `
                     <td>${r.name}</td>
