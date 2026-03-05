@@ -18,26 +18,29 @@ def ut_bot(df, a=1, c=10):
     # src = close
     src = df['close']
 
-    # xATRTrailingStop
+    # ATR Trailing Stop calculation using numpy for safety and speed
+    close_vals = df['close'].values
+    nloss_vals = df['nLoss'].values
     xATRTrailingStop = np.zeros(len(df))
+
     for i in range(1, len(df)):
-        if src[i] > xATRTrailingStop[i-1] and src[i-1] > xATRTrailingStop[i-1]:
-            xATRTrailingStop[i] = max(xATRTrailingStop[i-1], src[i] - df['nLoss'][i])
-        elif src[i] < xATRTrailingStop[i-1] and src[i-1] < xATRTrailingStop[i-1]:
-            xATRTrailingStop[i] = min(xATRTrailingStop[i-1], src[i] + df['nLoss'][i])
-        elif src[i] > xATRTrailingStop[i-1]:
-            xATRTrailingStop[i] = src[i] - df['nLoss'][i]
+        if close_vals[i] > xATRTrailingStop[i-1] and close_vals[i-1] > xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = max(xATRTrailingStop[i-1], close_vals[i] - nloss_vals[i])
+        elif close_vals[i] < xATRTrailingStop[i-1] and close_vals[i-1] < xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = min(xATRTrailingStop[i-1], close_vals[i] + nloss_vals[i])
+        elif close_vals[i] > xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = close_vals[i] - nloss_vals[i]
         else:
-            xATRTrailingStop[i] = src[i] + df['nLoss'][i]
+            xATRTrailingStop[i] = close_vals[i] + nloss_vals[i]
 
     df['xATRTrailingStop'] = xATRTrailingStop
 
-    # pos
+    # Position tracking
     pos = np.zeros(len(df))
     for i in range(1, len(df)):
-        if src[i-1] < xATRTrailingStop[i-1] and src[i] > xATRTrailingStop[i-1]:
+        if close_vals[i-1] < xATRTrailingStop[i-1] and close_vals[i] > xATRTrailingStop[i-1]:
             pos[i] = 1
-        elif src[i-1] > xATRTrailingStop[i-1] and src[i] < xATRTrailingStop[i-1]:
+        elif close_vals[i-1] > xATRTrailingStop[i-1] and close_vals[i] < xATRTrailingStop[i-1]:
             pos[i] = -1
         else:
             pos[i] = pos[i-1]
