@@ -8,7 +8,7 @@ class ModelManager:
     def __init__(self, socketio=None):
         self.socketio = socketio
         self.models = {}
-        self.is_initial_training = True
+        self.is_initial_training = False
         self.symbols = ['R_100', 'R_75', 'R_50', 'R_25', 'R_10']
         self.strat_params = [(1, 10), (2, 20), (3, 30), (1, 20), (2, 10), (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)]
         self.data_dir, self.model_dir = 'data', 'models'
@@ -20,8 +20,8 @@ class ModelManager:
         if self.socketio: self.socketio.emit('log', f"[System] {message}")
 
     async def initialize_models(self):
-        self.is_initial_training = True
-        self.log("Loading models from disk...")
+        """Loads models from disk."""
+        self.log("Initializing models from disk...")
         for symbol in self.symbols:
             self.models[symbol] = {}
             for i in range(len(self.strat_params)):
@@ -32,11 +32,48 @@ class ModelManager:
                     self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
                 else:
                     self.models[symbol][strat_idx] = {'status': 'pending'}
+        self.log("Disk initialization complete.")
+
+    async def startup_sync(self):
+        """Ensures data is current and missing models are trained."""
+        self.is_initial_training = True
+        self.log("Starting startup data synchronization...")
+        from fetch_data import update_symbol_data
+
+        for symbol in self.symbols:
+            # Always ensure data is up to date on start
+            self.log(f"Syncing market data for {symbol}...")
+            await update_symbol_data(symbol, data_dir=self.data_dir)
+
+            filepath = os.path.join(self.data_dir, f"{symbol}_5m_2y.csv")
+            if not os.path.exists(filepath): continue
+
+            df = None
+
+            for i in range(len(self.strat_params)):
+                strat_idx = i + 1
+                if self.get_model_status(symbol, strat_idx) == 'pending':
+                    if df is None:
+                        df = add_indicators(pd.read_csv(filepath))
+
+                    self.log(f"Training missing model: {symbol} Strat {strat_idx}...")
+                    a, c = self.strat_params[i]
+                    raw_trades = Backtester(ut_bot(df, a=a, c=c)).run()
+
+                    if len(raw_trades) >= 200:
+                        ml = MLFilter()
+                        if ml.train(df, raw_trades):
+                            ml.save(os.path.join(self.model_dir, f"{symbol}_strat_{strat_idx}.pkl"))
+                            self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
+                        else: self.models[symbol][strat_idx]['status'] = 'failed'
+                    else: self.models[symbol][strat_idx]['status'] = 'bypassed'
+
         self.is_initial_training = False
+        self.log("Startup synchronization finished. All systems ready.")
 
     async def train_all_models(self):
-        self.is_initial_training = True
-        self.log("Updating data and retraining...")
+        """Full retraining for daily update."""
+        self.log("Commencing scheduled daily retraining...")
         from fetch_data import update_symbol_data
         for symbol in self.symbols:
             await update_symbol_data(symbol, data_dir=self.data_dir)
@@ -55,7 +92,7 @@ class ModelManager:
                     else:
                         self.models[symbol][strat_idx]['status'] = 'ready' if self.get_model(symbol, strat_idx) else 'failed'
                 else: self.models[symbol][strat_idx]['status'] = 'bypassed'
-        self.is_initial_training = False
+        self.log("Daily retraining cycle complete.")
 
     def get_model_status(self, symbol, strategy_idx):
         return self.models.get(symbol, {}).get(int(strategy_idx), {}).get('status', 'pending')
@@ -66,9 +103,12 @@ class ModelManager:
 
     async def daily_update_loop(self):
         await self.initialize_models()
-        await self.train_all_models()
+        await self.startup_sync()
         while True:
-            wait = ((datetime.utcnow() + timedelta(days=1)).replace(hour=0, minute=5, second=0) - datetime.utcnow()).total_seconds()
+            now = datetime.utcnow()
+            next_run = (now + timedelta(days=1)).replace(hour=0, minute=5, second=0)
+            wait = (next_run - now).total_seconds()
+            self.log(f"Next full update scheduled in {wait/3600:.1f} hours.")
             await asyncio.sleep(wait)
             await self.train_all_models()
 
