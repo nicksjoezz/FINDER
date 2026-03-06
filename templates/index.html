@@ -3,130 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deriv UT Bot Pro</title>
+    <title>QuantumTrade | Pro Bot</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #2563eb; --sidebar-bg: #0f172a; --content-bg: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --log-bg: #1e1e1e; --log-text: #d4d4d4; }
-        body { background-color: var(--content-bg); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .sidebar { height: 100vh; background-color: var(--sidebar-bg); color: white; position: fixed; width: 260px; z-index: 100; transition: transform 0.3s; }
-        .content { margin-left: 260px; padding: 30px; transition: margin-left 0.3s; }
-        .card { background-color: var(--card-bg); border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 24px; border-radius: 16px; transition: transform 0.2s; }
-        .metric-card { border-left: 4px solid var(--primary); }
-        .log-container { height: 400px; overflow-y: auto; background-color: var(--log-bg); color: var(--log-text); padding: 20px; font-family: 'Fira Code', monospace; border-radius: 12px; font-size: 0.9rem; }
-        .nav-link { color: rgba(255,255,255,0.6); padding: 14px 20px; border-radius: 8px; margin: 4px 10px; }
-        .nav-link.active { background-color: var(--primary); color: white; }
-        .nav-link:hover:not(.active) { background-color: rgba(255,255,255,0.05); color: white; }
+        :root {
+            --bg-dark: #09090b;
+            --bg-card: #18181b;
+            --bg-sidebar: #09090b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-muted: #a1a1aa;
+            --text-main: #f4f4f5;
+            --border: #27272a;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logo-container {
+            padding: 2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            flex: 1;
+            padding: 0 1rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .nav-link.active {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        /* Content Area */
+        .main-content {
+            margin-left: 280px;
+            padding: 2.5rem;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Cards */
+        .glass-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Logs Container */
+        .log-shell {
+            background-color: #000;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            height: 500px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: #d1d5db;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+        }
+
+        .log-time { color: #6b7280; margin-right: 0.75rem; }
+        .log-system { color: var(--primary); }
+        .log-trade { color: var(--success); }
+        .log-error { color: var(--danger); }
+
+        /* Buttons */
+        .btn-quantum {
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-quantum-primary {
+            background: linear-gradient(135deg, var(--primary), #2563eb);
+            color: white;
+        }
+
+        .btn-quantum-primary:hover {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
+        }
 
         /* Loading Overlay */
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--sidebar-bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
-        .spinner { width: 60px; height: 60px; border: 5px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-dark);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(59, 130, 246, 0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
         @media (max-width: 992px) {
-            .sidebar { transform: translateX(-260px); }
+            .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .content { margin-left: 0; }
-            .mobile-toggle { display: block !important; }
+            .main-content { margin-left: 0; }
         }
-        .mobile-toggle { display: none; position: fixed; top: 20px; left: 20px; z-index: 1000; background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; }
-        .strategy-result { border-bottom: 1px solid #eee; padding: 10px 0; }
-        .win-badge { background: #22c55e; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
-        .loss-badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+
+        /* Comparison Table Styling */
+        .table-comparison {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+        }
+        .table-comparison th {
+            padding: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+        }
+        .table-comparison td {
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            vertical-align: middle;
+        }
+        .table-comparison tr td:first-child { border-radius: 12px 0 0 12px; }
+        .table-comparison tr td:last-child { border-radius: 0 12px 12px 0; }
+
+        .delta-positive { color: var(--success); font-weight: 600; }
+        .delta-neutral { color: var(--text-muted); }
+
+        .tag-ml {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
     <div id="loading-overlay">
-        <div class="spinner"></div>
-        <h3 class="fw-bold">Initializing System</h3>
-        <p id="loading-status" class="text-muted">Loading models and market data...</p>
+        <div class="loader-ring mb-4"></div>
+        <h3 class="fw-bold text-white mb-2">Neural Engine Initializing</h3>
+        <p id="loading-status" class="text-muted">Synchronizing market neural networks...</p>
     </div>
 
-    <button class="mobile-toggle btn" onclick="document.querySelector('.sidebar').classList.toggle('active')"><i class="fas fa-bars"></i></button>
-
     <div class="sidebar d-flex flex-column">
-        <div class="p-4"><h4 class="fw-bold"><i class="fas fa-robot me-2 text-primary"></i>DerivBot</h4></div>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li><a href="#" class="nav-link active" id="btn-dash"><i class="fas fa-chart-line me-2"></i> Overview</a></li>
-            <li><a href="#" class="nav-link" id="btn-settings"><i class="fas fa-cog me-2"></i> Settings</a></li>
-            <li><a href="#" class="nav-link" id="btn-backtest"><i class="fas fa-history me-2"></i> Backtest</a></li>
-        </ul>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+            <span class="fs-4 fw-bold letter-spacing-tight">QuantumTrade</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="#" class="nav-link active" id="btn-dash"><i class="fas fa-grid-2"></i> Terminal Overview</a>
+            <a href="#" class="nav-link" id="btn-backtest"><i class="fas fa-microscope"></i> Strategy Lab</a>
+            <a href="#" class="nav-link" id="btn-settings"><i class="fas fa-sliders"></i> Control Center</a>
+        </div>
+
         <div class="p-4">
-            <button id="toggle-bot" class="btn btn-primary w-100 py-2 fw-bold">START BOT</button>
+            <button id="toggle-bot" class="btn btn-quantum btn-quantum-primary w-100 mb-2">
+                <i class="fas fa-play me-2"></i> ENGAGE BOT
+            </button>
+            <div class="text-center">
+                <small class="text-muted small">v2.1.0-PRO-X</small>
+            </div>
         </div>
     </div>
 
-    <div class="content">
+    <main class="main-content">
         <div id="section-dash">
-            <h2 class="mb-4 fw-bold">Trading Dashboard</h2>
-            <div class="row g-4 mb-4">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <h1 class="fw-bold mb-1">Command Center</h1>
+                    <p class="text-muted mb-0">Live monitoring of your autonomous neural trader.</p>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-3 py-2">
+                        <i class="fas fa-circle-check me-1"></i> System Secure
+                    </span>
+                </div>
+            </div>
+
+            <div class="row g-4">
                 <div class="col-md-3">
-                    <div class="card p-4 metric-card">
-                        <h6 class="text-muted text-uppercase small fw-bold">Bot Status</h6>
-                        <h3 id="bot-status-text" class="mb-0">Offline</h3>
+                    <div class="glass-card h-100">
+                        <div class="stat-label">System Status</div>
+                        <div class="stat-value d-flex align-items-center gap-2">
+                            <div id="status-indicator" style="width:10px; height:10px; border-radius:50%; background-color:#6b7280;"></div>
+                            <span id="bot-status-text">OFFLINE</span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card p-4 metric-card">
-                        <h6 class="text-muted text-uppercase small fw-bold">Account Balance</h6>
-                        <h3 id="account-balance" class="mb-0">$0.00</h3>
+                    <div class="glass-card h-100">
+                        <div class="stat-label">Wallet Balance</div>
+                        <div class="stat-value" id="account-balance">$0.00</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card p-4 metric-card">
-                        <h6 class="text-muted text-uppercase small fw-bold">Wins / Losses</h6>
-                        <h3 id="trade-summary" class="mb-0">0 / 0</h3>
+                    <div class="glass-card h-100">
+                        <div class="stat-label">Performance</div>
+                        <div class="stat-value text-success" id="trade-summary">0W / 0L</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card p-4 metric-card">
-                        <h6 class="text-muted text-uppercase small fw-bold">Win Rate</h6>
-                        <h3 id="win-rate" class="mb-0">0%</h3>
+                    <div class="glass-card h-100">
+                        <div class="stat-label">Win Velocity</div>
+                        <div class="stat-value" id="win-rate">0.0%</div>
                     </div>
                 </div>
             </div>
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0 fw-bold">Real-time Logs</h5>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('logs').innerHTML = ''">Clear</button>
+
+            <div class="glass-card mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold m-0"><i class="fas fa-terminal me-2 text-primary"></i>Neural Stream</h5>
+                    <button class="btn btn-sm btn-outline-secondary border-secondary border-opacity-20" onclick="document.getElementById('logs').innerHTML = ''">Reset Log</button>
                 </div>
-                <div id="logs" class="log-container"></div>
+                <div id="logs" class="log-shell"></div>
             </div>
         </div>
 
         <div id="section-settings" style="display:none;">
-            <h2 class="mb-4 fw-bold">System Settings</h2>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card p-4">
+            <h1 class="fw-bold mb-4">Control Center</h1>
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="glass-card">
+                        <h5 class="fw-bold mb-4">API Configuration</h5>
                         <form id="settings-form">
-                            <div class="mb-3"><label class="form-label fw-bold">Deriv API Token</label><input type="password" name="api_token" id="set-token" class="form-control" placeholder="Enter Token"></div>
-                            <div class="mb-3"><label class="form-label fw-bold">App ID</label><input type="text" name="app_id" id="set-appid" class="form-control"></div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Symbol</label>
-                                    <select name="symbol" id="set-symbol" class="form-select">
-                                        <option value="R_10">Volatility 10 Index</option>
-                                        <option value="R_25">Volatility 25 Index</option>
-                                        <option value="R_50">Volatility 50 Index</option>
-                                        <option value="R_75">Volatility 75 Index</option>
-                                        <option value="R_100">Volatility 100 Index</option>
+                            <div class="row g-3">
+                                <div class="col-12"><label class="form-label text-muted small fw-bold">DERIV SECURE TOKEN</label><input type="password" name="api_token" id="set-token" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3 shadow-none"></div>
+                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">APPLICATION ID</label><input type="text" name="app_id" id="set-appid" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3"></div>
+                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">DATA DEPTH (DAYS)</label><input type="number" name="fetch_days" id="set-days" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3"></div>
+                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">SYMBOL CHANNEL</label>
+                                    <select name="symbol" id="set-symbol" class="form-select bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3">
+                                        <option value="R_10">Volatility 10 Index</option><option value="R_25">Volatility 25 Index</option><option value="R_50">Volatility 50 Index</option><option value="R_75">Volatility 75 Index</option><option value="R_100">Volatility 100 Index</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Strategy</label>
-                                    <select name="strategy" id="set-strategy" class="form-select">
-                                        <option value="1">Strategy 1 (1, 10)</option><option value="2">Strategy 2 (2, 20)</option>
-                                        <option value="3">Strategy 3 (3, 30)</option><option value="4">Strategy 4 (1, 20)</option>
-                                        <option value="5">Strategy 5 (2, 10)</option><option value="6">Strategy 6 (3, 20)</option>
-                                        <option value="7">Strategy 7 (1, 30)</option><option value="8">Strategy 8 (2, 30)</option>
-                                        <option value="9">Strategy 9 (3, 10)</option><option value="10">Strategy 10 (1.5, 15)</option>
+                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">ACTIVE STRATEGY</label>
+                                    <select name="strategy" id="set-strategy" class="form-select bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3">
+                                        <option value="1">Strategy 1 (1, 10)</option><option value="2">Strategy 2 (2, 20)</option><option value="3">Strategy 3 (3, 30)</option><option value="4">Strategy 4 (1, 20)</option><option value="5">Strategy 5 (2, 10)</option><option value="6">Strategy 6 (3, 20)</option><option value="7">Strategy 7 (1, 30)</option><option value="8">Strategy 8 (2, 30)</option><option value="9">Strategy 9 (3, 10)</option><option value="10">Strategy 10 (1.5, 15)</option>
                                     </select>
                                 </div>
+                                <div class="col-12 mb-2"><label class="form-label text-muted small fw-bold">STAKE ALLOCATION (%)</label><input type="number" name="trade_pc" id="set-stake" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3" step="0.1"></div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Stake (%)</label><input type="number" name="trade_pc" id="set-stake" class="form-control" step="0.1" value="1"></div>
-                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Historical Days</label><input type="number" name="fetch_days" id="set-days" class="form-control" value="730"></div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 py-2">SAVE CONFIGURATION</button>
+                            <button type="submit" class="btn btn-quantum btn-quantum-primary w-100 p-3 mt-4">SAVE ARCHITECTURE</button>
                         </form>
                     </div>
                 </div>
@@ -134,24 +353,27 @@
         </div>
 
         <div id="section-backtest" style="display:none;">
-            <h2 class="mb-4 fw-bold">Strategy Backtest</h2>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card p-4">
-                        <h5 class="fw-bold mb-3">Parameters</h5>
-                        <div class="mb-3"><label class="form-label">Symbol</label><select id="bt-symbol" class="form-select"><option value="R_10">Volatility 10 Index</option><option value="R_25">Volatility 25 Index</option><option value="R_50">Volatility 50 Index</option><option value="R_75">Volatility 75 Index</option><option value="R_100">Volatility 100 Index</option></select></div>
-                        <div class="mb-3"><label class="form-label">Balance ($)</label><input type="number" id="bt-balance" class="form-control" value="1000"></div>
-                        <div class="mb-3"><label class="form-label">Days</label><input type="number" id="bt-days" class="form-control" value="7"></div>
-                        <button id="run-backtest" class="btn btn-primary w-100 py-2">RUN SIMULATION</button>
+            <h1 class="fw-bold mb-4">Strategy Lab</h1>
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <div class="glass-card">
+                        <h5 class="fw-bold mb-4">Simulation Specs</h5>
+                        <div class="mb-3"><label class="text-muted small fw-bold mb-1">TEST CHANNEL</label><select id="bt-symbol" class="form-select bg-dark border-secondary border-opacity-20 text-white rounded-3"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
+                        <div class="mb-3"><label class="text-muted small fw-bold mb-1">SEED BALANCE ($)</label><input type="number" id="bt-balance" class="form-control bg-dark border-secondary border-opacity-20 text-white rounded-3" value="1000"></div>
+                        <div class="mb-3"><label class="text-muted small fw-bold mb-1">TIME WINDOW (DAYS)</label><input type="number" id="bt-days" class="form-control bg-dark border-secondary border-opacity-20 text-white rounded-3" value="7"></div>
+                        <button id="run-backtest" class="btn btn-quantum btn-quantum-primary w-100 mt-2">RUN NEURAL SIM</button>
                     </div>
                 </div>
-                <div class="col-lg-8">
-                    <div class="card p-4">
-                        <h5 class="fw-bold mb-3">Results (Including ML Filter)</h5>
-                        <div id="bt-loading" style="display:none;" class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Simulating trades...</p></div>
-                        <div id="bt-results-table" class="table-responsive">
-                            <table class="table table-hover">
-                                <thead><tr><th>Strategy</th><th>Win Rate</th><th>Trades</th><th>Max Losses</th><th>Final Balance</th></tr></thead>
+                <div class="col-lg-9">
+                    <div class="glass-card">
+                        <h5 class="fw-bold mb-4">Comparative Analysis <span class="text-muted small fw-normal ms-2">(Raw vs ML Optimized)</span></h5>
+                        <div id="bt-loading" style="display:none;" class="text-center py-5">
+                            <div class="loader-ring mx-auto mb-3" style="width:40px; height:40px;"></div>
+                            <p class="text-muted">Crunching historical vectors...</p>
+                        </div>
+                        <div id="bt-results-container" class="table-responsive">
+                            <table class="table-comparison">
+                                <thead><tr><th>STRATEGY</th><th>RAW WIN RATE</th><th>ML WIN RATE</th><th>DELTA</th><th>TRADES (ML)</th><th>PNL (ML)</th></tr></thead>
                                 <tbody id="bt-results-body"></tbody>
                             </table>
                         </div>
@@ -159,58 +381,58 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
         const socket = io();
         const logs = document.getElementById('logs');
         const overlay = document.getElementById('loading-overlay');
-        const statusText = document.getElementById('loading-status');
+        const statusStatus = document.getElementById('loading-status');
 
         socket.on('log', (msg) => {
             const div = document.createElement('div');
-            div.className = 'py-1';
-            div.innerHTML = `<span class="text-muted small">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
+            div.className = 'log-entry';
+            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+
+            let colorClass = 'log-system';
+            if (msg.includes('PROFIT')) colorClass = 'log-trade';
+            if (msg.includes('LOSS')) colorClass = 'log-error';
+            if (msg.includes('Error')) colorClass = 'log-error';
+
+            div.innerHTML = `<span class="log-time">${time}</span> <span class="${colorClass}">${msg}</span>`;
             logs.appendChild(div);
             logs.scrollTop = logs.scrollHeight;
         });
 
-        socket.on('training_progress', (data) => { statusText.innerText = data.message; });
+        socket.on('training_progress', (data) => { statusStatus.innerText = data.message; });
         socket.on('training_complete', () => { overlay.style.display = 'none'; });
 
         socket.on('status_update', (d) => {
-            document.getElementById('bot-status-text').innerText = d.active ? 'Active' : 'Offline';
-            document.getElementById('bot-status-text').style.color = d.active ? '#22c55e' : '#64748b';
-            document.getElementById('toggle-bot').innerText = d.active ? 'STOP BOT' : 'START BOT';
-            document.getElementById('toggle-bot').className = d.active ? 'btn btn-danger w-100 py-2 fw-bold' : 'btn btn-primary w-100 py-2 fw-bold';
+            document.getElementById('bot-status-text').innerText = d.active ? 'OPERATIONAL' : 'OFFLINE';
+            document.getElementById('status-indicator').style.backgroundColor = d.active ? '#10b981' : '#6b7280';
+            document.getElementById('toggle-bot').innerHTML = d.active ? '<i class="fas fa-stop me-2"></i> CEASE TRADING' : '<i class="fas fa-play me-2"></i> ENGAGE BOT';
+            document.getElementById('toggle-bot').className = d.active ? 'btn btn-quantum btn-danger w-100 mb-2' : 'btn btn-quantum btn-quantum-primary w-100 mb-2';
             document.getElementById('account-balance').innerText = '$' + d.balance;
-            document.getElementById('trade-summary').innerText = d.wins + ' / ' + d.losses;
+            document.getElementById('trade-summary').innerText = d.wins + 'W / ' + d.losses + 'L';
             const wr = (d.wins + d.losses) > 0 ? ((d.wins / (d.wins + d.losses)) * 100).toFixed(1) : 0;
             document.getElementById('win-rate').innerText = wr + '%';
         });
 
-        // Toggle Bot
-        document.getElementById('toggle-bot').onclick = async () => {
-            const btn = document.getElementById('toggle-bot');
-            btn.disabled = true;
-            await fetch('/toggle_bot', {method:'POST'});
-            setTimeout(() => { btn.disabled = false; }, 2000);
-        };
-
-        // Navigation
         function show(id) {
             ['dash', 'settings', 'backtest'].forEach(s => {
                 document.getElementById('section-'+s).style.display = s === id ? 'block' : 'none';
                 document.getElementById('btn-'+s).classList.toggle('active', s === id);
             });
-            if (window.innerWidth <= 992) document.querySelector('.sidebar').classList.remove('active');
         }
         document.getElementById('btn-dash').onclick = () => show('dash');
         document.getElementById('btn-settings').onclick = () => show('settings');
         document.getElementById('btn-backtest').onclick = () => show('backtest');
 
-        // Settings
+        document.getElementById('toggle-bot').onclick = async () => {
+            await fetch('/toggle_bot', {method:'POST'});
+        };
+
         const settingsForm = document.getElementById('settings-form');
         settingsForm.onsubmit = async (e) => {
             e.preventDefault();
@@ -220,13 +442,12 @@
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify(data)
             });
-            alert('Settings saved successfully!');
+            alert('Quantum architecture saved.');
         };
 
-        // Load current config
         async function loadConfig() {
             const r = await fetch('/get_config').then(res => res.json());
-            document.getElementById('set-token').value = r.api_token || '';
+            if (r.api_token) document.getElementById('set-token').value = r.api_token;
             document.getElementById('set-appid').value = r.app_id || '99999';
             document.getElementById('set-symbol').value = r.symbol || 'R_100';
             document.getElementById('set-strategy').value = r.strategy || '1';
@@ -235,49 +456,44 @@
         }
         loadConfig();
 
-        // Check if training already done
         async function checkStatus() {
             const r = await fetch('/get_system_status').then(res => res.json());
             if (!r.is_initial_training) overlay.style.display = 'none';
         }
         checkStatus();
 
-        // Backtest
         document.getElementById('run-backtest').onclick = async () => {
-            const btn = document.getElementById('run-backtest');
             const symbol = document.getElementById('bt-symbol').value;
             const days = document.getElementById('bt-days').value;
             const balance = document.getElementById('bt-balance').value;
 
-            btn.disabled = true;
             document.getElementById('bt-loading').style.display = 'block';
-            document.getElementById('bt-results-table').style.opacity = '0.3';
+            document.getElementById('bt-results-container').style.opacity = '0.3';
 
-            try {
-                const res = await fetch('/run_backtest', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({symbol, days, balance})
-                }).then(r => r.json());
+            const res = await fetch('/run_backtest', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({symbol, days, balance})
+            }).then(r => r.json());
 
-                const tbody = document.getElementById('bt-results-body');
-                tbody.innerHTML = '';
-                res.results.forEach(r => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><span class="fw-bold">${r.name}</span><br><small class="text-muted">ML: ${r.ml_status}</small></td>
-                        <td>${(r.win_rate * 100).toFixed(1)}%</td>
-                        <td>${r.trades}</td>
-                        <td>${r.max_losses}</td>
-                        <td class="${r.final_balance >= balance ? 'text-success' : 'text-danger'} fw-bold">$${r.final_balance.toFixed(2)}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (e) { alert('Backtest failed'); }
+            const tbody = document.getElementById('bt-results-body');
+            tbody.innerHTML = '';
+            res.results.forEach(r => {
+                const tr = document.createElement('tr');
+                const delta = (r.ml.win_rate - r.raw.win_rate) * 100;
+                tr.innerHTML = `
+                    <td><div class="fw-bold">${r.name}</div><div class="text-muted small">${r.params}</div></td>
+                    <td>${(r.raw.win_rate * 100).toFixed(1)}%</td>
+                    <td class="text-primary fw-bold">${(r.ml.win_rate * 100).toFixed(1)}% <span class="tag-ml">ML</span></td>
+                    <td class="${delta > 0 ? 'delta-positive' : 'delta-neutral'}">${delta > 0 ? '+' : ''}${delta.toFixed(1)}%</td>
+                    <td>${r.ml.trades}</td>
+                    <td class="${r.ml.final_balance >= balance ? 'text-success' : 'text-danger'} fw-bold">$${r.ml.final_balance.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
 
-            btn.disabled = false;
             document.getElementById('bt-loading').style.display = 'none';
-            document.getElementById('bt-results-table').style.opacity = '1';
+            document.getElementById('bt-results-container').style.opacity = '1';
         };
     </script>
 </body>

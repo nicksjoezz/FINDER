@@ -103,31 +103,43 @@ def run_bt():
         s_idx = i + 1
         df_sig = ut_bot(df, a=a, c=c)
 
+        # Raw results (no ML filter)
+        tr_raw = Backtester(df_sig).run()
+        raw_bal, raw_prof = simulate_financials(tr_raw, balance, risk_pc)
+
+        # ML Filtered results
         m_status = model_manager.get_model_status(d['symbol'], s_idx)
         ml = model_manager.get_model(d['symbol'], s_idx)
 
         if ml:
             df_filtered = ml.filter_signals(df_sig)
-            tr = Backtester(df_filtered).run()
+            tr_ml = Backtester(df_filtered).run()
+            ml_bal, ml_prof = simulate_financials(tr_ml, balance, risk_pc)
         else:
-            tr = Backtester(df_sig).run()
+            tr_ml = pd.DataFrame()
+            ml_bal, ml_prof = 0.0, 0.0
 
-        if not tr.empty:
-            final_bal, total_prof = simulate_financials(tr, balance, risk_pc)
-            res.append({
-                'name': f"Strategy {s_idx}",
-                'win_rate': float(tr['win'].mean()),
-                'trades': int(len(tr)),
-                'max_losses': int(calculate_max_consecutive_losses(tr['win'])),
-                'ml_status': m_status,
-                'final_balance': float(final_bal),
-                'total_profit': float(total_prof)
-            })
+        res.append({
+            'name': f"Strategy {s_idx}",
+            'params': f"a={a}, c={c}",
+            'raw': {
+                'win_rate': float(tr_raw['win'].mean()) if not tr_raw.empty else 0,
+                'trades': int(len(tr_raw)),
+                'max_losses': int(calculate_max_consecutive_losses(tr_raw['win'])) if not tr_raw.empty else 0,
+                'final_balance': float(raw_bal)
+            },
+            'ml': {
+                'status': m_status,
+                'win_rate': float(tr_ml['win'].mean()) if not tr_ml.empty else 0,
+                'trades': int(len(tr_ml)),
+                'max_losses': int(calculate_max_consecutive_losses(tr_ml['win'])) if not tr_ml.empty else 0,
+                'final_balance': float(ml_bal)
+            }
+        })
     return jsonify({'results': res})
 
 def start_bot_loop(loop):
     asyncio.set_event_loop(loop)
-    # Start the model manager loop within the same asyncio loop
     loop.create_task(model_manager.daily_update_loop())
     loop.run_forever()
 
@@ -136,5 +148,4 @@ model_manager.socketio = socketio
 threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True).start()
 
 if __name__ == '__main__':
-    # Recommended way to run Flask-SocketIO
     socketio.run(app, host='0.0.0.0', port=5000, debug=False)

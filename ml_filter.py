@@ -13,23 +13,19 @@ class MLFilter:
         self.is_trained = False
         self.feature_cols = ['rsi', 'macd_diff', 'adx', 'bb_pct', 'ema_dist']
 
-    def prepare_features(self, df, indices):
-        # Ensure indices are valid
-        valid_indices = [idx for idx in indices if 0 <= idx < len(df)]
+    def prepare_features(self, df, positional_indices):
+        # positional_indices must be positional indices (0 to len(df)-1)
+        valid_indices = [idx for idx in positional_indices if 0 <= idx < len(df)]
         if not valid_indices:
             return np.zeros((0, len(self.feature_cols)))
 
-        # Pre-calculate features to avoid repeated iloc in loop if possible,
-        # but for simplicity and given small number of features, we'll do it carefully.
-
-        # Calculate bb_pct and ema_dist if not in df
+        # Ensure required columns exist
         if 'bb_pct' not in df.columns:
             df = df.copy()
             df['bb_pct'] = (df['close'] - df['bb_lband']) / (df['bb_hband'] - df['bb_lband'] + 1e-9)
             df['ema_dist'] = (df['close'] - df['ema_200']) / df['close']
 
         feature_data = df.iloc[valid_indices][['rsi', 'macd_diff', 'adx', 'bb_pct', 'ema_dist']]
-        # Fill NaNs with 0 or handle them
         feature_data = feature_data.fillna(0)
 
         return feature_data.values
@@ -38,9 +34,10 @@ class MLFilter:
         if trades.empty:
             return False
 
-        # Ensure indicators are present
+        # Reset index to ensure positional indexing matches
+        df = df.reset_index(drop=True)
+
         if 'bb_pct' not in df.columns:
-            df = df.copy()
             df['bb_pct'] = (df['close'] - df['bb_lband']) / (df['bb_hband'] - df['bb_lband'] + 1e-9)
             df['ema_dist'] = (df['close'] - df['ema_200']) / df['close']
 
@@ -52,11 +49,9 @@ class MLFilter:
             if entry_epoch not in epoch_to_idx: continue
             entry_idx = epoch_to_idx[entry_epoch]
 
-            # We want features from the candle BEFORE the entry (the signal candle)
             signal_idx = entry_idx - 1
             if signal_idx < 0: continue
 
-            # Check if features are NaN at this index
             if pd.isna(df.iloc[signal_idx][['rsi', 'macd_diff', 'adx', 'bb_pct', 'ema_dist']]).any():
                 continue
 
@@ -73,27 +68,32 @@ class MLFilter:
 
     def filter_signals(self, df):
         if not self.is_trained: return df
-        df = df.copy()
+        # We must NOT reset index of the original df because it might be used elsewhere
+        # Instead, we work with a copy and reset its index for positional logic
+        df_work = df.copy().reset_index(drop=True)
 
-        # Pre-calculate needed features for filtering
-        if 'bb_pct' not in df.columns:
-            df['bb_pct'] = (df['close'] - df['bb_lband']) / (df['bb_hband'] - df['bb_lband'] + 1e-9)
-            df['ema_dist'] = (df['close'] - df['ema_200']) / df['close']
+        if 'bb_pct' not in df_work.columns:
+            df_work['bb_pct'] = (df_work['close'] - df_work['bb_lband']) / (df_work['bb_hband'] - df_work['bb_lband'] + 1e-9)
+            df_work['ema_dist'] = (df_work['close'] - df_work['ema_200']) / df_work['close']
 
         for side in ['buy', 'sell']:
-            indices = df.index[df[side]].tolist()
+            # Get positional indices where signal is true
+            indices = df_work.index[df_work[side]].tolist()
             if not indices: continue
 
-            # We filter based on the candle where the signal occurred
-            features = self.prepare_features(df, indices)
+            features = self.prepare_features(df_work, indices)
             if len(features) == 0: continue
 
             preds = self.model.predict(features)
             for i, idx in enumerate(indices):
-                # If prediction is 0 (loss), block the signal
                 if preds[i] == 0:
-                    df.at[idx, side] = False
-        return df
+                    df_work.at[idx, side] = False
+
+        # Restore the original index labels if they were important
+        # Actually, Backtester uses the df as is.
+        # But to be safe, we return the df with same index labels as input.
+        df_work.index = df.index
+        return df_work
 
     def save(self, filepath): joblib.dump(self.model, filepath)
     def load(self, filepath):
