@@ -1,4 +1,4 @@
-import asyncio, pandas as pd, os, time, logging
+import asyncio, pandas as pd, os, time, logging, gc, sys
 from datetime import datetime, timedelta
 from ml_filter import MLFilter
 from strategy_utils import ut_bot, Backtester
@@ -16,7 +16,10 @@ class ModelManager:
         os.makedirs(self.model_dir, exist_ok=True)
 
     def log(self, message):
-        logging.info(f"[ModelManager] {message}")
+        full_msg = f"[ModelManager] {message}"
+        logging.info(full_msg)
+        # Ensure it appears in terminal/logs
+        print(full_msg, flush=True)
         if self.socketio:
             self.socketio.emit('log', f"[System] {message}")
             self.socketio.emit('training_progress', {'message': message})
@@ -55,29 +58,43 @@ class ModelManager:
                 self.log(f"Data file for {symbol} not found after sync.")
                 continue
 
-            df_raw = pd.read_csv(filepath)
-            df = add_indicators(df_raw)
+            try:
+                df_raw = pd.read_csv(filepath)
+                df = add_indicators(df_raw)
+                del df_raw # Clear raw data from memory
+                gc.collect()
 
-            for i in range(len(self.strat_params)):
-                strat_idx = i + 1
-                # Even if loaded, we might want to ensure it's "ready"
-                if self.get_model_status(symbol, strat_idx) == 'pending':
-                    self.log(f"Training model: {symbol} Strat {strat_idx}...")
-                    a, c = self.strat_params[i]
-                    raw_trades = Backtester(ut_bot(df, a=a, c=c)).run()
+                for i in range(len(self.strat_params)):
+                    strat_idx = i + 1
+                    if self.get_model_status(symbol, strat_idx) == 'pending':
+                        self.log(f"Training model: {symbol} Strat {strat_idx}...")
+                        a, c = self.strat_params[i]
 
-                    if len(raw_trades) >= 200:
-                        ml = MLFilter()
-                        if ml.train(df, raw_trades):
-                            ml.save(os.path.join(self.model_dir, f"{symbol}_strat_{strat_idx}.pkl"))
-                            self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
-                            self.log(f"Model {symbol} Strat {strat_idx} ready.")
+                        # Apply UT Bot and get trades
+                        df_ut = ut_bot(df, a=a, c=c)
+                        raw_trades = Backtester(df_ut).run()
+                        del df_ut # Clear temporary signals DF
+
+                        if len(raw_trades) >= 200:
+                            ml = MLFilter()
+                            if ml.train(df, raw_trades):
+                                ml.save(os.path.join(self.model_dir, f"{symbol}_strat_{strat_idx}.pkl"))
+                                self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
+                                self.log(f"Model {symbol} Strat {strat_idx} ready.")
+                            else:
+                                self.models[symbol][strat_idx] = {'status': 'failed'}
+                                self.log(f"Model {symbol} Strat {strat_idx} training failed.")
                         else:
-                            self.models[symbol][strat_idx] = {'status': 'failed'}
-                            self.log(f"Model {symbol} Strat {strat_idx} training failed.")
-                    else:
-                        self.models[symbol][strat_idx] = {'status': 'bypassed'}
-                        self.log(f"Model {symbol} Strat {strat_idx} bypassed (not enough trades: {len(raw_trades)}).")
+                            self.models[symbol][strat_idx] = {'status': 'bypassed'}
+                            self.log(f"Model {symbol} Strat {strat_idx} bypassed (not enough trades: {len(raw_trades)}).")
+
+                        del raw_trades
+                        gc.collect()
+
+                del df # Clear indicator DF for this symbol
+                gc.collect()
+            except Exception as e:
+                self.log(f"Error processing {symbol}: {e}")
 
         self.is_initial_training = False
         if self.socketio:
@@ -98,26 +115,40 @@ class ModelManager:
             filepath = os.path.join(self.data_dir, f"{symbol}_5m_2y.csv")
             if not os.path.exists(filepath): continue
 
-            df_raw = pd.read_csv(filepath)
-            df = add_indicators(df_raw)
+            try:
+                df_raw = pd.read_csv(filepath)
+                df = add_indicators(df_raw)
+                del df_raw
+                gc.collect()
 
-            for i, (a, c) in enumerate(self.strat_params):
-                strat_idx = i + 1
-                self.models[symbol][strat_idx]['status'] = 'training'
-                raw_trades = Backtester(ut_bot(df, a=a, c=c)).run()
-                if len(raw_trades) >= 200:
-                    ml = MLFilter()
-                    if ml.train(df, raw_trades):
-                        ml.save(os.path.join(self.model_dir, f"{symbol}_strat_{strat_idx}.pkl"))
-                        self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
-                    else:
-                        # Fallback to existing model if training fails
-                        if not self.get_model(symbol, strat_idx):
-                             self.models[symbol][strat_idx]['status'] = 'failed'
+                for i, (a, c) in enumerate(self.strat_params):
+                    strat_idx = i + 1
+                    self.models[symbol][strat_idx]['status'] = 'training'
+                    df_ut = ut_bot(df, a=a, c=c)
+                    raw_trades = Backtester(df_ut).run()
+                    del df_ut
+
+                    if len(raw_trades) >= 200:
+                        ml = MLFilter()
+                        if ml.train(df, raw_trades):
+                            ml.save(os.path.join(self.model_dir, f"{symbol}_strat_{strat_idx}.pkl"))
+                            self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
                         else:
-                             self.models[symbol][strat_idx]['status'] = 'ready'
-                else:
-                    self.models[symbol][strat_idx]['status'] = 'bypassed'
+                            if not self.get_model(symbol, strat_idx):
+                                 self.models[symbol][strat_idx]['status'] = 'failed'
+                            else:
+                                 self.models[symbol][strat_idx]['status'] = 'ready'
+                    else:
+                        self.models[symbol][strat_idx]['status'] = 'bypassed'
+
+                    del raw_trades
+                    gc.collect()
+
+                del df
+                gc.collect()
+            except Exception as e:
+                self.log(f"Error during daily retraining for {symbol}: {e}")
+
         self.log("Daily retraining cycle complete.")
 
     def get_model_status(self, symbol, strategy_idx):
@@ -134,7 +165,7 @@ class ModelManager:
             now = datetime.utcnow()
             next_run = (now + timedelta(days=1)).replace(hour=0, minute=5, second=0)
             wait = (next_run - now).total_seconds()
-            if wait <= 0: wait = 86400 # Run next day if already past 00:05
+            if wait <= 0: wait = 86400
             self.log(f"Next full update scheduled in {wait/3600:.1f} hours.")
             await asyncio.sleep(wait)
             await self.train_all_models()
