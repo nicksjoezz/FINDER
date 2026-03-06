@@ -19,7 +19,7 @@ class TradingBot:
         self.total_trades = 0
         self.api = None
         self.last_candle_epoch = 0
-        self.ml_filters = {} # Cache ML filters per symbol/strategy
+        self.active_contracts = {} # contract_id -> {'side', 'entry_time', 'stake'}
 
     def log(self, message):
         logging.info(message)
@@ -40,21 +40,56 @@ class TradingBot:
             self.api = DerivAPI(app_id=app_id)
             auth = await self.api.authorize(self.config['api_token'])
             self.balance = float(auth['authorize']['balance'])
-            self.log(f"Connected to Deriv. Balance: {self.balance}")
+            self.log(f"Connected to Deriv. Balance: ${self.balance:.2f}")
             self.update_status()
+
+            # Subscribe to balance updates and contract results
+            asyncio.create_task(self.subscribe_to_updates())
             return True
         except Exception as e:
             self.log(f"Connection error: {e}")
             return False
 
-    async def get_ml_filter(self, symbol, strategy_idx):
-        # The ModelManager handles model lifecycle (training and retraining)
-        ml = model_manager.get_model(symbol, strategy_idx)
-        if ml:
-            return ml
+    async def subscribe_to_updates(self):
+        try:
+            # Subscribe to proposal_open_contract to get results
+            poc_sub = await self.api.subscribe({'proposal_open_contract': 1, 'subscribe': 1})
+            poc_sub.subscribe(self.handle_contract_update)
 
-        self.log(f"Waiting for ML model for {symbol} Strategy {strategy_idx} to be ready...")
-        return None
+            # Subscribe to balance
+            bal_sub = await self.api.subscribe({'balance': 1, 'subscribe': 1})
+            bal_sub.subscribe(self.handle_balance_update)
+        except Exception as e:
+            self.log(f"Subscription error: {e}")
+
+    def handle_balance_update(self, data):
+        if 'balance' in data:
+            self.balance = float(data['balance']['balance'])
+            self.update_status()
+
+    def handle_contract_update(self, data):
+        if 'proposal_open_contract' in data:
+            contract = data['proposal_open_contract']
+            if contract['is_sold']:
+                status = contract['status'] # won, lost
+                profit = float(contract['profit'])
+                contract_id = contract['contract_id']
+
+                if contract_id in self.active_contracts:
+                    side = self.active_contracts[contract_id]['side']
+                    if status == 'won':
+                        self.wins += 1
+                        self.log(f"PROFIT: {side} trade won! +${profit:.2f}")
+                    else:
+                        self.losses += 1
+                        self.log(f"LOSS: {side} trade lost. -${abs(profit):.2f}")
+
+                    del self.active_contracts[contract_id]
+                    self.update_status()
+
+    async def get_ml_filter(self, symbol, strategy_idx):
+        ml = model_manager.get_model(symbol, strategy_idx)
+        return ml
 
     async def start(self, config):
         self.config = config
@@ -73,16 +108,13 @@ class TradingBot:
         symbol = self.config['symbol']
         strategy_idx = int(self.config['strategy'])
 
-        # Strategy mapping (simplified for demo)
         strat_params = [
             (1, 10), (2, 20), (3, 30), (1, 20), (2, 10),
             (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)
         ]
         a, c = strat_params[strategy_idx-1]
 
-        ml = await self.get_ml_filter(symbol, strategy_idx)
-
-        self.log(f"Bot monitoring {symbol} with Strategy {strategy_idx}...")
+        self.log(f"Bot monitoring {symbol} with Strategy {strategy_idx} (a={a}, c={c})...")
 
         while self.is_running:
             try:
@@ -90,53 +122,65 @@ class TradingBot:
                 response = await self.api.ticks_history({
                     'ticks_history': symbol,
                     'end': 'latest',
-                    'count': 300, # Enough for indicators
+                    'count': 300,
                     'granularity': 300,
                     'style': 'candles'
                 })
+
+                if 'candles' not in response:
+                    await asyncio.sleep(10)
+                    continue
 
                 df = pd.DataFrame(response['candles'])
                 current_candle = df.iloc[-1]
 
                 if current_candle['epoch'] > self.last_candle_epoch:
-                    # New candle formed
+                    # New candle formed (or first check)
                     self.last_candle_epoch = current_candle['epoch']
-                    self.log(f"New candle at {time.ctime(current_candle['epoch'])}")
+                    self.log(f"Current candle time: {time.ctime(current_candle['epoch'])}")
 
-                    # Always fetch the latest model from manager (handles daily retraining)
-                    ml = await self.get_ml_filter(symbol, strategy_idx)
-
-                    # Apply UT Bot
+                    # Indicators
+                    df = add_indicators(df)
                     df_signals = ut_bot(df, a=a, c=c)
-                    df_signals = add_indicators(df_signals)
 
-                    # Apply ML Filter if available
+                    # ML Filter
+                    ml = await self.get_ml_filter(symbol, strategy_idx)
                     if ml:
                         df_signals = ml.filter_signals(df_signals)
+                    else:
+                        self.log(f"ML Model for {symbol} Strategy {strategy_idx} is not ready yet. Trading without ML filter.")
 
-                    # Last completed candle is at -2
+                    # Signal is from the last closed candle (index -2)
                     last_sig = df_signals.iloc[-2]
 
                     if last_sig['buy']:
+                        self.log(f"UT Bot SIGNAL: BUY confirmed.")
                         await self.place_trade('CALL')
                     elif last_sig['sell']:
+                        self.log(f"UT Bot SIGNAL: SELL confirmed.")
                         await self.place_trade('PUT')
 
-                await asyncio.sleep(10) # Poll every 10s
+                await asyncio.sleep(10)
 
             except Exception as e:
-                self.log(f"Loop error: {e}")
-                await asyncio.sleep(5)
+                self.log(f"Main loop error: {e}")
+                await asyncio.sleep(10)
 
     async def place_trade(self, side):
-        amount = self.balance * (float(self.config['trade_pc']) / 100.0)
-        amount = max(amount, 1.0) # Deriv min trade
-
-        self.log(f"PLACING {side} TRADE - Amount: ${amount:.2f}")
-
         try:
-            # Rise/Fall contract
-            # 3 candles = 15 minutes = 900 seconds
+            # Check for existing active trades for this symbol to avoid double entry
+            # In simple Rise/Fall 15m, maybe we only want one trade at a time
+            if any(c['side'] == side for c in self.active_contracts.values()):
+                self.log(f"Already have an active {side} trade. Skipping.")
+                return
+
+            stake_pc = float(self.config.get('trade_pc', 1))
+            amount = self.balance * (stake_pc / 100.0)
+            amount = round(max(amount, 0.35), 2) # Deriv min is 0.35 for some symbols
+
+            self.log(f"PLACING {side} TRADE - Stake: ${amount:.2f}")
+
+            # 3 candles = 15 minutes
             proposal = await self.api.buy({
                 "buy": 1,
                 "price": amount,
@@ -151,14 +195,15 @@ class TradingBot:
                 }
             })
 
-            self.total_trades += 1
-            self.log(f"Trade successfully placed: {proposal['buy']['contract_id']}")
+            if 'buy' in proposal:
+                contract_id = proposal['buy']['contract_id']
+                self.total_trades += 1
+                self.active_contracts[contract_id] = {'side': side, 'stake': amount}
+                self.log(f"Trade successfully placed! ID: {contract_id}")
+            else:
+                self.log(f"Failed to place trade: {proposal.get('error', {}).get('message', 'Unknown error')}")
 
-            # In a real bot, we'd track the contract_id and update balance/wins/losses
-            # For this dashboard demo, we'll simulate a result after 15m or just update balance periodically
             self.update_status()
 
         except Exception as e:
-            self.log(f"Trade error: {e}")
-
-import os
+            self.log(f"Trade placement error: {e}")

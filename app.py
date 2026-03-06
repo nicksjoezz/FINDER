@@ -9,16 +9,23 @@ from strategy_utils import ut_bot, Backtester, calculate_max_consecutive_losses,
 from indicators import add_indicators
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+# Standard Flask-SocketIO initialization
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 bot = TradingBot(socketio)
 CONFIG_FILE = 'config.json'
 
 def load_config():
     if os.path.exists(CONFIG_FILE):
         try:
-            with open(CONFIG_FILE, 'r') as f: return json.load(f)
+            with open(CONFIG_FILE, 'r') as f:
+                data = json.load(f)
+                # Ensure all keys exist
+                defaults = {"api_token": "", "app_id": "99999", "symbol": "R_100", "strategy": "1", "trade_pc": 1, "fetch_days": 730}
+                for k, v in defaults.items():
+                    if k not in data: data[k] = v
+                return data
         except: pass
-    return {"api_token": "381klIwm4Mr8BTT", "app_id": "99999", "symbol": "R_100", "strategy": "1", "trade_pc": 1, "is_live": False, "fetch_days": 730}
+    return {"api_token": "", "app_id": "99999", "symbol": "R_100", "strategy": "1", "trade_pc": 1, "fetch_days": 730}
 
 def save_config(config):
     with open(CONFIG_FILE, 'w') as f: json.dump(config, f, indent=4)
@@ -36,10 +43,11 @@ def save_configs():
 
 @app.route('/toggle_bot', methods=['POST'])
 def toggle_bot():
-    if bot.is_running: asyncio.run_coroutine_threadsafe(bot.stop(), bot_loop)
+    if bot.is_running:
+        asyncio.run_coroutine_threadsafe(bot.stop(), bot_loop)
     else:
         c = load_config()
-        if not c.get('api_token'): return jsonify({'status': 'error'})
+        if not c.get('api_token'): return jsonify({'status': 'error', 'message': 'No API Token'})
         asyncio.run_coroutine_threadsafe(bot.start(c), bot_loop)
     return jsonify({'status': 'success'})
 
@@ -49,45 +57,77 @@ def get_sys_status(): return jsonify({'is_initial_training': model_manager.is_in
 async def get_bt_data(symbol, days):
     fp = os.path.join('data', f"{symbol}_5m_2y.csv")
     ts = int((datetime.now() - timedelta(days=int(days))).timestamp())
+
     if os.path.exists(fp):
-        df = pd.read_csv(fp)
-        if not df.empty and df['epoch'].min() <= ts: return df[df['epoch'] >= ts]
+        try:
+            df = pd.read_csv(fp)
+            if not df.empty and df['epoch'].min() <= ts:
+                return df[df['epoch'] >= ts]
+        except: pass
+
     c = load_config()
     api = DerivAPI(app_id=c.get('app_id', '99999'))
     end, candles = int(datetime.now().timestamp()), []
     curr = end
     while curr > ts:
-        r = await api.ticks_history({'ticks_history': symbol, 'end': str(curr), 'count': 5000, 'granularity': 300, 'style': 'candles'})
-        if 'candles' not in r or not r['candles']: break
-        candles.extend(r['candles'][::-1])
-        curr = r['candles'][0]['epoch'] - 1
-        if len(candles) > (int(days) * 288 + 500): break
+        try:
+            r = await api.ticks_history({'ticks_history': symbol, 'end': str(curr), 'count': 5000, 'granularity': 300, 'style': 'candles'})
+            if 'candles' not in r or not r['candles']: break
+            candles.extend(r['candles'][::-1])
+            curr = r['candles'][0]['epoch'] - 1
+            if len(candles) > (int(days) * 288 + 500): break
+        except: break
     await api.disconnect()
+    if not candles: return pd.DataFrame()
     return pd.DataFrame(candles).drop_duplicates(subset=['epoch']).sort_values('epoch')
 
 @app.route('/run_backtest', methods=['POST'])
 def run_bt():
     d = request.json
-    f = asyncio.run_coroutine_threadsafe(get_bt_data(d['symbol'], d['days']), bot_loop)
-    df = add_indicators(f.result())
-    if df.empty: return jsonify({'results': []})
+    try:
+        future = asyncio.run_coroutine_threadsafe(get_bt_data(d['symbol'], d['days']), bot_loop)
+        df_raw = future.result(timeout=60)
+    except Exception as e:
+        return jsonify({'error': str(e), 'results': []})
+
+    if df_raw.empty: return jsonify({'results': []})
+
+    df = add_indicators(df_raw)
     res = []
     params = [(1, 10), (2, 20), (3, 30), (1, 20), (2, 10), (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)]
+
+    balance = float(d.get('balance', 1000))
+    risk_pc = float(load_config().get('trade_pc', 1))
+
     for i, (a, c) in enumerate(params):
         s_idx = i + 1
         df_sig = ut_bot(df, a=a, c=c)
+
         m_status = model_manager.get_model_status(d['symbol'], s_idx)
-        if m_status == 'ready':
-            df_f = model_manager.get_model(d['symbol'], s_idx).filter_signals(df_sig)
-            tr = Backtester(df_f).run()
-        else: tr = Backtester(df_sig).run()
+        ml = model_manager.get_model(d['symbol'], s_idx)
+
+        if ml:
+            df_filtered = ml.filter_signals(df_sig)
+            tr = Backtester(df_filtered).run()
+        else:
+            tr = Backtester(df_sig).run()
+
         if not tr.empty:
-            bal, prof = simulate_financials(tr, float(d.get('balance', 1000)), float(load_config().get('trade_pc', 1)))
-            res.append({'name': f"Strategy {s_idx}", 'win_rate': tr['win'].mean(), 'trades': len(tr), 'max_losses': int(calculate_max_consecutive_losses(tr['win'])), 'ml_status': m_status, 'final_balance': bal, 'total_profit': prof})
+            final_bal, total_prof = simulate_financials(tr, balance, risk_pc)
+            res.append({
+                'name': f"Strategy {s_idx}",
+                'win_rate': float(tr['win'].mean()),
+                'trades': int(len(tr)),
+                'max_losses': int(calculate_max_consecutive_losses(tr['win'])),
+                'ml_status': m_status,
+                'final_balance': float(final_bal),
+                'total_profit': float(total_prof)
+            })
     return jsonify({'results': res})
 
 def start_bot_loop(loop):
     asyncio.set_event_loop(loop)
+    # Start the model manager loop within the same asyncio loop
     loop.create_task(model_manager.daily_update_loop())
     loop.run_forever()
 
@@ -96,4 +136,5 @@ model_manager.socketio = socketio
 threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True).start()
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True, allow_unsafe_werkzeug=True)
+    # Recommended way to run Flask-SocketIO
+    socketio.run(app, host='0.0.0.0', port=5000, debug=False)

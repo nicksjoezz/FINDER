@@ -17,7 +17,9 @@ class ModelManager:
 
     def log(self, message):
         logging.info(f"[ModelManager] {message}")
-        if self.socketio: self.socketio.emit('log', f"[System] {message}")
+        if self.socketio:
+            self.socketio.emit('log', f"[System] {message}")
+            self.socketio.emit('training_progress', {'message': message})
 
     async def initialize_models(self):
         """Loads models from disk."""
@@ -41,22 +43,26 @@ class ModelManager:
         from fetch_data import update_symbol_data
 
         for symbol in self.symbols:
-            # Always ensure data is up to date on start
             self.log(f"Syncing market data for {symbol}...")
-            await update_symbol_data(symbol, data_dir=self.data_dir)
+            try:
+                await update_symbol_data(symbol, data_dir=self.data_dir)
+            except Exception as e:
+                self.log(f"Failed to sync data for {symbol}: {e}")
+                continue
 
             filepath = os.path.join(self.data_dir, f"{symbol}_5m_2y.csv")
-            if not os.path.exists(filepath): continue
+            if not os.path.exists(filepath):
+                self.log(f"Data file for {symbol} not found after sync.")
+                continue
 
-            df = None
+            df_raw = pd.read_csv(filepath)
+            df = add_indicators(df_raw)
 
             for i in range(len(self.strat_params)):
                 strat_idx = i + 1
+                # Even if loaded, we might want to ensure it's "ready"
                 if self.get_model_status(symbol, strat_idx) == 'pending':
-                    if df is None:
-                        df = add_indicators(pd.read_csv(filepath))
-
-                    self.log(f"Training missing model: {symbol} Strat {strat_idx}...")
+                    self.log(f"Training model: {symbol} Strat {strat_idx}...")
                     a, c = self.strat_params[i]
                     raw_trades = Backtester(ut_bot(df, a=a, c=c)).run()
 
@@ -65,10 +71,17 @@ class ModelManager:
                         if ml.train(df, raw_trades):
                             ml.save(os.path.join(self.model_dir, f"{symbol}_strat_{strat_idx}.pkl"))
                             self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
-                        else: self.models[symbol][strat_idx]['status'] = 'failed'
-                    else: self.models[symbol][strat_idx]['status'] = 'bypassed'
+                            self.log(f"Model {symbol} Strat {strat_idx} ready.")
+                        else:
+                            self.models[symbol][strat_idx] = {'status': 'failed'}
+                            self.log(f"Model {symbol} Strat {strat_idx} training failed.")
+                    else:
+                        self.models[symbol][strat_idx] = {'status': 'bypassed'}
+                        self.log(f"Model {symbol} Strat {strat_idx} bypassed (not enough trades: {len(raw_trades)}).")
 
         self.is_initial_training = False
+        if self.socketio:
+            self.socketio.emit('training_complete', {'status': 'success'})
         self.log("Startup synchronization finished. All systems ready.")
 
     async def train_all_models(self):
@@ -76,10 +89,18 @@ class ModelManager:
         self.log("Commencing scheduled daily retraining...")
         from fetch_data import update_symbol_data
         for symbol in self.symbols:
-            await update_symbol_data(symbol, data_dir=self.data_dir)
+            try:
+                await update_symbol_data(symbol, data_dir=self.data_dir)
+            except Exception as e:
+                self.log(f"Failed to sync data for {symbol} during daily update: {e}")
+                continue
+
             filepath = os.path.join(self.data_dir, f"{symbol}_5m_2y.csv")
             if not os.path.exists(filepath): continue
-            df = add_indicators(pd.read_csv(filepath))
+
+            df_raw = pd.read_csv(filepath)
+            df = add_indicators(df_raw)
+
             for i, (a, c) in enumerate(self.strat_params):
                 strat_idx = i + 1
                 self.models[symbol][strat_idx]['status'] = 'training'
@@ -90,8 +111,13 @@ class ModelManager:
                         ml.save(os.path.join(self.model_dir, f"{symbol}_strat_{strat_idx}.pkl"))
                         self.models[symbol][strat_idx] = {'model': ml, 'status': 'ready'}
                     else:
-                        self.models[symbol][strat_idx]['status'] = 'ready' if self.get_model(symbol, strat_idx) else 'failed'
-                else: self.models[symbol][strat_idx]['status'] = 'bypassed'
+                        # Fallback to existing model if training fails
+                        if not self.get_model(symbol, strat_idx):
+                             self.models[symbol][strat_idx]['status'] = 'failed'
+                        else:
+                             self.models[symbol][strat_idx]['status'] = 'ready'
+                else:
+                    self.models[symbol][strat_idx]['status'] = 'bypassed'
         self.log("Daily retraining cycle complete.")
 
     def get_model_status(self, symbol, strategy_idx):
@@ -108,6 +134,7 @@ class ModelManager:
             now = datetime.utcnow()
             next_run = (now + timedelta(days=1)).replace(hour=0, minute=5, second=0)
             wait = (next_run - now).total_seconds()
+            if wait <= 0: wait = 86400 # Run next day if already past 00:05
             self.log(f"Next full update scheduled in {wait/3600:.1f} hours.")
             await asyncio.sleep(wait)
             await self.train_all_models()

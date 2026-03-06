@@ -8,73 +8,277 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #2563eb; --sidebar-bg: #0f172a; --content-bg: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --log-bg: #1e1e1e; --log-text: #d4d4d4; }
-        body { background-color: var(--content-bg); color: var(--text-main); font-family: 'Inter', sans-serif; }
-        .sidebar { height: 100vh; background-color: var(--sidebar-bg); color: white; position: fixed; width: 260px; }
-        .content { margin-left: 260px; padding: 30px; }
-        .card { background-color: var(--card-bg); border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 24px; border-radius: 16px; }
+        body { background-color: var(--content-bg); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .sidebar { height: 100vh; background-color: var(--sidebar-bg); color: white; position: fixed; width: 260px; z-index: 100; transition: transform 0.3s; }
+        .content { margin-left: 260px; padding: 30px; transition: margin-left 0.3s; }
+        .card { background-color: var(--card-bg); border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 24px; border-radius: 16px; transition: transform 0.2s; }
         .metric-card { border-left: 4px solid var(--primary); }
-        .log-container { height: 400px; overflow-y: auto; background-color: var(--log-bg); color: var(--log-text); padding: 20px; font-family: monospace; border-radius: 12px; }
-        .nav-link { color: rgba(255,255,255,0.6); padding: 14px 20px; }
+        .log-container { height: 400px; overflow-y: auto; background-color: var(--log-bg); color: var(--log-text); padding: 20px; font-family: 'Fira Code', monospace; border-radius: 12px; font-size: 0.9rem; }
+        .nav-link { color: rgba(255,255,255,0.6); padding: 14px 20px; border-radius: 8px; margin: 4px 10px; }
         .nav-link.active { background-color: var(--primary); color: white; }
+        .nav-link:hover:not(.active) { background-color: rgba(255,255,255,0.05); color: white; }
+
+        /* Loading Overlay */
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--sidebar-bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        .spinner { width: 60px; height: 60px; border: 5px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-260px); }
+            .sidebar.active { transform: translateX(0); }
+            .content { margin-left: 0; }
+            .mobile-toggle { display: block !important; }
+        }
+        .mobile-toggle { display: none; position: fixed; top: 20px; left: 20px; z-index: 1000; background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; }
+        .strategy-result { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .win-badge { background: #22c55e; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+        .loss-badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h3 class="fw-bold">Initializing System</h3>
+        <p id="loading-status" class="text-muted">Loading models and market data...</p>
+    </div>
+
+    <button class="mobile-toggle btn" onclick="document.querySelector('.sidebar').classList.toggle('active')"><i class="fas fa-bars"></i></button>
+
     <div class="sidebar d-flex flex-column">
         <div class="p-4"><h4 class="fw-bold"><i class="fas fa-robot me-2 text-primary"></i>DerivBot</h4></div>
         <ul class="nav nav-pills flex-column mb-auto">
-            <li><a href="#" class="nav-link active" id="btn-dash">Overview</a></li>
-            <li><a href="#" class="nav-link" id="btn-settings">Settings</a></li>
-            <li><a href="#" class="nav-link" id="btn-backtest">Backtest</a></li>
+            <li><a href="#" class="nav-link active" id="btn-dash"><i class="fas fa-chart-line me-2"></i> Overview</a></li>
+            <li><a href="#" class="nav-link" id="btn-settings"><i class="fas fa-cog me-2"></i> Settings</a></li>
+            <li><a href="#" class="nav-link" id="btn-backtest"><i class="fas fa-history me-2"></i> Backtest</a></li>
         </ul>
-        <div class="p-4"><button id="toggle-bot" class="btn btn-primary w-100">Start Bot</button></div>
+        <div class="p-4">
+            <button id="toggle-bot" class="btn btn-primary w-100 py-2 fw-bold">START BOT</button>
+        </div>
     </div>
+
     <div class="content">
-        <div id="global-training-alert" class="alert alert-info mb-4" style="display:none;">Updating models...</div>
         <div id="section-dash">
+            <h2 class="mb-4 fw-bold">Trading Dashboard</h2>
             <div class="row g-4 mb-4">
-                <div class="col-md-3"><div class="card p-4 metric-card"><h6>Status</h6><h3 id="bot-status-text">Offline</h3></div></div>
-                <div class="col-md-3"><div class="card p-4 metric-card"><h6>Balance</h6><h3 id="account-balance">$0.00</h3></div></div>
-                <div class="col-md-3"><div class="card p-4 metric-card"><h6>Wins/Losses</h6><h3 id="trade-summary">0 / 0</h3></div></div>
+                <div class="col-md-3">
+                    <div class="card p-4 metric-card">
+                        <h6 class="text-muted text-uppercase small fw-bold">Bot Status</h6>
+                        <h3 id="bot-status-text" class="mb-0">Offline</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-4 metric-card">
+                        <h6 class="text-muted text-uppercase small fw-bold">Account Balance</h6>
+                        <h3 id="account-balance" class="mb-0">$0.00</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-4 metric-card">
+                        <h6 class="text-muted text-uppercase small fw-bold">Wins / Losses</h6>
+                        <h3 id="trade-summary" class="mb-0">0 / 0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card p-4 metric-card">
+                        <h6 class="text-muted text-uppercase small fw-bold">Win Rate</h6>
+                        <h3 id="win-rate" class="mb-0">0%</h3>
+                    </div>
+                </div>
             </div>
-            <div class="card p-4"><h5>Logs</h5><div id="logs" class="log-container"></div></div>
-        </div>
-        <div id="section-settings" style="display:none;">
             <div class="card p-4">
-                <h4>Config</h4>
-                <form id="settings-form">
-                    <input type="password" name="api_token" class="form-control mb-2" placeholder="Token">
-                    <input type="text" name="app_id" class="form-control mb-2" value="99999">
-                    <input type="number" name="fetch_days" class="form-control mb-2" value="730">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 fw-bold">Real-time Logs</h5>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('logs').innerHTML = ''">Clear</button>
+                </div>
+                <div id="logs" class="log-container"></div>
             </div>
         </div>
+
+        <div id="section-settings" style="display:none;">
+            <h2 class="mb-4 fw-bold">System Settings</h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card p-4">
+                        <form id="settings-form">
+                            <div class="mb-3"><label class="form-label fw-bold">Deriv API Token</label><input type="password" name="api_token" id="set-token" class="form-control" placeholder="Enter Token"></div>
+                            <div class="mb-3"><label class="form-label fw-bold">App ID</label><input type="text" name="app_id" id="set-appid" class="form-control"></div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Symbol</label>
+                                    <select name="symbol" id="set-symbol" class="form-select">
+                                        <option value="R_10">Volatility 10 Index</option>
+                                        <option value="R_25">Volatility 25 Index</option>
+                                        <option value="R_50">Volatility 50 Index</option>
+                                        <option value="R_75">Volatility 75 Index</option>
+                                        <option value="R_100">Volatility 100 Index</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Strategy</label>
+                                    <select name="strategy" id="set-strategy" class="form-select">
+                                        <option value="1">Strategy 1 (1, 10)</option><option value="2">Strategy 2 (2, 20)</option>
+                                        <option value="3">Strategy 3 (3, 30)</option><option value="4">Strategy 4 (1, 20)</option>
+                                        <option value="5">Strategy 5 (2, 10)</option><option value="6">Strategy 6 (3, 20)</option>
+                                        <option value="7">Strategy 7 (1, 30)</option><option value="8">Strategy 8 (2, 30)</option>
+                                        <option value="9">Strategy 9 (3, 10)</option><option value="10">Strategy 10 (1.5, 15)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Stake (%)</label><input type="number" name="trade_pc" id="set-stake" class="form-control" step="0.1" value="1"></div>
+                                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Historical Days</label><input type="number" name="fetch_days" id="set-days" class="form-control" value="730"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2">SAVE CONFIGURATION</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="section-backtest" style="display:none;">
-            <div class="card p-4"><h4>Simulation</h4><button id="run-backtest" class="btn btn-primary">Run</button><div id="bt-results" class="mt-4"></div></div>
+            <h2 class="mb-4 fw-bold">Strategy Backtest</h2>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold mb-3">Parameters</h5>
+                        <div class="mb-3"><label class="form-label">Symbol</label><select id="bt-symbol" class="form-select"><option value="R_10">Volatility 10 Index</option><option value="R_25">Volatility 25 Index</option><option value="R_50">Volatility 50 Index</option><option value="R_75">Volatility 75 Index</option><option value="R_100">Volatility 100 Index</option></select></div>
+                        <div class="mb-3"><label class="form-label">Balance ($)</label><input type="number" id="bt-balance" class="form-control" value="1000"></div>
+                        <div class="mb-3"><label class="form-label">Days</label><input type="number" id="bt-days" class="form-control" value="7"></div>
+                        <button id="run-backtest" class="btn btn-primary w-100 py-2">RUN SIMULATION</button>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card p-4">
+                        <h5 class="fw-bold mb-3">Results (Including ML Filter)</h5>
+                        <div id="bt-loading" style="display:none;" class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Simulating trades...</p></div>
+                        <div id="bt-results-table" class="table-responsive">
+                            <table class="table table-hover">
+                                <thead><tr><th>Strategy</th><th>Win Rate</th><th>Trades</th><th>Max Losses</th><th>Final Balance</th></tr></thead>
+                                <tbody id="bt-results-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
         const socket = io();
-        socket.on('log', (msg) => { const p = document.createElement('div'); p.innerText = msg; document.getElementById('logs').appendChild(p); document.getElementById('logs').scrollTop = 99999; });
+        const logs = document.getElementById('logs');
+        const overlay = document.getElementById('loading-overlay');
+        const statusText = document.getElementById('loading-status');
+
+        socket.on('log', (msg) => {
+            const div = document.createElement('div');
+            div.className = 'py-1';
+            div.innerHTML = `<span class="text-muted small">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
+            logs.appendChild(div);
+            logs.scrollTop = logs.scrollHeight;
+        });
+
+        socket.on('training_progress', (data) => { statusText.innerText = data.message; });
+        socket.on('training_complete', () => { overlay.style.display = 'none'; });
+
         socket.on('status_update', (d) => {
-            document.getElementById('bot-status-text').innerText = d.active ? 'Running' : 'Offline';
-            document.getElementById('toggle-bot').innerText = d.active ? 'Stop' : 'Start';
+            document.getElementById('bot-status-text').innerText = d.active ? 'Active' : 'Offline';
+            document.getElementById('bot-status-text').style.color = d.active ? '#22c55e' : '#64748b';
+            document.getElementById('toggle-bot').innerText = d.active ? 'STOP BOT' : 'START BOT';
+            document.getElementById('toggle-bot').className = d.active ? 'btn btn-danger w-100 py-2 fw-bold' : 'btn btn-primary w-100 py-2 fw-bold';
             document.getElementById('account-balance').innerText = '$' + d.balance;
             document.getElementById('trade-summary').innerText = d.wins + ' / ' + d.losses;
+            const wr = (d.wins + d.losses) > 0 ? ((d.wins / (d.wins + d.losses)) * 100).toFixed(1) : 0;
+            document.getElementById('win-rate').innerText = wr + '%';
         });
-        document.getElementById('toggle-bot').onclick = () => fetch('/toggle_bot', {method:'POST'});
-        function show(id) { ['dash','settings','backtest'].forEach(s => document.getElementById('section-'+s).style.display = s===id?'block':'none'); }
+
+        // Toggle Bot
+        document.getElementById('toggle-bot').onclick = async () => {
+            const btn = document.getElementById('toggle-bot');
+            btn.disabled = true;
+            await fetch('/toggle_bot', {method:'POST'});
+            setTimeout(() => { btn.disabled = false; }, 2000);
+        };
+
+        // Navigation
+        function show(id) {
+            ['dash', 'settings', 'backtest'].forEach(s => {
+                document.getElementById('section-'+s).style.display = s === id ? 'block' : 'none';
+                document.getElementById('btn-'+s).classList.toggle('active', s === id);
+            });
+            if (window.innerWidth <= 992) document.querySelector('.sidebar').classList.remove('active');
+        }
         document.getElementById('btn-dash').onclick = () => show('dash');
         document.getElementById('btn-settings').onclick = () => show('settings');
         document.getElementById('btn-backtest').onclick = () => show('backtest');
-        document.getElementById('settings-form').onsubmit = async (e) => {
+
+        // Settings
+        const settingsForm = document.getElementById('settings-form');
+        settingsForm.onsubmit = async (e) => {
             e.preventDefault();
-            const d = Object.fromEntries(new FormData(e.target));
-            await fetch('/save_settings', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(d)});
-            alert('Saved');
+            const data = Object.fromEntries(new FormData(e.target));
+            await fetch('/save_settings', {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify(data)
+            });
+            alert('Settings saved successfully!');
         };
-        setInterval(async () => { const r = await fetch('/get_system_status').then(r=>r.json()); document.getElementById('global-training-alert').style.display = r.is_initial_training?'block':'none'; }, 5000);
+
+        // Load current config
+        async function loadConfig() {
+            const r = await fetch('/get_config').then(res => res.json());
+            document.getElementById('set-token').value = r.api_token || '';
+            document.getElementById('set-appid').value = r.app_id || '99999';
+            document.getElementById('set-symbol').value = r.symbol || 'R_100';
+            document.getElementById('set-strategy').value = r.strategy || '1';
+            document.getElementById('set-stake').value = r.trade_pc || 1;
+            document.getElementById('set-days').value = r.fetch_days || 730;
+        }
+        loadConfig();
+
+        // Check if training already done
+        async function checkStatus() {
+            const r = await fetch('/get_system_status').then(res => res.json());
+            if (!r.is_initial_training) overlay.style.display = 'none';
+        }
+        checkStatus();
+
+        // Backtest
+        document.getElementById('run-backtest').onclick = async () => {
+            const btn = document.getElementById('run-backtest');
+            const symbol = document.getElementById('bt-symbol').value;
+            const days = document.getElementById('bt-days').value;
+            const balance = document.getElementById('bt-balance').value;
+
+            btn.disabled = true;
+            document.getElementById('bt-loading').style.display = 'block';
+            document.getElementById('bt-results-table').style.opacity = '0.3';
+
+            try {
+                const res = await fetch('/run_backtest', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({symbol, days, balance})
+                }).then(r => r.json());
+
+                const tbody = document.getElementById('bt-results-body');
+                tbody.innerHTML = '';
+                res.results.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="fw-bold">${r.name}</span><br><small class="text-muted">ML: ${r.ml_status}</small></td>
+                        <td>${(r.win_rate * 100).toFixed(1)}%</td>
+                        <td>${r.trades}</td>
+                        <td>${r.max_losses}</td>
+                        <td class="${r.final_balance >= balance ? 'text-success' : 'text-danger'} fw-bold">$${r.final_balance.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (e) { alert('Backtest failed'); }
+
+            btn.disabled = false;
+            document.getElementById('bt-loading').style.display = 'none';
+            document.getElementById('bt-results-table').style.opacity = '1';
+        };
     </script>
 </body>
 </html>
