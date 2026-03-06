@@ -2,116 +2,96 @@ import asyncio
 import pandas as pd
 from deriv_api import DerivAPI
 import os
+import json
 from datetime import datetime, timedelta
 import sys
 
-async def get_historical_data(symbol, start_time, end_time, granularity):
-    api = DerivAPI(app_id=1089)
+CONFIG_FILE = 'config.json'
 
-    all_candles = []
-    current_end = end_time
-
-    # Target approx 1 year of 5m data = 365 * 24 * 60 / 5 = 105,120 candles
-    # Note: Deriv API currently limits historical 5m candles to ~105,000 for synthetic indices.
-    target_count = 105500
-
-    while len(all_candles) < target_count and current_end > start_time:
-        sys.stderr.write(f"Fetching data for {symbol} up to {datetime.fromtimestamp(current_end)}\n")
+def load_fetch_config():
+    if os.path.exists(CONFIG_FILE):
         try:
-            response = await api.ticks_history({
-                'ticks_history': symbol,
-                'end': str(current_end),
-                'adjust_start_time': 1,
-                'count': 5000,
-                'granularity': granularity,
-                'style': 'candles'
-            })
-
-            if 'error' in response:
-                sys.stderr.write(f"API Error for {symbol}: {response['error']}\n")
-                break
-
-            if 'candles' not in response:
-                sys.stderr.write(f"No candles in response for {symbol}: {response}\n")
-                break
-
-            candles = response['candles']
-            if not candles:
-                sys.stderr.write(f"Empty candles list for {symbol}\n")
-                break
-
-            all_candles.extend(candles[::-1])
-
-            # The earliest candle in this batch
-            new_end = candles[0]['epoch'] - 1
-            if new_end >= current_end:
-                # We've reached the earliest possible candle provided by the API
-                break
-            current_end = new_end
-
-            sys.stderr.write(f"  Got {len(candles)} candles. Total: {len(all_candles)}\n")
-
-            await asyncio.sleep(0.3) # Faster fetching
-
-        except Exception as e:
-            sys.stderr.write(f"An error occurred for {symbol}: {e}\n")
-            break
-
-    await api.disconnect()
-
-    if not all_candles:
-        return pd.DataFrame()
-
-    df = pd.DataFrame(all_candles)
-    df = df.drop_duplicates(subset=['epoch']).sort_values('epoch')
-    return df
+            with open(CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+                return int(config.get('fetch_days', 730)), config.get('app_id', '1089')
+        except:
+            pass
+    return 730, '1089'
 
 async def update_symbol_data(symbol, data_dir='data'):
-    """
-    Incrementally updates the symbol's CSV file with latest data.
-    Maintains approx 1 year of history (~105k candles).
-    """
+    fetch_days, app_id = load_fetch_config()
     filepath = os.path.join(data_dir, f"{symbol}_5m_2y.csv")
     granularity = 300
-    end_time = int(datetime.now().timestamp())
+    os.makedirs(data_dir, exist_ok=True)
 
-    # 1. Read existing data
-    df_old = pd.DataFrame()
-    last_epoch = 0
+    df = pd.DataFrame()
     if os.path.exists(filepath):
         try:
-            df_old = pd.read_csv(filepath)
-            if not df_old.empty:
-                last_epoch = int(df_old['epoch'].max())
+            df = pd.read_csv(filepath)
+            if not df.empty:
+                df = df.drop_duplicates(subset=['epoch']).sort_values('epoch')
         except Exception as e:
-            sys.stderr.write(f"Error reading {filepath}: {e}\n")
+            sys.stderr.write(f"Error reading {filepath}: {e}. Starting fresh.\n")
 
-    # 2. Fetch missing data
-    # We fetch from last_epoch + granularity to avoid overlap
-    start_time = last_epoch + granularity if last_epoch > 0 else int((datetime.now() - timedelta(days=366)).timestamp())
+    end_time = int(datetime.now().timestamp())
+    start_time = int((datetime.now() - timedelta(days=fetch_days)).timestamp())
 
-    if end_time - start_time < granularity:
-        sys.stderr.write(f"Data for {symbol} is already up to date.\n")
-        return df_old
+    api = DerivAPI(app_id=app_id)
 
-    sys.stderr.write(f"Updating {symbol} from {datetime.fromtimestamp(start_time)} to {datetime.fromtimestamp(end_time)}\n")
-    df_new = await get_historical_data(symbol, start_time, end_time, granularity)
+    async def fetch_and_save(current_start, current_end, direction='backward'):
+        nonlocal df
+        while current_end > current_start:
+            sys.stderr.write(f"[{symbol}] Fetching {direction} up to {datetime.fromtimestamp(current_end)}\n")
+            try:
+                response = await api.ticks_history({
+                    'ticks_history': symbol,
+                    'end': str(current_end),
+                    'adjust_start_time': 1,
+                    'count': 5000,
+                    'granularity': granularity,
+                    'style': 'candles'
+                })
 
-    if df_new.empty:
-        return df_old
+                if 'error' in response:
+                    sys.stderr.write(f"API Error: {response['error']}\n")
+                    break
 
-    # 3. Merge and prune
-    df_combined = pd.concat([df_old, df_new]).drop_duplicates(subset=['epoch']).sort_values('epoch')
+                candles = response.get('candles', [])
+                if not candles:
+                    sys.stderr.write(f"No more candles available for {symbol}.\n")
+                    break
 
-    # Keep only the last 106,000 candles (~1 year)
-    if len(df_combined) > 106000:
-        df_combined = df_combined.tail(106000)
+                df_new = pd.DataFrame(candles)
+                df = pd.concat([df, df_new]).drop_duplicates(subset=['epoch']).sort_values('epoch')
 
-    # 4. Save
-    os.makedirs(data_dir, exist_ok=True)
-    df_combined.to_csv(filepath, index=False)
-    sys.stderr.write(f"Saved {len(df_combined)} total candles for {symbol} (Added {len(df_new)})\n")
-    return df_combined
+                cutoff = int((datetime.now() - timedelta(days=fetch_days + 1)).timestamp())
+                df = df[df['epoch'] >= cutoff]
+
+                df.to_csv(filepath, index=False)
+
+                new_end = int(candles[0]['epoch']) - 1
+                if new_end >= current_end: break
+                current_end = new_end
+
+                if current_end < current_start: break
+                await asyncio.sleep(0.5)
+
+            except Exception as e:
+                sys.stderr.write(f"Fetch error: {e}. Retrying...\n")
+                await asyncio.sleep(5)
+                continue
+
+    last_recorded = int(df['epoch'].max()) if not df.empty else start_time
+    if end_time - last_recorded > granularity:
+        await fetch_and_save(last_recorded, end_time, direction='forward')
+
+    earliest_recorded = int(df['epoch'].min()) if not df.empty else end_time
+    if earliest_recorded > start_time:
+        await fetch_and_save(start_time, earliest_recorded, direction='backward')
+
+    await api.disconnect()
+    sys.stderr.write(f"Completed update for {symbol}. Total: {len(df)}\n")
+    return df
 
 async def main():
     symbols = ['R_100', 'R_75', 'R_50', 'R_25', 'R_10']

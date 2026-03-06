@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+data/*.csv
+models/*.pkl
+flask.log
+Profitable strategy/

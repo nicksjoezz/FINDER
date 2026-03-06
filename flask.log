@@ -54,3 +54,36 @@ Data for R_10 is already up to date.
 (108559) accepted ('127.0.0.1', 51556)
 127.0.0.1 - - [05/Mar/2026 11:47:28] "GET /socket.io/?EIO=4&transport=websocket&sid=kf-nyaYJjjQvX-qHAAAF HTTP/1.1" 200 0 0.007598
 127.0.0.1 - - [05/Mar/2026 11:47:53] "GET /socket.io/?EIO=4&transport=polling&t=PozqmEF&sid=kf-nyaYJjjQvX-qHAAAF HTTP/1.1" 200 181 24.998376
+2026-03-06 02:21:55,395  * Detected change in '/app/model_manager.py', reloading
+2026-03-06 02:21:59,386  * Restarting with stat
+2026-03-06 02:22:04,081  * Debugger is active!
+2026-03-06 02:22:04,084  * Debugger PIN: 528-207-680
+(131295) wsgi starting up on http://0.0.0.0:5000
+[R_100] Fetching forward up to 2026-03-06 02:22:04
+[R_100] Fetching forward up to 2026-02-16 17:44:59
+[R_100] Fetching forward up to 2026-01-30 09:04:59
+[R_100] Fetching forward up to 2026-01-13 00:24:59
+[R_100] Fetching forward up to 2025-12-26 15:44:59
+[R_100] Fetching forward up to 2025-12-09 07:04:59
+[R_100] Fetching backward up to 2025-03-03 20:29:57
+Completed update for R_100. Total candles: 105764
+[R_75] Fetching forward up to 2026-03-06 02:22:28
+[R_75] Fetching backward up to 2025-03-03 20:31:07
+Completed update for R_75. Total candles: 105763
+[R_50] Fetching forward up to 2026-03-06 02:22:36
+[R_50] Fetching backward up to 2025-03-03 20:32:12
+Completed update for R_50. Total candles: 105763
+[R_25] Fetching forward up to 2026-03-06 02:22:43
+[R_25] Fetching backward up to 2025-03-03 20:33:17
+Completed update for R_25. Total candles: 105763
+[R_10] Fetching forward up to 2026-03-06 02:22:50
+[R_10] Fetching backward up to 2025-03-03 20:27:45
+Completed update for R_10. Total candles: 105764
+2026-03-06 02:31:18,230  * Detected change in '/app/model_manager.py', reloading
+2026-03-06 02:31:18,650  * Restarting with stat
+2026-03-06 02:31:22,551  * Debugger is active!
+2026-03-06 02:31:22,559  * Debugger PIN: 528-207-680
+(135572) wsgi starting up on http://0.0.0.0:5000
+[R_100] Fetching forward up to 2026-03-06 02:31:25
+[R_100] Fetching backward up to 2025-03-03 20:29:57
+Completed update for R_100. Total: 105766
