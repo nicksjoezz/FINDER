@@ -1,0 +1,25 @@
+[ModelManager] Initializing models from disk...
+[ModelManager] Disk initialization complete.
+[ModelManager] Starting startup data synchronization...
+[ModelManager] Syncing market data for R_100...
+[R_100] Fetching forward up to 2026-03-06 17:31:09
+[R_100] Fetching backward up to 2025-03-03 20:29:57
+Completed update for R_100. Total: 105946
+[ModelManager] Syncing market data for R_75...
+[R_75] Fetching forward up to 2026-03-06 17:31:18
+[R_75] Fetching backward up to 2025-03-03 20:31:07
+Completed update for R_75. Total: 105945
+[ModelManager] Syncing market data for R_50...
+[R_50] Fetching forward up to 2026-03-06 17:31:26
+[R_50] Fetching backward up to 2025-03-03 20:32:12
+Completed update for R_50. Total: 105945
+[ModelManager] Syncing market data for R_25...
+[R_25] Fetching forward up to 2026-03-06 17:31:36
+[R_25] Fetching backward up to 2025-03-03 20:33:17
+Completed update for R_25. Total: 105945
+[ModelManager] Syncing market data for R_10...
+[R_10] Fetching forward up to 2026-03-06 17:31:45
+[R_10] Fetching backward up to 2025-03-03 20:27:45
+Completed update for R_10. Total: 105946
+[ModelManager] Startup synchronization finished. All systems ready.
+[ModelManager] Next full update scheduled in 6.6 hours.

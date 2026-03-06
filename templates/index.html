@@ -42,7 +42,7 @@
             display: flex;
             flex-direction: column;
             z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .logo-container {
@@ -73,23 +73,33 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0.875rem 1rem;
+            padding: 1rem 1.25rem;
             color: var(--text-muted);
             text-decoration: none;
             border-radius: 12px;
             margin-bottom: 0.5rem;
             transition: all 0.2s;
             font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
         }
 
         .nav-link:hover {
             background-color: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
+            border-color: var(--border);
         }
 
         .nav-link.active {
             background-color: rgba(59, 130, 246, 0.1);
             color: var(--primary);
+            border-color: rgba(59, 130, 246, 0.2);
         }
 
         /* Content Area */
@@ -97,7 +107,7 @@
             margin-left: 280px;
             padding: 2.5rem;
             min-height: 100vh;
-            transition: all 0.3s ease;
+            transition: margin-left 0.3s ease;
         }
 
         /* Cards */
@@ -107,11 +117,6 @@
             border-radius: 20px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.5);
         }
 
         .stat-label {
@@ -141,12 +146,7 @@
             color: #d1d5db;
         }
 
-        .log-entry {
-            margin-bottom: 0.5rem;
-            border-left: 2px solid transparent;
-            padding-left: 0.75rem;
-        }
-
+        .log-entry { margin-bottom: 0.5rem; padding-left: 0.75rem; border-left: 2px solid #27272a; }
         .log-time { color: #6b7280; margin-right: 0.75rem; }
         .log-system { color: var(--primary); }
         .log-trade { color: var(--success); }
@@ -155,20 +155,19 @@
         /* Buttons */
         .btn-quantum {
             border-radius: 12px;
-            padding: 0.75rem 1.5rem;
+            padding: 0.875rem 1.5rem;
             font-weight: 600;
             transition: all 0.2s;
             border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .btn-quantum-primary {
             background: linear-gradient(135deg, var(--primary), #2563eb);
             color: white;
-        }
-
-        .btn-quantum-primary:hover {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-            transform: translateY(-1px);
         }
 
         /* Loading Overlay */
@@ -181,7 +180,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 2rem;
         }
 
         .loader-ring {
@@ -195,185 +195,144 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+        /* Mobile Adjustments */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 1.25rem;
+            left: 1.25rem;
+            z-index: 1100;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
 
         @media (max-width: 992px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
-            .main-content { margin-left: 0; }
+            .main-content { margin-left: 0; padding: 6rem 1.5rem 2rem; }
+            .mobile-toggle { display: flex; }
         }
 
         /* Comparison Table Styling */
         .table-comparison {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 0.5rem;
+            border-spacing: 0 0.75rem;
         }
-        .table-comparison th {
-            padding: 1rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            border-bottom: 1px solid var(--border);
-        }
-        .table-comparison td {
-            padding: 1rem;
-            background-color: rgba(255, 255, 255, 0.02);
-            vertical-align: middle;
-        }
-        .table-comparison tr td:first-child { border-radius: 12px 0 0 12px; }
-        .table-comparison tr td:last-child { border-radius: 0 12px 12px 0; }
+        .table-comparison th { padding: 1rem; color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border); }
+        .table-comparison td { padding: 1.25rem 1rem; background-color: rgba(255, 255, 255, 0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .table-comparison tr td:first-child { border-radius: 16px 0 0 16px; border-left: 1px solid var(--border); }
+        .table-comparison tr td:last-child { border-radius: 0 16px 16px 0; border-right: 1px solid var(--border); }
 
-        .delta-positive { color: var(--success); font-weight: 600; }
-        .delta-neutral { color: var(--text-muted); }
+        .delta-positive { color: var(--success); font-weight: 700; }
+        .tag-ml { background-color: rgba(59, 130, 246, 0.15); color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; margin-left: 0.5rem; border: 1px solid rgba(59, 130, 246, 0.2); }
 
-        .tag-ml {
-            background-color: rgba(59, 130, 246, 0.15);
-            color: var(--primary);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .form-control, .form-select {
+            background-color: #000 !important;
+            border: 1px solid var(--border) !important;
+            color: white !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 12px !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
         }
     </style>
 </head>
 <body>
     <div id="loading-overlay">
         <div class="loader-ring mb-4"></div>
-        <h3 class="fw-bold text-white mb-2">Neural Engine Initializing</h3>
-        <p id="loading-status" class="text-muted">Synchronizing market neural networks...</p>
+        <h3 class="fw-bold text-white mb-2">Quantum Neural Engine</h3>
+        <p id="loading-status" class="text-muted">Initializing symbol-specific machine learning filters...</p>
     </div>
 
-    <div class="sidebar d-flex flex-column">
+    <div class="mobile-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+
+    <div class="sidebar d-flex flex-column" id="sidebar">
         <div class="logo-container">
             <div class="logo-icon"><i class="fas fa-bolt"></i></div>
-            <span class="fs-4 fw-bold letter-spacing-tight">QuantumTrade</span>
+            <span class="fs-4 fw-bold">QuantumTrade</span>
         </div>
 
         <div class="nav-links">
-            <a href="#" class="nav-link active" id="btn-dash"><i class="fas fa-grid-2"></i> Terminal Overview</a>
-            <a href="#" class="nav-link" id="btn-backtest"><i class="fas fa-microscope"></i> Strategy Lab</a>
-            <a href="#" class="nav-link" id="btn-settings"><i class="fas fa-sliders"></i> Control Center</a>
+            <div class="nav-link active" id="nav-dash" onclick="show('dash', this)"><i class="fas fa-chart-line"></i> Terminal Overview</div>
+            <div class="nav-link" id="nav-backtest" onclick="show('backtest', this)"><i class="fas fa-flask"></i> Strategy Lab</div>
+            <div class="nav-link" id="nav-settings" onclick="show('settings', this)"><i class="fas fa-cog"></i> Control Center</div>
         </div>
 
-        <div class="p-4">
-            <button id="toggle-bot" class="btn btn-quantum btn-quantum-primary w-100 mb-2">
-                <i class="fas fa-play me-2"></i> ENGAGE BOT
+        <div class="p-4 mt-auto">
+            <button id="toggle-bot" class="btn btn-quantum btn-quantum-primary w-100 mb-3">
+                <i class="fas fa-play"></i> <span>ENGAGE BOT</span>
             </button>
-            <div class="text-center">
-                <small class="text-muted small">v2.1.0-PRO-X</small>
-            </div>
+            <div class="text-center"><small class="text-muted small fw-medium">v2.1.0-ENTERPRISE</small></div>
         </div>
     </div>
 
     <main class="main-content">
+        <!-- Overview -->
         <div id="section-dash">
-            <div class="d-flex justify-content-between align-items-end mb-4">
-                <div>
-                    <h1 class="fw-bold mb-1">Command Center</h1>
-                    <p class="text-muted mb-0">Live monitoring of your autonomous neural trader.</p>
-                </div>
-                <div class="text-end">
-                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-3 py-2">
-                        <i class="fas fa-circle-check me-1"></i> System Secure
-                    </span>
-                </div>
+            <div class="mb-5">
+                <h1 class="fw-bold mb-1">Command Center</h1>
+                <p class="text-muted">Real-time neural network trading stream.</p>
             </div>
 
-            <div class="row g-4">
-                <div class="col-md-3">
-                    <div class="glass-card h-100">
-                        <div class="stat-label">System Status</div>
-                        <div class="stat-value d-flex align-items-center gap-2">
-                            <div id="status-indicator" style="width:10px; height:10px; border-radius:50%; background-color:#6b7280;"></div>
-                            <span id="bot-status-text">OFFLINE</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="glass-card h-100">
-                        <div class="stat-label">Wallet Balance</div>
-                        <div class="stat-value" id="account-balance">$0.00</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="glass-card h-100">
-                        <div class="stat-label">Performance</div>
-                        <div class="stat-value text-success" id="trade-summary">0W / 0L</div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="glass-card h-100">
-                        <div class="stat-label">Win Velocity</div>
-                        <div class="stat-value" id="win-rate">0.0%</div>
-                    </div>
-                </div>
+            <div class="row g-4 mb-5">
+                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Bot Status</div><div class="stat-value d-flex align-items-center gap-3"><div id="status-indicator" style="width:12px; height:12px; border-radius:50%; background-color:#6b7280; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div><span id="bot-status-text" class="fs-4">OFFLINE</span></div></div></div>
+                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Wallet Balance</div><div class="stat-value" id="account-balance">$0.00</div></div></div>
+                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Performance</div><div class="stat-value text-success" id="trade-summary">0W / 0L</div></div></div>
+                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Neural Accuracy</div><div class="stat-value" id="win-rate">0.0%</div></div></div>
             </div>
 
-            <div class="glass-card mt-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold m-0"><i class="fas fa-terminal me-2 text-primary"></i>Neural Stream</h5>
-                    <button class="btn btn-sm btn-outline-secondary border-secondary border-opacity-20" onclick="document.getElementById('logs').innerHTML = ''">Reset Log</button>
+            <div class="glass-card p-0 overflow-hidden" style="border-color: var(--border);">
+                <div class="d-flex justify-content-between align-items-center p-4 border-bottom border-secondary border-opacity-10">
+                    <h5 class="fw-bold m-0"><i class="fas fa-terminal me-2 text-primary"></i>Neural Stream Logs</h5>
+                    <button class="btn btn-sm btn-outline-secondary border-secondary border-opacity-20 px-3" onclick="document.getElementById('logs').innerHTML = ''">Clear Console</button>
                 </div>
-                <div id="logs" class="log-shell"></div>
+                <div id="logs" class="log-shell border-0 rounded-0"></div>
             </div>
         </div>
 
-        <div id="section-settings" style="display:none;">
-            <h1 class="fw-bold mb-4">Control Center</h1>
-            <div class="row g-4">
-                <div class="col-lg-7">
-                    <div class="glass-card">
-                        <h5 class="fw-bold mb-4">API Configuration</h5>
-                        <form id="settings-form">
-                            <div class="row g-3">
-                                <div class="col-12"><label class="form-label text-muted small fw-bold">DERIV SECURE TOKEN</label><input type="password" name="api_token" id="set-token" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3 shadow-none"></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">APPLICATION ID</label><input type="text" name="app_id" id="set-appid" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3"></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">DATA DEPTH (DAYS)</label><input type="number" name="fetch_days" id="set-days" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3"></div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">SYMBOL CHANNEL</label>
-                                    <select name="symbol" id="set-symbol" class="form-select bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3">
-                                        <option value="R_10">Volatility 10 Index</option><option value="R_25">Volatility 25 Index</option><option value="R_50">Volatility 50 Index</option><option value="R_75">Volatility 75 Index</option><option value="R_100">Volatility 100 Index</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6"><label class="form-label text-muted small fw-bold">ACTIVE STRATEGY</label>
-                                    <select name="strategy" id="set-strategy" class="form-select bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3">
-                                        <option value="1">Strategy 1 (1, 10)</option><option value="2">Strategy 2 (2, 20)</option><option value="3">Strategy 3 (3, 30)</option><option value="4">Strategy 4 (1, 20)</option><option value="5">Strategy 5 (2, 10)</option><option value="6">Strategy 6 (3, 20)</option><option value="7">Strategy 7 (1, 30)</option><option value="8">Strategy 8 (2, 30)</option><option value="9">Strategy 9 (3, 10)</option><option value="10">Strategy 10 (1.5, 15)</option>
-                                    </select>
-                                </div>
-                                <div class="col-12 mb-2"><label class="form-label text-muted small fw-bold">STAKE ALLOCATION (%)</label><input type="number" name="trade_pc" id="set-stake" class="form-control bg-dark border-secondary border-opacity-20 text-white p-3 rounded-3" step="0.1"></div>
-                            </div>
-                            <button type="submit" class="btn btn-quantum btn-quantum-primary w-100 p-3 mt-4">SAVE ARCHITECTURE</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!-- Strategy Lab -->
         <div id="section-backtest" style="display:none;">
-            <h1 class="fw-bold mb-4">Strategy Lab</h1>
+            <div class="mb-5">
+                <h1 class="fw-bold mb-1">Strategy Lab</h1>
+                <p class="text-muted">Compare raw indicators against neural-filtered results.</p>
+            </div>
+
             <div class="row g-4">
                 <div class="col-lg-3">
                     <div class="glass-card">
-                        <h5 class="fw-bold mb-4">Simulation Specs</h5>
-                        <div class="mb-3"><label class="text-muted small fw-bold mb-1">TEST CHANNEL</label><select id="bt-symbol" class="form-select bg-dark border-secondary border-opacity-20 text-white rounded-3"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
-                        <div class="mb-3"><label class="text-muted small fw-bold mb-1">SEED BALANCE ($)</label><input type="number" id="bt-balance" class="form-control bg-dark border-secondary border-opacity-20 text-white rounded-3" value="1000"></div>
-                        <div class="mb-3"><label class="text-muted small fw-bold mb-1">TIME WINDOW (DAYS)</label><input type="number" id="bt-days" class="form-control bg-dark border-secondary border-opacity-20 text-white rounded-3" value="7"></div>
-                        <button id="run-backtest" class="btn btn-quantum btn-quantum-primary w-100 mt-2">RUN NEURAL SIM</button>
+                        <h6 class="fw-bold mb-4 text-uppercase small letter-spacing-wide">Simulation Specs</h6>
+                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">MARKET CHANNEL</label><select id="bt-symbol" class="form-select"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
+                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">SEED CAPITAL ($)</label><input type="number" id="bt-balance" class="form-control" value="1000"></div>
+                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">LOOKBACK (DAYS)</label><input type="number" id="bt-days" class="form-control" value="7"></div>
+                        <button id="run-backtest" class="btn btn-quantum btn-quantum-primary w-100 py-3">RUN ANALYSIS</button>
                     </div>
                 </div>
                 <div class="col-lg-9">
                     <div class="glass-card">
-                        <h5 class="fw-bold mb-4">Comparative Analysis <span class="text-muted small fw-normal ms-2">(Raw vs ML Optimized)</span></h5>
-                        <div id="bt-loading" style="display:none;" class="text-center py-5">
-                            <div class="loader-ring mx-auto mb-3" style="width:40px; height:40px;"></div>
-                            <p class="text-muted">Crunching historical vectors...</p>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold m-0">Performance Matrix</h5>
+                            <span class="text-muted small">Comparing 10 Strategy Vectors</span>
                         </div>
+
+                        <div id="bt-loading" style="display:none;" class="text-center py-5">
+                            <div class="loader-ring mx-auto mb-4" style="width:50px; height:50px;"></div>
+                            <p class="text-muted fw-medium">Neural Processing in Progress...</p>
+                        </div>
+
                         <div id="bt-results-container" class="table-responsive">
                             <table class="table-comparison">
-                                <thead><tr><th>STRATEGY</th><th>RAW WIN RATE</th><th>ML WIN RATE</th><th>DELTA</th><th>TRADES (ML)</th><th>PNL (ML)</th></tr></thead>
+                                <thead><tr><th>STRATEGY VECTOR</th><th>RAW ACCURACY</th><th>ML OPTIMIZED</th><th>EFFICIENCY Δ</th><th>PROJECTED PNL</th></tr></thead>
                                 <tbody id="bt-results-body"></tbody>
                             </table>
                         </div>
@@ -381,32 +340,59 @@
                 </div>
             </div>
         </div>
+
+        <!-- Control Center -->
+        <div id="section-settings" style="display:none;">
+            <div class="mb-5">
+                <h1 class="fw-bold mb-1">Control Center</h1>
+                <p class="text-muted">Configure your secure API and neural trading parameters.</p>
+            </div>
+
+            <div class="glass-card col-lg-8">
+                <form id="settings-form">
+                    <div class="row g-4">
+                        <div class="col-12"><label class="form-label text-muted small fw-bold mb-2">DERIV SECURE API TOKEN</label><input type="password" name="api_token" id="set-token" class="form-control" placeholder="Enter secure token..."></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">APPLICATION ID</label><input type="text" name="app_id" id="set-appid" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">INIT DATA DEPTH (DAYS)</label><input type="number" name="fetch_days" id="set-days" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">ACTIVE TRADING CHANNEL</label><select name="symbol" id="set-symbol" class="form-select"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">STRATEGY ARCHITECTURE</label><select name="strategy" id="set-strategy" class="form-select"><option value="1">Strategy 1 (1, 10)</option><option value="2">Strategy 2 (2, 20)</option><option value="3">Strategy 3 (3, 30)</option><option value="4">Strategy 4 (1, 20)</option><option value="5">Strategy 5 (2, 10)</option><option value="6">Strategy 6 (3, 20)</option><option value="7">Strategy 7 (1, 30)</option><option value="8">Strategy 8 (2, 30)</option><option value="9">Strategy 9 (3, 10)</option><option value="10">Strategy 10 (1.5, 15)</option></select></div>
+                        <div class="col-12"><label class="form-label text-muted small fw-bold mb-2">STAKE ALLOCATION PER TRADE (%)</label><input type="number" name="trade_pc" id="set-stake" class="form-control" step="0.1"></div>
+                    </div>
+                    <button type="submit" class="btn btn-quantum btn-quantum-primary w-100 py-3 mt-5">SAVE CONFIGURATION</button>
+                </form>
+            </div>
+        </div>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
         const socket = io();
-        const logs = document.getElementById('logs');
         const overlay = document.getElementById('loading-overlay');
         const statusStatus = document.getElementById('loading-status');
+        const sidebar = document.getElementById('sidebar');
+
+        document.getElementById('menu-toggle').onclick = () => sidebar.classList.toggle('active');
+
+        function show(id, el) {
+            ['dash', 'backtest', 'settings'].forEach(s => {
+                document.getElementById('section-'+s).style.display = s === id ? 'block' : 'none';
+            });
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            if (el) el.classList.add('active');
+            if (window.innerWidth <= 992) sidebar.classList.remove('active');
+        }
 
         socket.on('log', (msg) => {
             const div = document.createElement('div');
             div.className = 'log-entry';
-            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
-
-            let colorClass = 'log-system';
-            if (msg.includes('PROFIT')) colorClass = 'log-trade';
-            if (msg.includes('LOSS')) colorClass = 'log-error';
-            if (msg.includes('Error')) colorClass = 'log-error';
-
-            div.innerHTML = `<span class="log-time">${time}</span> <span class="${colorClass}">${msg}</span>`;
-            logs.appendChild(div);
-            logs.scrollTop = logs.scrollHeight;
+            const colorClass = msg.includes('PROFIT') ? 'log-trade' : (msg.includes('LOSS') || msg.includes('Error') ? 'log-error' : 'log-system');
+            div.innerHTML = `<span class="log-time">${new Date().toLocaleTimeString('en-GB', {hour12:false})}</span> <span class="${colorClass}">${msg}</span>`;
+            document.getElementById('logs').appendChild(div);
+            document.getElementById('logs').scrollTop = 99999;
         });
 
-        socket.on('training_progress', (data) => { statusStatus.innerText = data.message; });
-        socket.on('training_complete', () => { overlay.style.display = 'none'; });
+        socket.on('training_progress', (data) => statusStatus.innerText = data.message);
+        socket.on('training_complete', () => overlay.style.display = 'none');
 
         socket.on('status_update', (d) => {
             document.getElementById('bot-status-text').innerText = d.active ? 'OPERATIONAL' : 'OFFLINE';
@@ -415,86 +401,58 @@
             document.getElementById('toggle-bot').className = d.active ? 'btn btn-quantum btn-danger w-100 mb-2' : 'btn btn-quantum btn-quantum-primary w-100 mb-2';
             document.getElementById('account-balance').innerText = '$' + d.balance;
             document.getElementById('trade-summary').innerText = d.wins + 'W / ' + d.losses + 'L';
-            const wr = (d.wins + d.losses) > 0 ? ((d.wins / (d.wins + d.losses)) * 100).toFixed(1) : 0;
-            document.getElementById('win-rate').innerText = wr + '%';
+            const total = d.wins + d.losses;
+            document.getElementById('win-rate').innerText = (total > 0 ? (d.wins / total * 100) : 0).toFixed(1) + '%';
         });
 
-        function show(id) {
-            ['dash', 'settings', 'backtest'].forEach(s => {
-                document.getElementById('section-'+s).style.display = s === id ? 'block' : 'none';
-                document.getElementById('btn-'+s).classList.toggle('active', s === id);
-            });
-        }
-        document.getElementById('btn-dash').onclick = () => show('dash');
-        document.getElementById('btn-settings').onclick = () => show('settings');
-        document.getElementById('btn-backtest').onclick = () => show('backtest');
+        document.getElementById('toggle-bot').onclick = () => fetch('/toggle_bot', {method:'POST'});
 
-        document.getElementById('toggle-bot').onclick = async () => {
-            await fetch('/toggle_bot', {method:'POST'});
-        };
-
-        const settingsForm = document.getElementById('settings-form');
-        settingsForm.onsubmit = async (e) => {
+        document.getElementById('settings-form').onsubmit = async (e) => {
             e.preventDefault();
-            const data = Object.fromEntries(new FormData(e.target));
-            await fetch('/save_settings', {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify(data)
-            });
-            alert('Quantum architecture saved.');
+            await fetch('/save_settings', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});
+            alert('Quantum parameters updated.');
         };
-
-        async function loadConfig() {
-            const r = await fetch('/get_config').then(res => res.json());
-            if (r.api_token) document.getElementById('set-token').value = r.api_token;
-            document.getElementById('set-appid').value = r.app_id || '99999';
-            document.getElementById('set-symbol').value = r.symbol || 'R_100';
-            document.getElementById('set-strategy').value = r.strategy || '1';
-            document.getElementById('set-stake').value = r.trade_pc || 1;
-            document.getElementById('set-days').value = r.fetch_days || 730;
-        }
-        loadConfig();
-
-        async function checkStatus() {
-            const r = await fetch('/get_system_status').then(res => res.json());
-            if (!r.is_initial_training) overlay.style.display = 'none';
-        }
-        checkStatus();
 
         document.getElementById('run-backtest').onclick = async () => {
-            const symbol = document.getElementById('bt-symbol').value;
-            const days = document.getElementById('bt-days').value;
-            const balance = document.getElementById('bt-balance').value;
-
             document.getElementById('bt-loading').style.display = 'block';
             document.getElementById('bt-results-container').style.opacity = '0.3';
+            try {
+                const res = await fetch('/run_backtest', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({symbol:document.getElementById('bt-symbol').value, days:document.getElementById('bt-days').value, balance:document.getElementById('bt-balance').value})}).then(r=>r.json());
+                const tbody = document.getElementById('bt-results-body');
+                tbody.innerHTML = '';
+                res.results.forEach(r => {
+                    const delta = (r.ml.win_rate - r.raw.win_rate) * 100;
+                    const mlWinRateText = r.ml.status === 'ready' ? (r.ml.win_rate * 100).toFixed(1) + '%' : '<span class="text-warning">PENDING</span>';
+                    const mlDeltaText = r.ml.status === 'ready' ? (delta > 0 ? `<span class="delta-positive">+${delta.toFixed(1)}%</span>` : `<span class="text-muted">${delta.toFixed(1)}%</span>`) : '---';
+                    const mlPnLText = r.ml.status === 'ready' ? `<span class="${r.ml.final_balance >= document.getElementById('bt-balance').value ? 'text-success' : 'text-danger'} fw-bold">$${r.ml.final_balance.toFixed(2)}</span>` : '---';
 
-            const res = await fetch('/run_backtest', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({symbol, days, balance})
-            }).then(r => r.json());
-
-            const tbody = document.getElementById('bt-results-body');
-            tbody.innerHTML = '';
-            res.results.forEach(r => {
-                const tr = document.createElement('tr');
-                const delta = (r.ml.win_rate - r.raw.win_rate) * 100;
-                tr.innerHTML = `
-                    <td><div class="fw-bold">${r.name}</div><div class="text-muted small">${r.params}</div></td>
-                    <td>${(r.raw.win_rate * 100).toFixed(1)}%</td>
-                    <td class="text-primary fw-bold">${(r.ml.win_rate * 100).toFixed(1)}% <span class="tag-ml">ML</span></td>
-                    <td class="${delta > 0 ? 'delta-positive' : 'delta-neutral'}">${delta > 0 ? '+' : ''}${delta.toFixed(1)}%</td>
-                    <td>${r.ml.trades}</td>
-                    <td class="${r.ml.final_balance >= balance ? 'text-success' : 'text-danger'} fw-bold">$${r.ml.final_balance.toFixed(2)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
+                    tbody.innerHTML += `<tr>
+                        <td><div class="fw-bold">${r.name}</div><div class="text-muted small">${r.params}</div></td>
+                        <td class="text-muted">${(r.raw.win_rate*100).toFixed(1)}%</td>
+                        <td><div class="d-flex align-items-center">${mlWinRateText} ${r.ml.status === 'ready' ? '<span class="tag-ml">ML</span>' : ''}</div></td>
+                        <td>${mlDeltaText}</td>
+                        <td>${mlPnLText}</td>
+                    </tr>`;
+                });
+            } catch(e) { alert('Simulation Error: ' + e); }
             document.getElementById('bt-loading').style.display = 'none';
             document.getElementById('bt-results-container').style.opacity = '1';
         };
+
+        async function init() {
+            try {
+                const r = await fetch('/get_config').then(res=>res.json());
+                if(r.api_token) document.getElementById('set-token').value = r.api_token;
+                document.getElementById('set-appid').value = r.app_id || '';
+                document.getElementById('set-symbol').value = r.symbol || 'R_100';
+                document.getElementById('set-strategy').value = r.strategy || '1';
+                document.getElementById('set-stake').value = r.trade_pc || 1;
+                document.getElementById('set-days').value = r.fetch_days || 730;
+                const s = await fetch('/get_system_status').then(res=>res.json());
+                if(!s.is_initial_training) overlay.style.display = 'none';
+            } catch(e) {}
+        }
+        init();
     </script>
 </body>
 </html>
