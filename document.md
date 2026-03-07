@@ -41,6 +41,10 @@ The system achieves high win rates by combining two distinct layers of logic:
 
 ## 4. Performance Metrics and Stability
 
+### Key Metric: Efficiency Δ
+The **Efficiency Δ** represents the absolute improvement in win rate achieved by the ML filter over the raw UT Bot signals.
+`Efficiency Δ = (ML Win Rate) - (Raw Win Rate)`
+
 | Symbol | Top Strategy | Win Rate | Trade Count (1 Year) | Max Consec. Loss |
 | :--- | :--- | :--- | :--- | :--- |
 | **R_10** | Strategy 5 (2, 10) | 94.22% | 2,024 | 2 |

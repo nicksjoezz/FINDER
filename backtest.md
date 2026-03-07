@@ -21,21 +21,27 @@ The system processes the data and displays a comparison table with the following
 | Metric | Description |
 | :--- | :--- |
 | **Strategy** | The name of the strategy (Strategy 1 to 10). |
-| **ML Filter** | Shows if the Random Forest filter was active. It requires at least **200 historical signals** to train successfully. |
-| **Win Rate** | The percentage of trades that resulted in a profit. |
+| **Neural Accuracy** | The win rate achieved by the ML-filtered strategy. |
+| **Efficiency Δ** | The absolute improvement in win rate provided by the ML filter over the raw signals. |
 | **Trades** | The total number of signals confirmed by both UT Bot and the ML Filter. |
 | **Final Balance** | The simulated account balance after all trades are completed. |
-| **Total Profit** | The net gain or loss in dollars. |
-| **Max Consec. Losses** | The longest "losing streak" observed during the period. |
+| **Projected PnL** | The net gain or loss in dollars. |
 
 ## 4. Financial Simulation Logic (Rise/Fall)
 
 The backtester provides a realistic simulation of Deriv Rise/Fall options using the following logic:
 - **Win Payout (+95%):** For every winning trade, the profit is calculated as 95% of the stake.
 - **Loss (-100%):** For every losing trade, the entire stake is lost.
-- **Dynamic Staking:** The stake for each trade is calculated as a percentage of the **current** account balance at that moment, simulating compounding growth or decline.
+- **Fixed Staking:** The stake for each trade is calculated as a percentage of the **initial** seed capital. This provides a more consistent measure of strategy performance over time.
 
-## 4. How Machine Learning works in Backtesting
+## 5. What is EFFICIENCY Δ?
+
+**EFFICIENCY Δ** is a critical performance indicator. It represents the "lift" provided by the Machine Learning layer.
+`Efficiency Δ = (ML Optimized Win Rate) - (Raw Indicator Win Rate)`
+
+A positive Efficiency Δ indicates that the Neural Filter is successfully blocking losing trades that the standard UT Bot indicator would have otherwise taken.
+
+## 6. How Machine Learning works in Backtesting
 
 ### Deep Training & Model Retention Architecture
 The system uses a centralized `ModelManager` to ensure that backtesting and live trading are perfectly synchronized:

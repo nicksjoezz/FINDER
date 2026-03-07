@@ -97,13 +97,14 @@ def run_bt():
     params = [(1, 10), (2, 20), (3, 30), (1, 20), (2, 10), (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)]
 
     balance = float(d.get('balance', 1000))
-    risk_pc = float(load_config().get('trade_pc', 1))
+    # Use risk from request if available, else from config
+    risk_pc = float(d.get('risk_pc', load_config().get('trade_pc', 1)))
 
     for i, (a, c) in enumerate(params):
         s_idx = i + 1
         df_sig = ut_bot(df, a=a, c=c)
 
-        # Raw results (no ML filter)
+        # Raw results
         tr_raw = Backtester(df_sig).run()
         raw_bal, raw_prof = simulate_financials(tr_raw, balance, risk_pc)
 
@@ -125,14 +126,12 @@ def run_bt():
             'raw': {
                 'win_rate': float(tr_raw['win'].mean()) if not tr_raw.empty else 0,
                 'trades': int(len(tr_raw)),
-                'max_losses': int(calculate_max_consecutive_losses(tr_raw['win'])) if not tr_raw.empty else 0,
                 'final_balance': float(raw_bal)
             },
             'ml': {
                 'status': m_status,
                 'win_rate': float(tr_ml['win'].mean()) if not tr_ml.empty else 0,
                 'trades': int(len(tr_ml)),
-                'max_losses': int(calculate_max_consecutive_losses(tr_ml['win'])) if not tr_ml.empty else 0,
                 'final_balance': float(ml_bal)
             }
         })

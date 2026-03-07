@@ -19,7 +19,6 @@ class ModelManager:
         full_msg = f"[ModelManager] {message}"
         logging.info(full_msg)
         # Ensure it appears in terminal/logs
-        print(full_msg, flush=True)
         if self.socketio:
             self.socketio.emit('log', f"[System] {message}")
             self.socketio.emit('training_progress', {'message': message})
