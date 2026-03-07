@@ -1,22 +1,16 @@
-# Strategy Lab & Efficiency Documentation
+# Strategy Lab & Performance Documentation
 
-## What is EFFICIENCY Δ?
+## Performance Metrics
 
-**EFFICIENCY Δ** (Efficiency Delta) represents the quantitative improvement in win rate achieved by applying the symbol-specific Machine Learning neural filter over the raw UT Bot indicator signals.
+### Neural Accuracy
+The win rate achieved by the strategy after the Machine Learning Neural Filter has processed and filtered the raw UT Bot signals.
 
-### How it is calculated:
-`Efficiency Δ = (ML Optimized Win Rate) - (Raw Indicator Win Rate)`
-
-For example:
-- If Strategy A has a **Raw Win Rate** of **55.0%**.
-- After applying the **ML Neural Filter**, the **Optimized Win Rate** becomes **85.0%**.
-- The **Efficiency Δ** is **+30.0%**.
-
-### What it means:
-A positive Efficiency Δ indicates that the Machine Learning model has successfully identified and blocked high-probability losing trades, thereby increasing the overall accuracy of the strategy. A higher delta suggests a more "efficient" use of capital, as fewer trades are taken but with a significantly higher success probability.
+### Max Consecutive Losses
+This metric tracks the longest streak of consecutive losing trades during the backtest period. It is a critical measure of risk and potential drawdown. Both "Raw" (indicator only) and "ML" (optimized) values are provided for comparison.
 
 ## Backtesting Parameters
 
 - **Win Payout:** +95% of stake.
 - **Loss Penalty:** -100% of stake.
-- **Staking:** Fixed staking based on the user-defined "Risk per Trade (%)" of the initial "Seed Capital".
+- **Staking:** Dynamic Compounding. The stake for each trade is calculated as a percentage of the **available balance at the time of the trade**.
+- **Minimum Stake:** The simulation enforces a minimum stake of $0.35 (Deriv standard).

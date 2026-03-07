@@ -341,7 +341,7 @@
 
                         <div id="bt-results-container" class="table-responsive">
                             <table class="table-comparison">
-                                <thead><tr><th>STRATEGY</th><th>RAW DATA</th><th>NEURAL OPT</th><th>EFFICIENCY Δ</th><th>TRADES</th><th>PROJECTED PNL</th></tr></thead>
+                                <thead><tr><th>STRATEGY</th><th>RAW DATA</th><th>NEURAL OPT</th><th>MAX CONSEC. LOSSES</th><th>TRADES</th><th>PROJECTED PNL</th></tr></thead>
                                 <tbody id="bt-results-body"></tbody>
                             </table>
                         </div>
@@ -426,7 +426,7 @@
         const updateBtStake = () => {
             const bal = document.getElementById('bt-balance').value;
             const risk = document.getElementById('bt-risk').value;
-            document.getElementById('bt-stake-display').innerText = '$' + (bal * (risk/100)).toFixed(2);
+            document.getElementById('bt-stake-display').innerText = '$' + (bal * (risk/100)).toFixed(2) + ' (Compounding)';
         };
         document.getElementById('bt-balance').oninput = updateBtStake;
         document.getElementById('bt-risk').oninput = updateBtStake;
@@ -449,16 +449,15 @@
                 const tbody = document.getElementById('bt-results-body');
                 tbody.innerHTML = '';
                 res.results.forEach(r => {
-                    const delta = (r.ml.win_rate - r.raw.win_rate) * 100;
                     const mlWinRateText = r.ml.status === 'ready' ? (r.ml.win_rate * 100).toFixed(1) + '%' : '<span class="text-warning small">TRAINING</span>';
-                    const mlDeltaText = r.ml.status === 'ready' ? (delta > 0 ? `<span class="delta-positive">+${delta.toFixed(1)}%</span>` : `<span class="text-muted">${delta.toFixed(1)}%</span>`) : '---';
+                    const mlLossText = r.ml.status === 'ready' ? `<span class="text-danger fw-bold">${r.ml.max_consec_losses}</span>` : '---';
                     const mlPnLText = r.ml.status === 'ready' ? `<span class="${r.ml.final_balance >= document.getElementById('bt-balance').value ? 'text-success' : 'text-danger'} fw-bold">$${r.ml.final_balance.toFixed(2)}</span>` : '---';
 
                     tbody.innerHTML += `<tr>
                         <td><div class="fw-bold text-white">${r.name}</div><div class="text-muted small">${r.params}</div></td>
                         <td class="raw-accuracy-text">${(r.raw.win_rate*100).toFixed(1)}%</td>
                         <td><div class="d-flex align-items-center fw-bold text-primary">${mlWinRateText} ${r.ml.status === 'ready' ? '<span class="tag-ml">ML</span>' : ''}</div></td>
-                        <td>${mlDeltaText}</td>
+                        <td><div class="small"><span class="text-muted">Raw:</span> ${r.raw.max_consec_losses}</div><div class="small"><span class="text-danger">ML:</span> ${r.ml.max_consec_losses}</div></td>
                         <td><div class="small"><span class="text-muted">Raw:</span> ${r.raw.trades}</div><div class="small"><span class="text-primary">ML:</span> ${r.ml.trades}</div></td>
                         <td>${mlPnLText}</td>
                     </tr>`;

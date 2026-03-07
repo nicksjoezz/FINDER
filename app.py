@@ -106,7 +106,7 @@ def run_bt():
 
         # Raw results
         tr_raw = Backtester(df_sig).run()
-        raw_bal, raw_prof = simulate_financials(tr_raw, balance, risk_pc)
+        raw_bal, raw_prof, raw_mcl = simulate_financials(tr_raw, balance, risk_pc)
 
         # ML Filtered results
         m_status = model_manager.get_model_status(d['symbol'], s_idx)
@@ -115,10 +115,10 @@ def run_bt():
         if ml:
             df_filtered = ml.filter_signals(df_sig)
             tr_ml = Backtester(df_filtered).run()
-            ml_bal, ml_prof = simulate_financials(tr_ml, balance, risk_pc)
+            ml_bal, ml_prof, ml_mcl = simulate_financials(tr_ml, balance, risk_pc)
         else:
             tr_ml = pd.DataFrame()
-            ml_bal, ml_prof = 0.0, 0.0
+            ml_bal, ml_prof, ml_mcl = 0.0, 0.0, 0
 
         res.append({
             'name': f"Strategy {s_idx}",
@@ -126,13 +126,15 @@ def run_bt():
             'raw': {
                 'win_rate': float(tr_raw['win'].mean()) if not tr_raw.empty else 0,
                 'trades': int(len(tr_raw)),
-                'final_balance': float(raw_bal)
+                'final_balance': float(raw_bal),
+                'max_consec_losses': int(raw_mcl)
             },
             'ml': {
                 'status': m_status,
                 'win_rate': float(tr_ml['win'].mean()) if not tr_ml.empty else 0,
                 'trades': int(len(tr_ml)),
-                'final_balance': float(ml_bal)
+                'final_balance': float(ml_bal),
+                'max_consec_losses': int(ml_mcl)
             }
         })
     return jsonify({'results': res})
