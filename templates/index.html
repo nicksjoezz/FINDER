@@ -320,11 +320,6 @@
                         <div class="mb-4"><label class="text-muted small fw-bold mb-2">RISK PER TRADE (%)</label><input type="number" id="bt-risk" class="form-control" value="1" step="0.1"></div>
                         <div class="mb-4"><label class="text-muted small fw-bold mb-2">LOOKBACK (DAYS)</label><input type="number" id="bt-days" class="form-control" value="7"></div>
                         <button id="run-backtest" class="btn btn-quantum btn-quantum-primary w-100 py-3">RUN ANALYSIS</button>
-
-                        <div class="mt-4 p-3 rounded-3 bg-dark border border-secondary border-opacity-10">
-                            <div class="text-muted small mb-1">STAKE AMOUNT:</div>
-                            <div class="fw-bold" id="bt-stake-display">$10.00</div>
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-9">
@@ -423,14 +418,6 @@
             alert('Parameters locked.');
         };
 
-        const updateBtStake = () => {
-            const bal = document.getElementById('bt-balance').value;
-            const risk = document.getElementById('bt-risk').value;
-            document.getElementById('bt-stake-display').innerText = '$' + (bal * (risk/100)).toFixed(2) + ' (Compounding)';
-        };
-        document.getElementById('bt-balance').oninput = updateBtStake;
-        document.getElementById('bt-risk').oninput = updateBtStake;
-
         document.getElementById('run-backtest').onclick = async () => {
             document.getElementById('bt-loading').style.display = 'block';
             document.getElementById('bt-results-container').style.opacity = '0.3';
@@ -478,7 +465,6 @@
                 document.getElementById('set-days').value = r.fetch_days || 730;
 
                 document.getElementById('bt-risk').value = r.trade_pc || 1;
-                updateBtStake();
 
                 const s = await fetch('/get_system_status').then(res=>res.json());
                 if(!s.is_initial_training) overlay.style.display = 'none';

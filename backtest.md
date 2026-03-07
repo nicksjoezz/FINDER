@@ -35,7 +35,7 @@ The backtester provides a realistic simulation of Deriv Rise/Fall options using 
 - **Dynamic Compounding:** The stake for each trade is calculated as a percentage of the **available balance at the time of the trade**. This simulates realistic account growth and decline.
 
 
-## 6. How Machine Learning works in Backtesting
+## 5. How Machine Learning works in Backtesting
 
 ### Deep Training & Model Retention Architecture
 The system uses a centralized `ModelManager` to ensure that backtesting and live trading are perfectly synchronized:
@@ -49,7 +49,7 @@ You won't see `.pkl` or `.model` files in the folder. This is intentional:
 1.  **Adaptability:** The market changes constantly. A model trained on data from 6 months ago might be "stale." By training on-the-fly, the bot always stays current.
 2.  **Memory-Only:** Training 100 mini-coaches takes only a few seconds. Keeping them in memory is faster and keeps the project folder clean.
 
-## 5. Technical Implementation
+## 6. Technical Implementation
 
 ### Data Retrieval and Caching
 The backtester uses an intelligent, two-tier caching system for maximum efficiency:
