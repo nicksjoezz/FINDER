@@ -419,6 +419,10 @@
             document.getElementById('trade-summary').innerText = d.wins + 'W / ' + d.losses + 'L';
             const total = d.wins + d.losses;
             document.getElementById('win-rate').innerText = (total > 0 ? (d.wins / total * 100) : 0).toFixed(1) + '%';
+
+            if (d.last_trained) {
+                 document.querySelector('#section-dash p.text-muted').innerText = 'Neural network active. Last Retrained: ' + d.last_trained;
+            }
         }
 
         socket.on('status_update', (d) => updateUIStatus(d));
@@ -482,7 +486,10 @@
                 const s = await fetch('/get_system_status').then(res=>res.json());
                 if(!s.is_initial_training) overlay.style.display = 'none';
 
-                if (s.bot_state) updateUIStatus(s.bot_state);
+                if (s.bot_state) {
+                    if (s.last_trained) s.bot_state.last_trained = s.last_trained;
+                    updateUIStatus(s.bot_state);
+                }
                 if (s.logs) {
                     document.getElementById('logs').innerHTML = '';
                     s.logs.forEach(entry => {

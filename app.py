@@ -55,6 +55,7 @@ def toggle_bot():
 def get_sys_status():
     return jsonify({
         'is_initial_training': model_manager.is_initial_training,
+        'last_trained': model_manager.last_trained,
         'bot_state': bot.get_state(),
         'logs': bot.log_history
     })

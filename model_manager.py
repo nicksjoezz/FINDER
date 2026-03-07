@@ -8,6 +8,7 @@ class ModelManager:
     def __init__(self, socketio=None):
         self.socketio = socketio
         self.models = {}
+        self.last_trained = None
         self.is_initial_training = False
         self.symbols = ['R_100', 'R_75', 'R_50', 'R_25', 'R_10']
         self.strat_params = [(1, 10), (2, 20), (3, 30), (1, 20), (2, 10), (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)]
@@ -96,9 +97,10 @@ class ModelManager:
                 self.log(f"Error processing {symbol}: {e}")
 
         self.is_initial_training = False
+        self.last_trained = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
         if self.socketio:
             self.socketio.emit('training_complete', {'status': 'success'})
-        self.log("Startup synchronization finished. All systems ready.")
+        self.log(f"Startup synchronization finished at {self.last_trained}. All systems ready.")
 
     async def train_all_models(self):
         """Full retraining for daily update."""
@@ -148,7 +150,8 @@ class ModelManager:
             except Exception as e:
                 self.log(f"Error during daily retraining for {symbol}: {e}")
 
-        self.log("Daily retraining cycle complete.")
+        self.last_trained = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
+        self.log(f"Daily retraining cycle complete at {self.last_trained}.")
 
     def get_model_status(self, symbol, strategy_idx):
         return self.models.get(symbol, {}).get(int(strategy_idx), {}).get('status', 'pending')

@@ -42,7 +42,8 @@ class TradingBot:
             'wins': self.wins,
             'losses': self.losses,
             'total_trades': self.total_trades,
-            'config': self.config
+            'config': self.config,
+            'last_trained': model_manager.last_trained
         }
 
     async def connect(self):
@@ -141,47 +142,60 @@ class TradingBot:
 
         while self.is_running:
             try:
-                # Fetch recent candles
+                # Fetch recent candles (need at least 200 for indicators like EMA 200)
                 response = await self.api.ticks_history({
                     'ticks_history': symbol,
                     'end': 'latest',
-                    'count': 300,
+                    'count': 500,
                     'granularity': 300,
                     'style': 'candles'
                 })
 
-                if 'candles' not in response:
+                if 'candles' not in response or not response['candles']:
                     await asyncio.sleep(10)
                     continue
 
                 df = pd.DataFrame(response['candles'])
-                current_candle = df.iloc[-1]
+                # The last candle in ticks_history is usually the current building one
+                # We want signals from the last COMPLETED candle
+                last_completed_candle = df.iloc[-2]
 
-                if current_candle['epoch'] > self.last_candle_epoch:
-                    # New candle formed (or first check)
-                    self.last_candle_epoch = current_candle['epoch']
-                    self.log(f"Current candle time: {time.ctime(current_candle['epoch'])}")
+                if last_completed_candle['epoch'] > self.last_candle_epoch:
+                    # New candle closed
+                    self.last_candle_epoch = last_completed_candle['epoch']
+                    self.log(f"NEW CANDLE CLOSED: {time.ctime(self.last_candle_epoch)}")
 
-                    # Indicators
-                    df = add_indicators(df)
-                    df_signals = ut_bot(df, a=a, c=c)
+                    # Calculate Indicators on all but the current building candle
+                    df_calc = df.iloc[:-1].copy()
+                    df_calc = add_indicators(df_calc)
 
-                    # ML Filter
-                    ml = await self.get_ml_filter(symbol, strategy_idx)
-                    if ml:
-                        df_signals = ml.filter_signals(df_signals)
+                    # UT Bot Signals
+                    df_ut = ut_bot(df_calc, a=a, c=c)
+                    raw_sig = df_ut.iloc[-1] # The signal for the last completed candle
+
+                    buy_triggered = raw_sig['buy']
+                    sell_triggered = raw_sig['sell']
+
+                    if buy_triggered or sell_triggered:
+                        side = 'BUY' if buy_triggered else 'SELL'
+                        self.log(f"UT Bot {side} signal detected. Verifying with Neural Filter...")
+
+                        # ML Filter verification
+                        ml = await self.get_ml_filter(symbol, strategy_idx)
+                        if ml:
+                            df_ml = ml.filter_signals(df_ut)
+                            ml_sig = df_ml.iloc[-1]
+
+                            if ml_sig['buy'] or ml_sig['sell']:
+                                self.log(f"NEURAL FILTER: SIGNAL PASSED. Executing {side} trade.")
+                                await self.place_trade('CALL' if buy_triggered else 'PUT')
+                            else:
+                                self.log(f"NEURAL FILTER: SIGNAL BLOCKED (Low probability).")
+                        else:
+                            self.log(f"ML filter missing. Executing raw {side} trade.")
+                            await self.place_trade('CALL' if buy_triggered else 'PUT')
                     else:
-                        self.log(f"ML Model for {symbol} Strategy {strategy_idx} is not ready yet. Trading without ML filter.")
-
-                    # Signal is from the last closed candle (index -2)
-                    last_sig = df_signals.iloc[-2]
-
-                    if last_sig['buy']:
-                        self.log(f"UT Bot SIGNAL: BUY confirmed.")
-                        await self.place_trade('CALL')
-                    elif last_sig['sell']:
-                        self.log(f"UT Bot SIGNAL: SELL confirmed.")
-                        await self.place_trade('PUT')
+                        self.log("Signal processed: No UT Bot entries found for this candle.")
 
                 await asyncio.sleep(10)
 
@@ -222,9 +236,10 @@ class TradingBot:
                 contract_id = proposal['buy']['contract_id']
                 self.total_trades += 1
                 self.active_contracts[contract_id] = {'side': side, 'stake': amount}
-                self.log(f"Trade successfully placed! ID: {contract_id}")
+                self.log(f"SUCCESS: {side} trade placed! ID: {contract_id} | Stake: ${amount:.2f}")
             else:
-                self.log(f"Failed to place trade: {proposal.get('error', {}).get('message', 'Unknown error')}")
+                err = proposal.get('error', {}).get('message', 'Unknown error')
+                self.log(f"EXECUTION ERROR: Failed to place {side} trade. Reason: {err}")
 
             self.update_status()
 
