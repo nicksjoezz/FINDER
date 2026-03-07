@@ -12,6 +12,7 @@ class TradingBot:
     def __init__(self, socketio):
         self.socketio = socketio
         self.is_running = False
+        self.main_task = None
         self.config = {}
         self.balance = 0.0
         self.wins = 0
@@ -116,19 +117,39 @@ class TradingBot:
         self.config = config
         self.is_running = True
         if await self.connect():
-            asyncio.create_task(self.main_loop())
+            self.main_task = asyncio.create_task(self.main_loop())
         else:
             self.is_running = False
             self.update_status()
 
     async def stop(self):
         self.is_running = False
+        if self.main_task:
+            self.main_task.cancel()
+            try:
+                await self.main_task
+            except asyncio.CancelledError:
+                pass
+            self.main_task = None
+
         if self.api:
             await self.api.disconnect()
+            self.api = None
+
         self.log("Bot stopped.")
         self.update_status()
 
     async def main_loop(self):
+        try:
+            await self._main_loop_exec()
+        except asyncio.CancelledError:
+            self.log("Main loop task cancelled.")
+        except Exception as e:
+            self.log(f"Fatal main loop error: {e}")
+        finally:
+            self.is_running = False
+
+    async def _main_loop_exec(self):
         symbol = self.config['symbol']
         strategy_idx = int(self.config['strategy'])
 
