@@ -20,19 +20,30 @@ class TradingBot:
         self.api = None
         self.last_candle_epoch = 0
         self.active_contracts = {} # contract_id -> {'side', 'entry_time', 'stake'}
+        self.log_history = []
+        self.max_logs = 100
 
     def log(self, message):
-        logging.info(message)
+        timestamp = time.strftime('%H:%M:%S', time.gmtime())
+        full_log = f"{timestamp} | {message}"
+        logging.info(full_log)
+        self.log_history.append(full_log)
+        if len(self.log_history) > self.max_logs:
+            self.log_history.pop(0)
         self.socketio.emit('log', message)
 
     def update_status(self):
-        self.socketio.emit('status_update', {
+        self.socketio.emit('status_update', self.get_state())
+
+    def get_state(self):
+        return {
             'active': self.is_running,
             'balance': f"{self.balance:.2f}",
             'wins': self.wins,
             'losses': self.losses,
-            'total_trades': self.total_trades
-        })
+            'total_trades': self.total_trades,
+            'config': self.config
+        }
 
     async def connect(self):
         try:
@@ -91,11 +102,23 @@ class TradingBot:
         ml = model_manager.get_model(symbol, strategy_idx)
         return ml
 
+    def reset_metrics(self):
+        self.wins = 0
+        self.losses = 0
+        self.total_trades = 0
+        self.log_history = []
+        self.active_contracts = {}
+        self.last_candle_epoch = 0
+
     async def start(self, config):
+        self.reset_metrics()
         self.config = config
         self.is_running = True
         if await self.connect():
             asyncio.create_task(self.main_loop())
+        else:
+            self.is_running = False
+            self.update_status()
 
     async def stop(self):
         self.is_running = False

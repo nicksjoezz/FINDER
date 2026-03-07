@@ -52,7 +52,12 @@ def toggle_bot():
     return jsonify({'status': 'success'})
 
 @app.route('/get_system_status')
-def get_sys_status(): return jsonify({'is_initial_training': model_manager.is_initial_training})
+def get_sys_status():
+    return jsonify({
+        'is_initial_training': model_manager.is_initial_training,
+        'bot_state': bot.get_state(),
+        'logs': bot.log_history
+    })
 
 async def get_bt_data(symbol, days):
     fp = os.path.join('data', f"{symbol}_5m_2y.csv")

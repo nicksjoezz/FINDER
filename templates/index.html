@@ -386,29 +386,42 @@
             if (window.innerWidth <= 992) sidebar.classList.remove('active');
         }
 
-        socket.on('log', (msg) => {
+        function appendLog(msg, timestamp) {
             const div = document.createElement('div');
             div.className = 'log-entry';
             const colorClass = msg.includes('PROFIT') ? 'log-trade' : (msg.includes('LOSS') || msg.includes('Error') ? 'log-error' : 'log-system');
-            div.innerHTML = `<span class="log-time">${new Date().toLocaleTimeString('en-GB', {hour12:false})}</span> <span class="${colorClass}">${msg}</span>`;
+            const timeStr = timestamp || new Date().toLocaleTimeString('en-GB', {hour12:false});
+            div.innerHTML = `<span class="log-time">${timeStr}</span> <span class="${colorClass}">${msg}</span>`;
             const logContainer = document.getElementById('logs');
             logContainer.appendChild(div);
             logContainer.scrollTop = logContainer.scrollHeight;
-        });
+        }
+
+        socket.on('log', (msg) => appendLog(msg));
 
         socket.on('training_progress', (data) => statusStatus.innerText = data.message);
         socket.on('training_complete', () => overlay.style.display = 'none');
 
-        socket.on('status_update', (d) => {
+        function updateUIStatus(d) {
             document.getElementById('bot-status-text').innerText = d.active ? 'OPERATIONAL' : 'OFFLINE';
             document.getElementById('status-indicator').style.backgroundColor = d.active ? '#10b981' : '#6b7280';
-            document.getElementById('toggle-bot').innerText = d.active ? 'CEASE TRADING' : 'ENGAGE BOT';
-            document.getElementById('toggle-bot').className = d.active ? 'btn btn-quantum btn-danger w-100 mb-2' : 'btn btn-quantum btn-quantum-primary w-100 mb-2';
+
+            const btn = document.getElementById('toggle-bot');
+            if (d.active) {
+                btn.innerHTML = '<i class="fas fa-stop"></i> <span>CEASE TRADING</span>';
+                btn.className = 'btn btn-quantum btn-danger w-100 mb-3';
+            } else {
+                btn.innerHTML = '<i class="fas fa-play"></i> <span>ENGAGE BOT</span>';
+                btn.className = 'btn btn-quantum btn-quantum-primary w-100 mb-3';
+            }
+
             document.getElementById('account-balance').innerText = '$' + d.balance;
             document.getElementById('trade-summary').innerText = d.wins + 'W / ' + d.losses + 'L';
             const total = d.wins + d.losses;
             document.getElementById('win-rate').innerText = (total > 0 ? (d.wins / total * 100) : 0).toFixed(1) + '%';
-        });
+        }
+
+        socket.on('status_update', (d) => updateUIStatus(d));
 
         document.getElementById('toggle-bot').onclick = () => fetch('/toggle_bot', {method:'POST'});
 
@@ -468,6 +481,15 @@
 
                 const s = await fetch('/get_system_status').then(res=>res.json());
                 if(!s.is_initial_training) overlay.style.display = 'none';
+
+                if (s.bot_state) updateUIStatus(s.bot_state);
+                if (s.logs) {
+                    document.getElementById('logs').innerHTML = '';
+                    s.logs.forEach(entry => {
+                        const parts = entry.split(' | ');
+                        appendLog(parts[1], parts[0]);
+                    });
+                }
             } catch(e) {}
         }
         init();
