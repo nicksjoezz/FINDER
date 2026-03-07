@@ -183,6 +183,7 @@ class TradingBot:
                         # ML Filter verification
                         ml = await self.get_ml_filter(symbol, strategy_idx)
                         if ml:
+                            self.log(f"Using Neural Filter v.{ml.trained_at}")
                             df_ml = ml.filter_signals(df_ut)
                             ml_sig = df_ml.iloc[-1]
 

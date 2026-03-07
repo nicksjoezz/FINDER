@@ -7,10 +7,13 @@ from indicators import add_indicators
 import joblib
 import os
 
+from datetime import datetime
+
 class MLFilter:
     def __init__(self):
         self.model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
         self.is_trained = False
+        self.trained_at = None
         self.feature_cols = ['rsi', 'macd_diff', 'adx', 'bb_pct', 'ema_dist']
 
     def prepare_features(self, df, positional_indices):
@@ -64,6 +67,7 @@ class MLFilter:
         X = self.prepare_features(df, X_indices)
         self.model.fit(X, y)
         self.is_trained = True
+        self.trained_at = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
         return True
 
     def filter_signals(self, df):
@@ -95,11 +99,18 @@ class MLFilter:
         df_work.index = df.index
         return df_work
 
-    def save(self, filepath): joblib.dump(self.model, filepath)
+    def save(self, filepath):
+        joblib.dump({'model': self.model, 'trained_at': self.trained_at}, filepath)
+
     def load(self, filepath):
         if os.path.exists(filepath):
             try:
-                self.model = joblib.load(filepath)
+                data = joblib.load(filepath)
+                if isinstance(data, dict):
+                    self.model = data['model']
+                    self.trained_at = data.get('trained_at')
+                else:
+                    self.model = data
                 self.is_trained = True
                 return True
             except: pass

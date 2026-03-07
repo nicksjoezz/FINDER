@@ -104,20 +104,27 @@ class ModelManager:
 
     async def train_all_models(self):
         """Full retraining for daily update."""
-        self.log("Commencing scheduled daily retraining...")
+        start_time = datetime.utcnow()
+        self.log(f"Commencing daily retraining cycle at {start_time.strftime('%H:%M:%S UTC')}...")
         from fetch_data import update_symbol_data
+
         for symbol in self.symbols:
+            self.log(f"Step 1/2: Updating historical data for {symbol}...")
             try:
                 await update_symbol_data(symbol, data_dir=self.data_dir)
             except Exception as e:
-                self.log(f"Failed to sync data for {symbol} during daily update: {e}")
+                self.log(f"Failed to sync data for {symbol}: {e}")
                 continue
 
             filepath = os.path.join(self.data_dir, f"{symbol}_5m_2y.csv")
             if not os.path.exists(filepath): continue
 
+            self.log(f"Step 2/2: Retraining all {symbol} strategies...")
             try:
                 df_raw = pd.read_csv(filepath)
+                first_candle = datetime.fromtimestamp(df_raw['epoch'].min())
+                last_candle = datetime.fromtimestamp(df_raw['epoch'].max())
+                self.log(f"Training on range: {first_candle} to {last_candle} ({len(df_raw)} candles)")
                 df = add_indicators(df_raw)
                 del df_raw
                 gc.collect()
