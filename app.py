@@ -3,7 +3,7 @@ eventlet.monkey_patch()
 
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO
-import json, os, asyncio, threading, pandas as pd
+import json, os, asyncio, threading, pandas as pd, logging
 from datetime import datetime, timedelta
 from trading_bot import TradingBot
 from model_manager import model_manager
@@ -11,9 +11,11 @@ from deriv_api import DerivAPI
 from strategy_utils import ut_bot, Backtester, calculate_max_consecutive_losses, simulate_financials
 from indicators import add_indicators
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+
 app = Flask(__name__)
 # Standard Flask-SocketIO initialization
-socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*", logger=True, engineio_logger=True)
 bot = TradingBot(socketio)
 CONFIG_FILE = 'config.json'
 
@@ -155,7 +157,9 @@ def start_bot_loop(loop):
 
 bot_loop = asyncio.new_event_loop()
 model_manager.socketio = socketio
+print("Starting background worker thread...", flush=True)
 threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True).start()
+print("Background worker thread started.", flush=True)
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=False)

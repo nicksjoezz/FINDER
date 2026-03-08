@@ -2,6 +2,7 @@ import asyncio
 import pandas as pd
 import numpy as np
 import time
+import traceback
 from deriv_api import DerivAPI
 from strategy_utils import ut_bot
 from indicators import add_indicators
@@ -149,7 +150,8 @@ class TradingBot:
         except asyncio.CancelledError:
             self.log("Main loop task cancelled.")
         except Exception as e:
-            self.log(f"Fatal main loop error: {e}")
+            err_msg = f"Fatal main loop error: {type(e).__name__}: {e}\n{traceback.format_exc()}"
+            self.log(err_msg)
         finally:
             self.is_running = False
 
@@ -184,13 +186,19 @@ class TradingBot:
                     'style': 'candles'
                 }), timeout=45)
 
-                if 'candles' not in response or not response['candles']:
-                    self.log(f"Market Data Warning: No candles returned for {symbol}. Retrying...")
+                if 'candles' not in response or len(response.get('candles', [])) < 100:
+                    count = len(response.get('candles', [])) if 'candles' in response else "N/A"
+                    self.log(f"Market Data Warning: Insufficient candles returned for {symbol} (Count: {count}). Retrying...")
                     await asyncio.sleep(10)
                     continue
 
                 df = pd.DataFrame(response['candles'])
                 # We want signals from the last COMPLETED candle
+                if len(df) < 2:
+                    self.log(f"Market Data Warning: DataFrame too small for processing {symbol}. Retrying...")
+                    await asyncio.sleep(10)
+                    continue
+
                 last_completed_candle = df.iloc[-2]
 
                 if last_completed_candle['epoch'] > self.last_candle_epoch:
@@ -234,8 +242,14 @@ class TradingBot:
 
                 await asyncio.sleep(10)
 
+            except asyncio.TimeoutError:
+                self.log("Main loop error: API Request Timed Out. Retrying in 10s...")
+                await asyncio.sleep(10)
             except Exception as e:
-                self.log(f"Main loop error: {e}")
+                err_msg = f"Main loop error: {type(e).__name__}: {e}"
+                self.log(err_msg)
+                # Also print full stack to server terminal for deep debugging
+                print(f"[DEBUG] Full Traceback:\n{traceback.format_exc()}", flush=True)
                 await asyncio.sleep(10)
 
     async def place_trade(self, side):

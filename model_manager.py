@@ -1,4 +1,4 @@
-import asyncio, pandas as pd, os, time, logging, gc, sys
+import asyncio, pandas as pd, os, time, logging, gc, sys, traceback
 from datetime import datetime, timedelta
 from ml_filter import MLFilter
 from strategy_utils import ut_bot, Backtester
@@ -52,7 +52,8 @@ class ModelManager:
             try:
                 await update_symbol_data(symbol, data_dir=self.data_dir)
             except Exception as e:
-                self.log(f"Failed to sync data for {symbol}: {e}")
+                self.log(f"Failed to sync data for {symbol}: {type(e).__name__}: {e}")
+                print(f"[DEBUG] ModelManager Sync Traceback:\n{traceback.format_exc()}", flush=True)
                 continue
 
             filepath = os.path.join(self.data_dir, f"{symbol}_5m_2y.csv")
