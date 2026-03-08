@@ -8,479 +8,529 @@ https://eventlet.readthedocs.io/en/latest/asyncio/migration.html
 
   import eventlet
 Server initialized for eventlet.
-2026-03-08 16:17:30,488 Server initialized for eventlet.
+2026-03-08 19:01:28,475 Server initialized for eventlet.
 Starting background worker thread...
 Background worker thread started.
 Starting ModelManager initialization...
 [ModelManager] Initializing models from disk...
 emitting event "log" to all [/]
-2026-03-08 16:17:30,495 emitting event "log" to all [/]
+2026-03-08 19:01:28,483 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:30,495 emitting event "training_progress" to all [/]
+2026-03-08 19:01:28,483 emitting event "training_progress" to all [/]
 [ModelManager] Disk initialization complete.
 emitting event "log" to all [/]
-2026-03-08 16:17:31,418 emitting event "log" to all [/]
+2026-03-08 19:01:29,412 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:31,418 emitting event "training_progress" to all [/]
+2026-03-08 19:01:29,413 emitting event "training_progress" to all [/]
 [ModelManager] Starting startup data synchronization...
 emitting event "log" to all [/]
-2026-03-08 16:17:31,418 emitting event "log" to all [/]
+2026-03-08 19:01:29,413 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:31,418 emitting event "training_progress" to all [/]
+2026-03-08 19:01:29,413 emitting event "training_progress" to all [/]
 [ModelManager] Syncing market data for R_100...
 emitting event "log" to all [/]
-2026-03-08 16:17:31,419 emitting event "log" to all [/]
+2026-03-08 19:01:29,419 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:31,419 emitting event "training_progress" to all [/]
-[R_100] Fetching forward up to 2026-03-08 16:17:31
-Completed update for R_100. Total: 2304
+2026-03-08 19:01:29,419 emitting event "training_progress" to all [/]
+[R_100] Fetching forward up to 2026-03-08 19:01:29
+[R_100] Fetching backward up to 2026-02-19 10:25:00
+[R_100] Fetching backward up to 2026-02-02 01:49:59
+[R_100] Fetching backward up to 2026-01-15 17:09:59
+[R_100] Fetching backward up to 2025-12-29 08:29:59
+[R_100] Fetching backward up to 2025-12-11 23:49:59
+[R_100] Fetching backward up to 2025-11-24 15:09:59
+[R_100] Fetching backward up to 2025-11-07 06:29:59
+[R_100] Fetching backward up to 2025-10-20 21:49:59
+[R_100] Fetching backward up to 2025-10-03 13:09:59
+[R_100] Fetching backward up to 2025-09-16 04:29:59
+[R_100] Fetching backward up to 2025-08-29 19:49:59
+[R_100] Fetching backward up to 2025-08-12 11:09:59
+[R_100] Fetching backward up to 2025-07-26 02:29:59
+[R_100] Fetching backward up to 2025-07-08 17:49:59
+[R_100] Fetching backward up to 2025-06-21 09:09:59
+[R_100] Fetching backward up to 2025-06-04 00:29:59
+[R_100] Fetching backward up to 2025-05-17 15:49:59
+[R_100] Fetching backward up to 2025-04-30 07:09:59
+[R_100] Fetching backward up to 2025-04-12 22:29:59
+[R_100] Fetching backward up to 2025-03-26 13:49:59
+[R_100] Fetching backward up to 2025-03-09 05:09:59
+[R_100] Fetching backward up to 2025-03-08 19:03:41
+Completed update for R_100. Total: 105117
 [ModelManager] Training model: R_100 Strat 2...
 emitting event "log" to all [/]
-2026-03-08 16:17:34,344 emitting event "log" to all [/]
+2026-03-08 19:03:47,883 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:34,344 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 2 bypassed (not enough trades: 128).
+2026-03-08 19:03:47,883 emitting event "training_progress" to all [/]
+[ModelManager] Model R_100 Strat 2 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:34,552 emitting event "log" to all [/]
+2026-03-08 19:04:02,819 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:34,553 emitting event "training_progress" to all [/]
+2026-03-08 19:04:02,819 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_100 Strat 3...
 emitting event "log" to all [/]
-2026-03-08 16:17:34,627 emitting event "log" to all [/]
+2026-03-08 19:04:02,903 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:34,628 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 3 bypassed (not enough trades: 73).
+2026-03-08 19:04:02,903 emitting event "training_progress" to all [/]
+[ModelManager] Model R_100 Strat 3 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:34,830 emitting event "log" to all [/]
+2026-03-08 19:04:14,728 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:34,830 emitting event "training_progress" to all [/]
+2026-03-08 19:04:14,728 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_100 Strat 5...
 emitting event "log" to all [/]
-2026-03-08 16:17:34,902 emitting event "log" to all [/]
+2026-03-08 19:04:14,809 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:34,902 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 5 bypassed (not enough trades: 125).
+2026-03-08 19:04:14,810 emitting event "training_progress" to all [/]
+[ModelManager] Model R_100 Strat 5 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:35,112 emitting event "log" to all [/]
+2026-03-08 19:04:29,264 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,113 emitting event "training_progress" to all [/]
+2026-03-08 19:04:29,264 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_100 Strat 6...
 emitting event "log" to all [/]
-2026-03-08 16:17:35,183 emitting event "log" to all [/]
+2026-03-08 19:04:29,347 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,183 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 6 bypassed (not enough trades: 71).
+2026-03-08 19:04:29,347 emitting event "training_progress" to all [/]
+[ModelManager] Model R_100 Strat 6 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:35,382 emitting event "log" to all [/]
+2026-03-08 19:04:41,143 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,382 emitting event "training_progress" to all [/]
+2026-03-08 19:04:41,143 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_100 Strat 8...
 emitting event "log" to all [/]
-2026-03-08 16:17:35,452 emitting event "log" to all [/]
+2026-03-08 19:04:41,226 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,453 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 8 bypassed (not enough trades: 126).
+2026-03-08 19:04:41,226 emitting event "training_progress" to all [/]
+[ModelManager] Model R_100 Strat 8 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:35,659 emitting event "log" to all [/]
+2026-03-08 19:04:59,573 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,659 emitting event "training_progress" to all [/]
+2026-03-08 19:04:59,573 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_100 Strat 9...
 emitting event "log" to all [/]
-2026-03-08 16:17:35,727 emitting event "log" to all [/]
+2026-03-08 19:04:59,655 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,727 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 9 bypassed (not enough trades: 68).
+2026-03-08 19:04:59,656 emitting event "training_progress" to all [/]
+[ModelManager] Model R_100 Strat 9 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:35,926 emitting event "log" to all [/]
+2026-03-08 19:05:12,406 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,926 emitting event "training_progress" to all [/]
+2026-03-08 19:05:12,407 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_100 Strat 10...
 emitting event "log" to all [/]
-2026-03-08 16:17:35,994 emitting event "log" to all [/]
+2026-03-08 19:05:12,496 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:35,995 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 10 bypassed (not enough trades: 184).
+2026-03-08 19:05:12,497 emitting event "training_progress" to all [/]
+[ModelManager] Model R_100 Strat 10 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:36,208 emitting event "log" to all [/]
+2026-03-08 19:05:30,587 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:36,208 emitting event "training_progress" to all [/]
+2026-03-08 19:05:30,588 emitting event "training_progress" to all [/]
 [ModelManager] Syncing market data for R_75...
 emitting event "log" to all [/]
-2026-03-08 16:17:36,333 emitting event "log" to all [/]
+2026-03-08 19:05:30,744 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:36,333 emitting event "training_progress" to all [/]
-[R_75] Fetching forward up to 2026-03-08 16:17:36
-Completed update for R_75. Total: 2304
+2026-03-08 19:05:30,745 emitting event "training_progress" to all [/]
+[R_75] Fetching forward up to 2026-03-08 19:05:30
+[R_75] Fetching backward up to 2026-02-19 10:30:00
+[R_75] Fetching backward up to 2026-02-02 01:54:59
+[R_75] Fetching backward up to 2026-01-15 17:14:59
+[R_75] Fetching backward up to 2025-12-29 08:34:59
+[R_75] Fetching backward up to 2025-12-11 23:54:59
+[R_75] Fetching backward up to 2025-11-24 15:14:59
+[R_75] Fetching backward up to 2025-11-07 06:34:59
+[R_75] Fetching backward up to 2025-10-20 21:54:59
+[R_75] Fetching backward up to 2025-10-03 13:14:59
+[R_75] Fetching backward up to 2025-09-16 04:34:59
+[R_75] Fetching backward up to 2025-08-29 19:54:59
+[R_75] Fetching backward up to 2025-08-12 11:14:59
+[R_75] Fetching backward up to 2025-07-26 02:34:59
+[R_75] Fetching backward up to 2025-07-08 17:54:59
+[R_75] Fetching backward up to 2025-06-21 09:14:59
+[R_75] Fetching backward up to 2025-06-04 00:34:59
+[R_75] Fetching backward up to 2025-05-17 15:54:59
+[R_75] Fetching backward up to 2025-04-30 07:14:59
+[R_75] Fetching backward up to 2025-04-12 22:34:59
+[R_75] Fetching backward up to 2025-03-26 13:54:59
+[R_75] Fetching backward up to 2025-03-09 05:14:59
+[R_75] Fetching backward up to 2025-03-08 19:06:58
+Completed update for R_75. Total: 105117
 [ModelManager] Training model: R_75 Strat 2...
 emitting event "log" to all [/]
-2026-03-08 16:17:39,195 emitting event "log" to all [/]
+2026-03-08 19:07:06,964 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:39,196 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 2 bypassed (not enough trades: 141).
+2026-03-08 19:07:06,965 emitting event "training_progress" to all [/]
+[ModelManager] Model R_75 Strat 2 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:39,406 emitting event "log" to all [/]
+2026-03-08 19:07:22,515 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:39,406 emitting event "training_progress" to all [/]
+2026-03-08 19:07:22,515 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_75 Strat 3...
 emitting event "log" to all [/]
-2026-03-08 16:17:39,482 emitting event "log" to all [/]
+2026-03-08 19:07:22,603 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:39,483 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 3 bypassed (not enough trades: 71).
+2026-03-08 19:07:22,603 emitting event "training_progress" to all [/]
+[ModelManager] Model R_75 Strat 3 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:39,712 emitting event "log" to all [/]
+2026-03-08 19:07:35,986 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:39,712 emitting event "training_progress" to all [/]
+2026-03-08 19:07:35,986 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_75 Strat 5...
 emitting event "log" to all [/]
-2026-03-08 16:17:39,781 emitting event "log" to all [/]
+2026-03-08 19:07:36,067 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:39,781 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 5 bypassed (not enough trades: 144).
+2026-03-08 19:07:36,067 emitting event "training_progress" to all [/]
+[ModelManager] Model R_75 Strat 5 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:40,051 emitting event "log" to all [/]
+2026-03-08 19:07:50,736 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:40,052 emitting event "training_progress" to all [/]
+2026-03-08 19:07:50,736 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_75 Strat 6...
 emitting event "log" to all [/]
-2026-03-08 16:17:40,125 emitting event "log" to all [/]
+2026-03-08 19:07:50,815 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:40,125 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 6 bypassed (not enough trades: 71).
+2026-03-08 19:07:50,815 emitting event "training_progress" to all [/]
+[ModelManager] Model R_75 Strat 6 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:40,339 emitting event "log" to all [/]
+2026-03-08 19:08:02,550 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:40,339 emitting event "training_progress" to all [/]
+2026-03-08 19:08:02,550 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_75 Strat 8...
 emitting event "log" to all [/]
-2026-03-08 16:17:40,407 emitting event "log" to all [/]
+2026-03-08 19:08:02,626 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:40,407 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 8 bypassed (not enough trades: 143).
+2026-03-08 19:08:02,626 emitting event "training_progress" to all [/]
+[ModelManager] Model R_75 Strat 8 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:40,617 emitting event "log" to all [/]
+2026-03-08 19:08:16,952 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:40,617 emitting event "training_progress" to all [/]
+2026-03-08 19:08:16,952 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_75 Strat 9...
 emitting event "log" to all [/]
-2026-03-08 16:17:40,686 emitting event "log" to all [/]
+2026-03-08 19:08:17,031 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:40,686 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 9 bypassed (not enough trades: 74).
+2026-03-08 19:08:17,031 emitting event "training_progress" to all [/]
+[ModelManager] Model R_75 Strat 9 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:40,886 emitting event "log" to all [/]
+2026-03-08 19:08:28,699 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:40,886 emitting event "training_progress" to all [/]
+2026-03-08 19:08:28,699 emitting event "training_progress" to all [/]
 [ModelManager] Syncing market data for R_50...
 emitting event "log" to all [/]
-2026-03-08 16:17:41,014 emitting event "log" to all [/]
+2026-03-08 19:08:28,853 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:41,014 emitting event "training_progress" to all [/]
-[R_50] Fetching forward up to 2026-03-08 16:17:41
-Completed update for R_50. Total: 2304
+2026-03-08 19:08:28,854 emitting event "training_progress" to all [/]
+[R_50] Fetching forward up to 2026-03-08 19:08:28
+[R_50] Fetching backward up to 2026-02-19 10:30:00
+[R_50] Fetching backward up to 2026-02-02 01:54:59
+[R_50] Fetching backward up to 2026-01-15 17:14:59
+[R_50] Fetching backward up to 2025-12-29 08:34:59
+[R_50] Fetching backward up to 2025-12-11 23:54:59
+[R_50] Fetching backward up to 2025-11-24 15:14:59
+[R_50] Fetching backward up to 2025-11-07 06:34:59
+[R_50] Fetching backward up to 2025-10-20 21:54:59
+[R_50] Fetching backward up to 2025-10-03 13:14:59
+[R_50] Fetching backward up to 2025-09-16 04:34:59
+[R_50] Fetching backward up to 2025-08-29 19:54:59
+[R_50] Fetching backward up to 2025-08-12 11:14:59
+[R_50] Fetching backward up to 2025-07-26 02:34:59
+[R_50] Fetching backward up to 2025-07-08 17:54:59
+[R_50] Fetching backward up to 2025-06-21 09:14:59
+[R_50] Fetching backward up to 2025-06-04 00:34:59
+[R_50] Fetching backward up to 2025-05-17 15:54:59
+[R_50] Fetching backward up to 2025-04-30 07:14:59
+[R_50] Fetching backward up to 2025-04-12 22:34:59
+[R_50] Fetching backward up to 2025-03-26 13:54:59
+[R_50] Fetching backward up to 2025-03-09 05:14:59
+[R_50] Fetching backward up to 2025-03-08 19:09:52
+Completed update for R_50. Total: 105117
 [ModelManager] Training model: R_50 Strat 2...
 emitting event "log" to all [/]
-2026-03-08 16:17:43,678 emitting event "log" to all [/]
+2026-03-08 19:09:59,173 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:43,678 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 2 bypassed (not enough trades: 128).
+2026-03-08 19:09:59,174 emitting event "training_progress" to all [/]
+[ModelManager] Model R_50 Strat 2 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:43,899 emitting event "log" to all [/]
+2026-03-08 19:10:14,311 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:43,899 emitting event "training_progress" to all [/]
+2026-03-08 19:10:14,311 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_50 Strat 3...
 emitting event "log" to all [/]
-2026-03-08 16:17:43,965 emitting event "log" to all [/]
+2026-03-08 19:10:14,399 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:43,965 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 3 bypassed (not enough trades: 70).
+2026-03-08 19:10:14,399 emitting event "training_progress" to all [/]
+[ModelManager] Model R_50 Strat 3 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:44,164 emitting event "log" to all [/]
+2026-03-08 19:10:26,238 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:44,165 emitting event "training_progress" to all [/]
+2026-03-08 19:10:26,239 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_50 Strat 5...
 emitting event "log" to all [/]
-2026-03-08 16:17:44,232 emitting event "log" to all [/]
+2026-03-08 19:10:26,324 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:44,232 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 5 bypassed (not enough trades: 130).
+2026-03-08 19:10:26,324 emitting event "training_progress" to all [/]
+[ModelManager] Model R_50 Strat 5 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:44,613 emitting event "log" to all [/]
+2026-03-08 19:10:40,843 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:44,614 emitting event "training_progress" to all [/]
+2026-03-08 19:10:40,843 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_50 Strat 6...
 emitting event "log" to all [/]
-2026-03-08 16:17:44,734 emitting event "log" to all [/]
+2026-03-08 19:10:40,935 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:44,735 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 6 bypassed (not enough trades: 68).
+2026-03-08 19:10:40,935 emitting event "training_progress" to all [/]
+[ModelManager] Model R_50 Strat 6 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:45,112 emitting event "log" to all [/]
+2026-03-08 19:10:52,701 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:45,113 emitting event "training_progress" to all [/]
+2026-03-08 19:10:52,701 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_50 Strat 8...
 emitting event "log" to all [/]
-2026-03-08 16:17:45,213 emitting event "log" to all [/]
+2026-03-08 19:10:52,790 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:45,213 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 8 bypassed (not enough trades: 128).
+2026-03-08 19:10:52,790 emitting event "training_progress" to all [/]
+[ModelManager] Model R_50 Strat 8 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:45,441 emitting event "log" to all [/]
+2026-03-08 19:11:11,619 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:45,441 emitting event "training_progress" to all [/]
+2026-03-08 19:11:11,620 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_50 Strat 9...
 emitting event "log" to all [/]
-2026-03-08 16:17:45,533 emitting event "log" to all [/]
+2026-03-08 19:11:11,709 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:45,533 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 9 bypassed (not enough trades: 72).
+2026-03-08 19:11:11,710 emitting event "training_progress" to all [/]
+[ModelManager] Model R_50 Strat 9 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:45,854 emitting event "log" to all [/]
+2026-03-08 19:11:23,751 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:45,855 emitting event "training_progress" to all [/]
+2026-03-08 19:11:23,752 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_50 Strat 10...
 emitting event "log" to all [/]
-2026-03-08 16:17:45,970 emitting event "log" to all [/]
+2026-03-08 19:11:23,839 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:45,971 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 10 bypassed (not enough trades: 199).
+2026-03-08 19:11:23,839 emitting event "training_progress" to all [/]
+[ModelManager] Model R_50 Strat 10 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:46,392 emitting event "log" to all [/]
+2026-03-08 19:11:42,147 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:46,393 emitting event "training_progress" to all [/]
+2026-03-08 19:11:42,147 emitting event "training_progress" to all [/]
 [ModelManager] Syncing market data for R_25...
 emitting event "log" to all [/]
-2026-03-08 16:17:46,599 emitting event "log" to all [/]
+2026-03-08 19:11:42,353 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:46,599 emitting event "training_progress" to all [/]
-[R_25] Fetching forward up to 2026-03-08 16:17:46
-Completed update for R_25. Total: 2304
+2026-03-08 19:11:42,354 emitting event "training_progress" to all [/]
+[R_25] Fetching forward up to 2026-03-08 19:11:42
+[R_25] Fetching backward up to 2026-02-19 10:35:00
+[R_25] Fetching backward up to 2026-02-02 01:59:59
+[R_25] Fetching backward up to 2026-01-15 17:19:59
+[R_25] Fetching backward up to 2025-12-29 08:39:59
+[R_25] Fetching backward up to 2025-12-11 23:59:59
+[R_25] Fetching backward up to 2025-11-24 15:19:59
+[R_25] Fetching backward up to 2025-11-07 06:39:59
+[R_25] Fetching backward up to 2025-10-20 21:59:59
+[R_25] Fetching backward up to 2025-10-03 13:19:59
+[R_25] Fetching backward up to 2025-09-16 04:39:59
+[R_25] Fetching backward up to 2025-08-29 19:59:59
+[R_25] Fetching backward up to 2025-08-12 11:19:59
+[R_25] Fetching backward up to 2025-07-26 02:39:59
+[R_25] Fetching backward up to 2025-07-08 17:59:59
+[R_25] Fetching backward up to 2025-06-21 09:19:59
+[R_25] Fetching backward up to 2025-06-04 00:39:59
+[R_25] Fetching backward up to 2025-05-17 15:59:59
+[R_25] Fetching backward up to 2025-04-30 07:19:59
+[R_25] Fetching backward up to 2025-04-12 22:39:59
+[R_25] Fetching backward up to 2025-03-26 13:59:59
+[R_25] Fetching backward up to 2025-03-09 05:19:59
+[R_25] Fetching backward up to 2025-03-08 19:13:13
+Completed update for R_25. Total: 105117
 [ModelManager] Training model: R_25 Strat 2...
 emitting event "log" to all [/]
-2026-03-08 16:17:49,568 emitting event "log" to all [/]
+2026-03-08 19:13:20,227 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:49,569 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 2 bypassed (not enough trades: 117).
+2026-03-08 19:13:20,228 emitting event "training_progress" to all [/]
+[ModelManager] Model R_25 Strat 2 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:50,005 emitting event "log" to all [/]
+2026-03-08 19:13:34,678 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:50,005 emitting event "training_progress" to all [/]
+2026-03-08 19:13:34,678 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_25 Strat 3...
 emitting event "log" to all [/]
-2026-03-08 16:17:50,121 emitting event "log" to all [/]
+2026-03-08 19:13:34,757 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:50,122 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 3 bypassed (not enough trades: 70).
+2026-03-08 19:13:34,757 emitting event "training_progress" to all [/]
+[ModelManager] Model R_25 Strat 3 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:50,441 emitting event "log" to all [/]
+2026-03-08 19:13:46,308 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:50,442 emitting event "training_progress" to all [/]
+2026-03-08 19:13:46,308 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_25 Strat 5...
 emitting event "log" to all [/]
-2026-03-08 16:17:50,546 emitting event "log" to all [/]
+2026-03-08 19:13:46,383 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:50,547 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 5 bypassed (not enough trades: 120).
+2026-03-08 19:13:46,384 emitting event "training_progress" to all [/]
+[ModelManager] Model R_25 Strat 5 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:50,888 emitting event "log" to all [/]
+2026-03-08 19:14:00,718 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:50,888 emitting event "training_progress" to all [/]
+2026-03-08 19:14:00,718 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_25 Strat 6...
 emitting event "log" to all [/]
-2026-03-08 16:17:50,974 emitting event "log" to all [/]
+2026-03-08 19:14:00,801 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:50,974 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 6 bypassed (not enough trades: 69).
+2026-03-08 19:14:00,801 emitting event "training_progress" to all [/]
+[ModelManager] Model R_25 Strat 6 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:51,297 emitting event "log" to all [/]
+2026-03-08 19:14:12,420 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:51,297 emitting event "training_progress" to all [/]
+2026-03-08 19:14:12,420 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_25 Strat 8...
 emitting event "log" to all [/]
-2026-03-08 16:17:51,390 emitting event "log" to all [/]
+2026-03-08 19:14:12,505 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:51,390 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 8 bypassed (not enough trades: 118).
+2026-03-08 19:14:12,506 emitting event "training_progress" to all [/]
+[ModelManager] Model R_25 Strat 8 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:51,734 emitting event "log" to all [/]
+2026-03-08 19:14:27,018 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:51,734 emitting event "training_progress" to all [/]
+2026-03-08 19:14:27,018 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_25 Strat 9...
 emitting event "log" to all [/]
-2026-03-08 16:17:51,837 emitting event "log" to all [/]
+2026-03-08 19:14:27,103 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:51,837 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 9 bypassed (not enough trades: 70).
+2026-03-08 19:14:27,103 emitting event "training_progress" to all [/]
+[ModelManager] Model R_25 Strat 9 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:52,291 emitting event "log" to all [/]
+2026-03-08 19:14:38,897 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:52,291 emitting event "training_progress" to all [/]
+2026-03-08 19:14:38,897 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_25 Strat 10...
 emitting event "log" to all [/]
-2026-03-08 16:17:52,397 emitting event "log" to all [/]
+2026-03-08 19:14:38,975 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:52,397 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 10 bypassed (not enough trades: 186).
+2026-03-08 19:14:38,976 emitting event "training_progress" to all [/]
+[ModelManager] Model R_25 Strat 10 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:52,961 emitting event "log" to all [/]
+2026-03-08 19:14:56,295 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:52,962 emitting event "training_progress" to all [/]
+2026-03-08 19:14:56,295 emitting event "training_progress" to all [/]
 [ModelManager] Syncing market data for R_10...
 emitting event "log" to all [/]
-2026-03-08 16:17:53,205 emitting event "log" to all [/]
+2026-03-08 19:14:56,456 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:53,205 emitting event "training_progress" to all [/]
-[R_10] Fetching forward up to 2026-03-08 16:17:53
-Completed update for R_10. Total: 2304
+2026-03-08 19:14:56,456 emitting event "training_progress" to all [/]
+[R_10] Fetching forward up to 2026-03-08 19:14:56
+[R_10] Fetching backward up to 2026-02-19 10:35:00
+[R_10] Fetching backward up to 2026-02-02 01:59:59
+[R_10] Fetching backward up to 2026-01-15 17:19:59
+[R_10] Fetching backward up to 2025-12-29 08:39:59
+[R_10] Fetching backward up to 2025-12-11 23:59:59
+[R_10] Fetching backward up to 2025-11-24 15:19:59
+[R_10] Fetching backward up to 2025-11-07 06:39:59
+[R_10] Fetching backward up to 2025-10-20 21:59:59
+[R_10] Fetching backward up to 2025-10-03 13:19:59
+[R_10] Fetching backward up to 2025-09-16 04:39:59
+[R_10] Fetching backward up to 2025-08-29 19:59:59
+[R_10] Fetching backward up to 2025-08-12 11:19:59
+[R_10] Fetching backward up to 2025-07-26 02:39:59
+[R_10] Fetching backward up to 2025-07-08 17:59:59
+[R_10] Fetching backward up to 2025-06-21 09:19:59
+[R_10] Fetching backward up to 2025-06-04 00:39:59
+[R_10] Fetching backward up to 2025-05-17 15:59:59
+[R_10] Fetching backward up to 2025-04-30 07:19:59
+[R_10] Fetching backward up to 2025-04-12 22:39:59
+[R_10] Fetching backward up to 2025-03-26 13:59:59
+[R_10] Fetching backward up to 2025-03-09 05:19:59
+[R_10] Fetching backward up to 2025-03-08 19:16:42
+Completed update for R_10. Total: 105117
 [ModelManager] Training model: R_10 Strat 2...
 emitting event "log" to all [/]
-2026-03-08 16:17:56,172 emitting event "log" to all [/]
+2026-03-08 19:16:48,983 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:56,173 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 2 bypassed (not enough trades: 123).
+2026-03-08 19:16:48,984 emitting event "training_progress" to all [/]
+[ModelManager] Model R_10 Strat 2 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:56,653 emitting event "log" to all [/]
+2026-03-08 19:17:03,787 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:56,654 emitting event "training_progress" to all [/]
+2026-03-08 19:17:03,787 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_10 Strat 3...
 emitting event "log" to all [/]
-2026-03-08 16:17:56,773 emitting event "log" to all [/]
+2026-03-08 19:17:03,878 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:56,774 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 3 bypassed (not enough trades: 76).
+2026-03-08 19:17:03,878 emitting event "training_progress" to all [/]
+[ModelManager] Model R_10 Strat 3 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:57,244 emitting event "log" to all [/]
+2026-03-08 19:17:16,057 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:57,244 emitting event "training_progress" to all [/]
+2026-03-08 19:17:16,057 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_10 Strat 5...
 emitting event "log" to all [/]
-2026-03-08 16:17:57,370 emitting event "log" to all [/]
+2026-03-08 19:17:16,153 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:57,371 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 5 bypassed (not enough trades: 121).
+2026-03-08 19:17:16,153 emitting event "training_progress" to all [/]
+[ModelManager] Model R_10 Strat 5 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:57,968 emitting event "log" to all [/]
+2026-03-08 19:17:34,255 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:57,968 emitting event "training_progress" to all [/]
+2026-03-08 19:17:34,255 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_10 Strat 6...
 emitting event "log" to all [/]
-2026-03-08 16:17:58,084 emitting event "log" to all [/]
+2026-03-08 19:17:34,353 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:58,084 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 6 bypassed (not enough trades: 77).
+2026-03-08 19:17:34,353 emitting event "training_progress" to all [/]
+[ModelManager] Model R_10 Strat 6 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:58,541 emitting event "log" to all [/]
+2026-03-08 19:17:46,081 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:58,541 emitting event "training_progress" to all [/]
+2026-03-08 19:17:46,081 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_10 Strat 8...
 emitting event "log" to all [/]
-2026-03-08 16:17:58,658 emitting event "log" to all [/]
+2026-03-08 19:17:46,163 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:58,658 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 8 bypassed (not enough trades: 124).
+2026-03-08 19:17:46,163 emitting event "training_progress" to all [/]
+[ModelManager] Model R_10 Strat 8 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:59,117 emitting event "log" to all [/]
+2026-03-08 19:18:00,631 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:59,117 emitting event "training_progress" to all [/]
+2026-03-08 19:18:00,631 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_10 Strat 9...
 emitting event "log" to all [/]
-2026-03-08 16:17:59,190 emitting event "log" to all [/]
+2026-03-08 19:18:00,707 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:59,190 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 9 bypassed (not enough trades: 77).
+2026-03-08 19:18:00,708 emitting event "training_progress" to all [/]
+[ModelManager] Model R_10 Strat 9 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:59,391 emitting event "log" to all [/]
+2026-03-08 19:18:12,440 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:59,392 emitting event "training_progress" to all [/]
+2026-03-08 19:18:12,440 emitting event "training_progress" to all [/]
 [ModelManager] Training model: R_10 Strat 10...
 emitting event "log" to all [/]
-2026-03-08 16:17:59,462 emitting event "log" to all [/]
+2026-03-08 19:18:12,519 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:59,462 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 10 bypassed (not enough trades: 195).
+2026-03-08 19:18:12,519 emitting event "training_progress" to all [/]
+[ModelManager] Model R_10 Strat 10 ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:59,679 emitting event "log" to all [/]
+2026-03-08 19:18:29,730 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:59,679 emitting event "training_progress" to all [/]
+2026-03-08 19:18:29,730 emitting event "training_progress" to all [/]
 emitting event "training_complete" to all [/]
-2026-03-08 16:17:59,819 emitting event "training_complete" to all [/]
-[ModelManager] Startup synchronization finished at 2026-03-08 16:17:59 UTC. All systems ready.
+2026-03-08 19:18:29,882 emitting event "training_complete" to all [/]
+[ModelManager] Startup synchronization finished at 2026-03-08 19:18:29 UTC. All systems ready.
 emitting event "log" to all [/]
-2026-03-08 16:17:59,819 emitting event "log" to all [/]
+2026-03-08 19:18:29,882 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:59,819 emitting event "training_progress" to all [/]
-[ModelManager] Next full update scheduled in 7.8 hours.
+2026-03-08 19:18:29,882 emitting event "training_progress" to all [/]
+[ModelManager] Next full update scheduled in 4.8 hours.
 emitting event "log" to all [/]
-2026-03-08 16:17:59,819 emitting event "log" to all [/]
+2026-03-08 19:18:29,882 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 16:17:59,819 emitting event "training_progress" to all [/]
-sSouBQ1cv-8_Q_oJAAAA: Sending packet OPEN data {'sid': 'sSouBQ1cv-8_Q_oJAAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-2026-03-08 16:21:26,145 sSouBQ1cv-8_Q_oJAAAA: Sending packet OPEN data {'sid': 'sSouBQ1cv-8_Q_oJAAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-Invalid session sSouBQ1cv-8_Q_oJAAAA (further occurrences of this error will be logged with level INFO)
-2026-03-08 16:21:26,157 Invalid session sSouBQ1cv-8_Q_oJAAAA (further occurrences of this error will be logged with level INFO)
-Invalid session sSouBQ1cv-8_Q_oJAAAA
-2026-03-08 16:21:26,158 Invalid session sSouBQ1cv-8_Q_oJAAAA
-Invalid session sSouBQ1cv-8_Q_oJAAAA
-2026-03-08 16:21:26,160 Invalid session sSouBQ1cv-8_Q_oJAAAA
-Invalid session sSouBQ1cv-8_Q_oJAAAA
-2026-03-08 16:21:26,169 Invalid session sSouBQ1cv-8_Q_oJAAAA
-bBuxcQduqjRnv1UhAAAA: Sending packet OPEN data {'sid': 'bBuxcQduqjRnv1UhAAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-2026-03-08 16:21:26,846 bBuxcQduqjRnv1UhAAAA: Sending packet OPEN data {'sid': 'bBuxcQduqjRnv1UhAAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-bBuxcQduqjRnv1UhAAAA: Received packet MESSAGE data 0
-2026-03-08 16:21:26,850 bBuxcQduqjRnv1UhAAAA: Received packet MESSAGE data 0
-bBuxcQduqjRnv1UhAAAA: Sending packet MESSAGE data 0{"sid":"6nuvoxBZV05xIWqlAAAB"}
-2026-03-08 16:21:26,851 bBuxcQduqjRnv1UhAAAA: Sending packet MESSAGE data 0{"sid":"6nuvoxBZV05xIWqlAAAB"}
-Invalid session bBuxcQduqjRnv1UhAAAA (further occurrences of this error will be logged with level INFO)
-2026-03-08 16:21:26,852 Invalid session bBuxcQduqjRnv1UhAAAA (further occurrences of this error will be logged with level INFO)
-bBuxcQduqjRnv1UhAAAA: Received request to upgrade to websocket
-2026-03-08 16:21:26,852 bBuxcQduqjRnv1UhAAAA: Received request to upgrade to websocket
-bBuxcQduqjRnv1UhAAAA: Failed websocket upgrade, expected UPGRADE packet, received None instead.
-2026-03-08 16:21:26,856 bBuxcQduqjRnv1UhAAAA: Failed websocket upgrade, expected UPGRADE packet, received None instead.
-wXMYtep7nZzOjucKAAAB: Sending packet OPEN data {'sid': 'wXMYtep7nZzOjucKAAAB', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-2026-03-08 16:21:27,749 wXMYtep7nZzOjucKAAAB: Sending packet OPEN data {'sid': 'wXMYtep7nZzOjucKAAAB', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-wXMYtep7nZzOjucKAAAB: Received packet MESSAGE data 0
-2026-03-08 16:21:27,752 wXMYtep7nZzOjucKAAAB: Received packet MESSAGE data 0
-wXMYtep7nZzOjucKAAAB: Sending packet MESSAGE data 0{"sid":"1r9jCKLRW5MQBT0QAAAC"}
-2026-03-08 16:21:27,754 wXMYtep7nZzOjucKAAAB: Sending packet MESSAGE data 0{"sid":"1r9jCKLRW5MQBT0QAAAC"}
-Invalid session wXMYtep7nZzOjucKAAAB
-2026-03-08 16:21:27,755 Invalid session wXMYtep7nZzOjucKAAAB
-Invalid session wXMYtep7nZzOjucKAAAB
-2026-03-08 16:21:27,756 Invalid session wXMYtep7nZzOjucKAAAB
-Invalid session wXMYtep7nZzOjucKAAAB
-2026-03-08 16:21:27,759 Invalid session wXMYtep7nZzOjucKAAAB
-9nFANTQEfOReqzj4AAAD: Sending packet OPEN data {'sid': '9nFANTQEfOReqzj4AAAD', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-2026-03-08 16:21:28,937 9nFANTQEfOReqzj4AAAD: Sending packet OPEN data {'sid': '9nFANTQEfOReqzj4AAAD', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-9nFANTQEfOReqzj4AAAD: Received packet MESSAGE data 0
-2026-03-08 16:21:28,940 9nFANTQEfOReqzj4AAAD: Received packet MESSAGE data 0
-9nFANTQEfOReqzj4AAAD: Sending packet MESSAGE data 0{"sid":"1fzr4TI3qmQO-JiTAAAE"}
-2026-03-08 16:21:28,942 9nFANTQEfOReqzj4AAAD: Sending packet MESSAGE data 0{"sid":"1fzr4TI3qmQO-JiTAAAE"}
-Invalid session 9nFANTQEfOReqzj4AAAD
-2026-03-08 16:21:29,182 Invalid session 9nFANTQEfOReqzj4AAAD
-Invalid session 9nFANTQEfOReqzj4AAAD
-2026-03-08 16:21:29,183 Invalid session 9nFANTQEfOReqzj4AAAD
-Invalid session 9nFANTQEfOReqzj4AAAD
-2026-03-08 16:21:29,191 Invalid session 9nFANTQEfOReqzj4AAAD
-sSouBQ1cv-8_Q_oJAAAA: Sending packet PING data None
-2026-03-08 16:21:51,153 sSouBQ1cv-8_Q_oJAAAA: Sending packet PING data None
-bBuxcQduqjRnv1UhAAAA: Sending packet PING data None
-2026-03-08 16:21:51,852 bBuxcQduqjRnv1UhAAAA: Sending packet PING data None
-wXMYtep7nZzOjucKAAAB: Sending packet PING data None
-2026-03-08 16:21:52,752 wXMYtep7nZzOjucKAAAB: Sending packet PING data None
-9nFANTQEfOReqzj4AAAD: Sending packet PING data None
-2026-03-08 16:21:53,940 9nFANTQEfOReqzj4AAAD: Sending packet PING data None
-wXMYtep7nZzOjucKAAAB: Client is gone, closing socket
-2026-03-08 16:22:12,853 wXMYtep7nZzOjucKAAAB: Client is gone, closing socket
-wXMYtep7nZzOjucKAAAB: Client is gone, closing socket
-2026-03-08 16:22:12,854 wXMYtep7nZzOjucKAAAB: Client is gone, closing socket
-9nFANTQEfOReqzj4AAAD: Client is gone, closing socket
-2026-03-08 16:22:19,528 9nFANTQEfOReqzj4AAAD: Client is gone, closing socket
-9nFANTQEfOReqzj4AAAD: Client is gone, closing socket
-2026-03-08 16:22:19,528 9nFANTQEfOReqzj4AAAD: Client is gone, closing socket
-sSouBQ1cv-8_Q_oJAAAA: Client is gone, closing socket
-2026-03-08 16:22:26,203 sSouBQ1cv-8_Q_oJAAAA: Client is gone, closing socket
-sSouBQ1cv-8_Q_oJAAAA: Client is gone, closing socket
-2026-03-08 16:22:26,203 sSouBQ1cv-8_Q_oJAAAA: Client is gone, closing socket
-bBuxcQduqjRnv1UhAAAA: Client is gone, closing socket
-2026-03-08 16:22:26,885 bBuxcQduqjRnv1UhAAAA: Client is gone, closing socket
-bBuxcQduqjRnv1UhAAAA: Client is gone, closing socket
-2026-03-08 16:22:26,886 bBuxcQduqjRnv1UhAAAA: Client is gone, closing socket
+2026-03-08 19:18:29,882 emitting event "training_progress" to all [/]
+fE-rsB8F1LzRMdA2AAAA: Sending packet OPEN data {'sid': 'fE-rsB8F1LzRMdA2AAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2026-03-08 19:25:18,507 fE-rsB8F1LzRMdA2AAAA: Sending packet OPEN data {'sid': 'fE-rsB8F1LzRMdA2AAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+fE-rsB8F1LzRMdA2AAAA: Received packet MESSAGE data 0
+2026-03-08 19:25:18,537 fE-rsB8F1LzRMdA2AAAA: Received packet MESSAGE data 0
+fE-rsB8F1LzRMdA2AAAA: Sending packet MESSAGE data 0{"sid":"mwYp5JGnn32pECP-AAAB"}
+2026-03-08 19:25:18,538 fE-rsB8F1LzRMdA2AAAA: Sending packet MESSAGE data 0{"sid":"mwYp5JGnn32pECP-AAAB"}
+fE-rsB8F1LzRMdA2AAAA: Received request to upgrade to websocket
+2026-03-08 19:25:18,549 fE-rsB8F1LzRMdA2AAAA: Received request to upgrade to websocket
+fE-rsB8F1LzRMdA2AAAA: Upgrade to websocket successful
+2026-03-08 19:25:18,569 fE-rsB8F1LzRMdA2AAAA: Upgrade to websocket successful

@@ -247,7 +247,6 @@
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
         }
 
-        /* Fixed colors for backtest display */
         .raw-accuracy-text { color: var(--text-main); font-weight: 500; }
     </style>
 </head>
@@ -255,7 +254,7 @@
     <div id="loading-overlay">
         <div class="loader-ring mb-4"></div>
         <h3 class="fw-bold text-white mb-2">Quantum Neural Engine</h3>
-        <p id="loading-status" class="text-muted">Initializing symbol-specific machine learning filters...</p>
+        <p id="loading-status" class="text-muted">Synchronizing Quantum Neural Vectors...</p>
     </div>
 
     <div class="mobile-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
@@ -276,7 +275,7 @@
             <button id="toggle-bot" class="btn btn-quantum btn-quantum-primary w-100 mb-3">
                 <i class="fas fa-play"></i> <span>ENGAGE BOT</span>
             </button>
-            <div class="text-center"><small class="text-muted small fw-medium">v2.1.0-ENTERPRISE</small></div>
+            <div class="text-center"><small class="text-muted small fw-medium">v3.0.0-PRO</small></div>
         </div>
     </div>
 
@@ -285,20 +284,20 @@
         <div id="section-dash">
             <div class="mb-5">
                 <h1 class="fw-bold mb-1">Command Center</h1>
-                <p class="text-muted">Real-time neural network trading stream.</p>
+                <p class="text-muted">Live Neural Market Stream</p>
             </div>
 
             <div class="row g-4 mb-5">
-                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Bot Status</div><div class="stat-value d-flex align-items-center gap-3"><div id="status-indicator" style="width:12px; height:12px; border-radius:50%; background-color:#6b7280; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div><span id="bot-status-text" class="fs-4">OFFLINE</span></div></div></div>
-                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Wallet Balance</div><div class="stat-value" id="account-balance">$0.00</div></div></div>
-                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Performance</div><div class="stat-value text-success" id="trade-summary">0W / 0L</div></div></div>
+                <div class="col-md-3"><div class="glass-card"><div class="stat-label">System Status</div><div class="stat-value d-flex align-items-center gap-3"><div id="status-indicator" style="width:12px; height:12px; border-radius:50%; background-color:#6b7280;"></div><span id="bot-status-text" class="fs-4">OFFLINE</span></div></div></div>
+                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Account Balance</div><div class="stat-value" id="account-balance">$0.00</div></div></div>
+                <div class="col-md-3"><div class="glass-card"><div class="stat-label">Performance Metric</div><div class="stat-value text-success" id="trade-summary">0W / 0L</div></div></div>
                 <div class="col-md-3"><div class="glass-card"><div class="stat-label">Neural Accuracy</div><div class="stat-value" id="win-rate">0.0%</div></div></div>
             </div>
 
-            <div class="glass-card p-0 overflow-hidden" style="border-color: var(--border);">
+            <div class="glass-card p-0 overflow-hidden">
                 <div class="d-flex justify-content-between align-items-center p-4 border-bottom border-secondary border-opacity-10">
-                    <h5 class="fw-bold m-0"><i class="fas fa-terminal me-2 text-primary"></i>Neural Stream Logs</h5>
-                    <button class="btn btn-sm btn-outline-secondary border-secondary border-opacity-20 px-3" onclick="document.getElementById('logs').innerHTML = ''">Clear Console</button>
+                    <h5 class="fw-bold m-0"><i class="fas fa-terminal me-2 text-primary"></i>Real-time Execution Logs</h5>
+                    <button class="btn btn-sm btn-outline-secondary border-secondary border-opacity-20 px-3" onclick="document.getElementById('logs').innerHTML = ''">Clear</button>
                 </div>
                 <div id="logs" class="log-shell border-0 rounded-0"></div>
             </div>
@@ -308,35 +307,35 @@
         <div id="section-backtest" style="display:none;">
             <div class="mb-5">
                 <h1 class="fw-bold mb-1">Strategy Lab</h1>
-                <p class="text-muted">High-fidelity neural simulation engine.</p>
+                <p class="text-muted">Advanced Neural Simulation & Backtesting</p>
             </div>
 
             <div class="row g-4">
                 <div class="col-lg-3">
                     <div class="glass-card">
-                        <h6 class="fw-bold mb-4 text-uppercase small letter-spacing-wide">Simulation Specs</h6>
-                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">MARKET CHANNEL</label><select id="bt-symbol" class="form-select"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
-                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">SEED CAPITAL ($)</label><input type="number" id="bt-balance" class="form-control" value="1000"></div>
-                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">RISK PER TRADE (%)</label><input type="number" id="bt-risk" class="form-control" value="1" step="0.1"></div>
-                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">LOOKBACK (DAYS)</label><input type="number" id="bt-days" class="form-control" value="7"></div>
-                        <button id="run-backtest" class="btn btn-quantum btn-quantum-primary w-100 py-3">RUN ANALYSIS</button>
+                        <h6 class="fw-bold mb-4 text-uppercase small">Simulation Parameters</h6>
+                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">Market</label><select id="bt-symbol" class="form-select"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
+                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">Initial Capital ($)</label><input type="number" id="bt-balance" class="form-control" value="1000"></div>
+                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">Risk per Trade (%)</label><input type="number" id="bt-risk" class="form-control" value="1" step="0.1"></div>
+                        <div class="mb-4"><label class="text-muted small fw-bold mb-2">Lookback Period (Days)</label><input type="number" id="bt-days" class="form-control" value="7"></div>
+                        <button id="run-backtest" class="btn btn-quantum btn-quantum-primary w-100 py-3">RUN SIMULATION</button>
                     </div>
                 </div>
                 <div class="col-lg-9">
                     <div class="glass-card">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold m-0">Neural Performance Matrix</h5>
-                            <span class="text-muted small">+95% Win Payout | -100% Loss</span>
+                            <h5 class="fw-bold m-0">Performance Matrix</h5>
+                            <span class="text-muted small">Rise/Fall Simulation (+95%/-100%)</span>
                         </div>
 
                         <div id="bt-loading" style="display:none;" class="text-center py-5">
                             <div class="loader-ring mx-auto mb-4" style="width:50px; height:50px;"></div>
-                            <p class="text-muted fw-medium">Processing historical neural vectors...</p>
+                            <p class="text-muted">Computing neural vectors...</p>
                         </div>
 
                         <div id="bt-results-container" class="table-responsive">
                             <table class="table-comparison">
-                                <thead><tr><th>STRATEGY</th><th>RAW DATA</th><th>NEURAL OPT</th><th>MAX CONSEC. LOSSES</th><th>TRADES</th><th>PROJECTED PNL</th></tr></thead>
+                                <thead><tr><th>STRATEGY</th><th>RAW WIN RATE</th><th>NEURAL WIN RATE</th><th>LOSS STREAK (R/ML)</th><th>TRADES (R/ML)</th><th>PROJECTED BAL.</th></tr></thead>
                                 <tbody id="bt-results-body"></tbody>
                             </table>
                         </div>
@@ -349,20 +348,21 @@
         <div id="section-settings" style="display:none;">
             <div class="mb-5">
                 <h1 class="fw-bold mb-1">Control Center</h1>
-                <p class="text-muted">Secure API and neural trading parameters.</p>
+                <p class="text-muted">Manage API credentials and trading logic.</p>
             </div>
 
             <div class="glass-card col-lg-8">
                 <form id="settings-form">
                     <div class="row g-4">
-                        <div class="col-12"><label class="form-label text-muted small fw-bold mb-2">DERIV SECURE API TOKEN</label><input type="password" name="api_token" id="set-token" class="form-control" placeholder="Enter secure token..."></div>
-                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">APPLICATION ID</label><input type="text" name="app_id" id="set-appid" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">INIT DATA DEPTH (DAYS)</label><input type="number" name="fetch_days" id="set-days" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">ACTIVE TRADING CHANNEL</label><select name="symbol" id="set-symbol" class="form-select"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
-                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">STRATEGY ARCHITECTURE</label><select name="strategy" id="set-strategy" class="form-select"><option value="1">Strategy 1 (1, 10)</option><option value="2">Strategy 2 (2, 20)</option><option value="3">Strategy 3 (3, 30)</option><option value="4">Strategy 4 (1, 20)</option><option value="5">Strategy 5 (2, 10)</option><option value="6">Strategy 6 (3, 20)</option><option value="7">Strategy 7 (1, 30)</option><option value="8">Strategy 8 (2, 30)</option><option value="9">Strategy 9 (3, 10)</option><option value="10">Strategy 10 (1.5, 15)</option></select></div>
-                        <div class="col-12"><label class="form-label text-muted small fw-bold mb-2">STAKE ALLOCATION PER TRADE (%)</label><input type="number" name="trade_pc" id="set-stake" class="form-control" step="0.1"></div>
+                        <div class="col-12"><label class="form-label text-muted small fw-bold mb-2">Deriv API Token</label><input type="password" name="api_token" id="set-token" class="form-control" placeholder="Paste your API token here"></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">App ID</label><input type="text" name="app_id" id="set-appid" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">Training Data Depth (Days)</label><input type="number" name="fetch_days" id="set-days" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">Default Asset</label><select name="symbol" id="set-symbol" class="form-select"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option></select></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">Active Strategy</label><select name="strategy" id="set-strategy" class="form-select"><option value="1">Strategy 1 (1, 10)</option><option value="2">Strategy 2 (2, 20)</option><option value="3">Strategy 3 (3, 30)</option><option value="4">Strategy 4 (1, 20)</option><option value="5">Strategy 5 (2, 10)</option><option value="6">Strategy 6 (3, 20)</option><option value="7">Strategy 7 (1, 30)</option><option value="8">Strategy 8 (2, 30)</option><option value="9">Strategy 9 (3, 10)</option><option value="10">Strategy 10 (1.5, 15)</option></select></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">Staking Risk (%)</label><input type="number" name="trade_pc" id="set-stake" class="form-control" step="0.1"></div>
+                        <div class="col-md-6"><label class="form-label text-muted small fw-bold mb-2">Logging Level</label><select name="log_level" id="set-loglevel" class="form-select"><option value="INFO">Standard</option><option value="DEBUG">Detailed</option></select></div>
                     </div>
-                    <button type="submit" class="btn btn-quantum btn-quantum-primary w-100 py-3 mt-5">SAVE ARCHITECTURE</button>
+                    <button type="submit" class="btn btn-quantum btn-quantum-primary w-100 py-3 mt-5">SAVE CONFIGURATION</button>
                 </form>
             </div>
         </div>
@@ -389,7 +389,7 @@
         function appendLog(msg, timestamp) {
             const div = document.createElement('div');
             div.className = 'log-entry';
-            const colorClass = msg.includes('PROFIT') ? 'log-trade' : (msg.includes('LOSS') || msg.includes('Error') ? 'log-error' : 'log-system');
+            const colorClass = msg.includes('PROFIT') || msg.includes('ORDER PLACED') ? 'log-trade' : (msg.includes('LOSS') || msg.includes('Error') || msg.includes('FAILED') ? 'log-error' : 'log-system');
             const timeStr = timestamp || new Date().toLocaleTimeString('en-GB', {hour12:false});
             div.innerHTML = `<span class="log-time">${timeStr}</span> <span class="${colorClass}">${msg}</span>`;
             const logContainer = document.getElementById('logs');
@@ -398,7 +398,6 @@
         }
 
         socket.on('log', (msg) => appendLog(msg));
-
         socket.on('training_progress', (data) => statusStatus.innerText = data.message);
         socket.on('training_complete', () => overlay.style.display = 'none');
 
@@ -408,7 +407,7 @@
 
             const btn = document.getElementById('toggle-bot');
             if (d.active) {
-                btn.innerHTML = '<i class="fas fa-stop"></i> <span>CEASE TRADING</span>';
+                btn.innerHTML = '<i class="fas fa-stop"></i> <span>HALT TRADING</span>';
                 btn.className = 'btn btn-quantum btn-danger w-100 mb-3';
             } else {
                 btn.innerHTML = '<i class="fas fa-play"></i> <span>ENGAGE BOT</span>';
@@ -421,18 +420,17 @@
             document.getElementById('win-rate').innerText = (total > 0 ? (d.wins / total * 100) : 0).toFixed(1) + '%';
 
             if (d.last_trained) {
-                 document.querySelector('#section-dash p.text-muted').innerText = 'Neural network active. Last Retrained: ' + d.last_trained;
+                 document.querySelector('#section-dash p.text-muted').innerText = 'Neural filters active. Last Trained: ' + d.last_trained;
             }
         }
 
         socket.on('status_update', (d) => updateUIStatus(d));
-
         document.getElementById('toggle-bot').onclick = () => fetch('/toggle_bot', {method:'POST'});
 
         document.getElementById('settings-form').onsubmit = async (e) => {
             e.preventDefault();
             await fetch('/save_settings', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});
-            alert('Parameters locked.');
+            alert('Settings updated successfully.');
         };
 
         document.getElementById('run-backtest').onclick = async () => {
@@ -453,16 +451,16 @@
                 const tbody = document.getElementById('bt-results-body');
                 tbody.innerHTML = '';
                 res.results.forEach(r => {
-                    const mlWinRateText = r.ml.status === 'ready' ? (r.ml.win_rate * 100).toFixed(1) + '%' : '<span class="text-warning small">TRAINING</span>';
-                    const mlLossText = r.ml.status === 'ready' ? `<span class="text-danger fw-bold">${r.ml.max_consec_losses}</span>` : '---';
-                    const mlPnLText = r.ml.status === 'ready' ? `<span class="${r.ml.final_balance >= document.getElementById('bt-balance').value ? 'text-success' : 'text-danger'} fw-bold">$${r.ml.final_balance.toFixed(2)}</span>` : '---';
+                    const mlReady = r.ml.status === 'ready';
+                    const mlWinRateText = mlReady ? (r.ml.win_rate * 100).toFixed(1) + '%' : '<span class="text-warning small">QUEUED</span>';
+                    const mlPnLText = mlReady ? `<span class="${r.ml.final_balance >= document.getElementById('bt-balance').value ? 'text-success' : 'text-danger'} fw-bold">$${r.ml.final_balance.toFixed(2)}</span>` : '---';
 
                     tbody.innerHTML += `<tr>
                         <td><div class="fw-bold text-white">${r.name}</div><div class="text-muted small">${r.params}</div></td>
                         <td class="raw-accuracy-text">${(r.raw.win_rate*100).toFixed(1)}%</td>
-                        <td><div class="d-flex align-items-center fw-bold text-primary">${mlWinRateText} ${r.ml.status === 'ready' ? '<span class="tag-ml">ML</span>' : ''}</div></td>
-                        <td><div class="small"><span class="text-muted">Raw:</span> ${r.raw.max_consec_losses}</div><div class="small"><span class="text-danger">ML:</span> ${r.ml.max_consec_losses}</div></td>
-                        <td><div class="small"><span class="text-muted">Raw:</span> ${r.raw.trades}</div><div class="small"><span class="text-primary">ML:</span> ${r.ml.trades}</div></td>
+                        <td><div class="d-flex align-items-center fw-bold text-primary">${mlWinRateText} ${mlReady ? '<span class="tag-ml ms-2">ML</span>' : ''}</div></td>
+                        <td><div class="small"><span class="text-muted">R:</span> ${r.raw.max_consec_losses} | <span class="text-danger">ML:</span> ${mlReady ? r.ml.max_consec_losses : '-'}</div></td>
+                        <td><div class="small"><span class="text-muted">R:</span> ${r.raw.trades} | <span class="text-primary">ML:</span> ${mlReady ? r.ml.trades : '-'}</div></td>
                         <td>${mlPnLText}</td>
                     </tr>`;
                 });
@@ -479,7 +477,8 @@
                 document.getElementById('set-symbol').value = r.symbol || 'R_100';
                 document.getElementById('set-strategy').value = r.strategy || '1';
                 document.getElementById('set-stake').value = r.trade_pc || 1;
-                document.getElementById('set-days').value = r.fetch_days || 730;
+                document.getElementById('set-days').value = r.fetch_days || 365;
+                document.getElementById('set-loglevel').value = r.log_level || 'INFO';
 
                 document.getElementById('bt-risk').value = r.trade_pc || 1;
 
@@ -487,7 +486,6 @@
                 if(!s.is_initial_training) overlay.style.display = 'none';
 
                 if (s.bot_state) {
-                    if (s.last_trained) s.bot_state.last_trained = s.last_trained;
                     updateUIStatus(s.bot_state);
                 }
                 if (s.logs) {
