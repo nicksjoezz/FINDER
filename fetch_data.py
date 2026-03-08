@@ -43,14 +43,15 @@ async def update_symbol_data(symbol, data_dir='data'):
         while current_end > current_start:
             sys.stderr.write(f"[{symbol}] Fetching {direction} up to {datetime.fromtimestamp(current_end)}\n")
             try:
-                response = await api.ticks_history({
+                # Add 60s timeout to ticks_history call
+                response = await asyncio.wait_for(api.ticks_history({
                     'ticks_history': symbol,
                     'end': str(current_end),
                     'adjust_start_time': 1,
                     'count': 5000,
                     'granularity': granularity,
                     'style': 'candles'
-                })
+                }), timeout=60)
 
                 if 'error' in response:
                     sys.stderr.write(f"API Error: {response['error']}\n")

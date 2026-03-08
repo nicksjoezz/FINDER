@@ -28,6 +28,8 @@ class TradingBot:
         timestamp = time.strftime('%H:%M:%S', time.gmtime())
         full_log = f"{timestamp} | {message}"
         logging.info(full_log)
+        # Ensure it appears in terminal
+        print(f"[TradingBot] {full_log}", flush=True)
         self.log_history.append(full_log)
         if len(self.log_history) > self.max_logs:
             self.log_history.pop(0)
@@ -51,16 +53,18 @@ class TradingBot:
         try:
             app_id = self.config.get('app_id', '62845')
             self.api = DerivAPI(app_id=app_id)
-            auth = await self.api.authorize(self.config['api_token'])
+            self.log(f"Attempting API Authentication (App ID: {app_id})...")
+            # Set a 30s timeout for auth
+            auth = await asyncio.wait_for(self.api.authorize(self.config['api_token']), timeout=30)
             self.balance = float(auth['authorize']['balance'])
-            self.log(f"Connected to Deriv. Balance: ${self.balance:.2f}")
+            self.log(f"AUTHENTICATED: Wallet balance is ${self.balance:.2f}")
             self.update_status()
 
             # Subscribe to balance updates and contract results
             asyncio.create_task(self.subscribe_to_updates())
             return True
         except Exception as e:
-            self.log(f"Connection error: {e}")
+            self.log(f"CONNECTION FAILED: {e}")
             return False
 
     async def subscribe_to_updates(self):
@@ -160,31 +164,40 @@ class TradingBot:
         a, c = strat_params[strategy_idx-1]
 
         self.log(f"Bot monitoring {symbol} with Strategy {strategy_idx} (a={a}, c={c})...")
+        last_heartbeat = 0
 
         while self.is_running:
             try:
+                now = time.time()
+                # 60s Heartbeat log to confirm bot is active
+                if now - last_heartbeat > 60:
+                    self.log(f"System Heartbeat: Bot is actively monitoring {symbol}...")
+                    last_heartbeat = now
+
                 # Fetch recent candles (need at least 200 for indicators like EMA 200)
-                response = await self.api.ticks_history({
+                # Set a 45s timeout for data fetch
+                response = await asyncio.wait_for(self.api.ticks_history({
                     'ticks_history': symbol,
                     'end': 'latest',
                     'count': 500,
                     'granularity': 300,
                     'style': 'candles'
-                })
+                }), timeout=45)
 
                 if 'candles' not in response or not response['candles']:
+                    self.log(f"Market Data Warning: No candles returned for {symbol}. Retrying...")
                     await asyncio.sleep(10)
                     continue
 
                 df = pd.DataFrame(response['candles'])
-                # The last candle in ticks_history is usually the current building one
                 # We want signals from the last COMPLETED candle
                 last_completed_candle = df.iloc[-2]
 
                 if last_completed_candle['epoch'] > self.last_candle_epoch:
                     # New candle closed
                     self.last_candle_epoch = last_completed_candle['epoch']
-                    self.log(f"NEW CANDLE CLOSED: {time.ctime(self.last_candle_epoch)}")
+                    candle_time = time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime(self.last_candle_epoch))
+                    self.log(f"NEW CANDLE CLOSED: {candle_time}. Analyzing patterns...")
 
                     # Calculate Indicators on all but the current building candle
                     df_calc = df.iloc[:-1].copy()
@@ -212,12 +225,12 @@ class TradingBot:
                                 self.log(f"NEURAL FILTER: SIGNAL PASSED. Executing {side} trade.")
                                 await self.place_trade('CALL' if buy_triggered else 'PUT')
                             else:
-                                self.log(f"NEURAL FILTER: SIGNAL BLOCKED (Low probability).")
+                                self.log(f"NEURAL FILTER: SIGNAL BLOCKED (Low probability patterns detected).")
                         else:
                             self.log(f"ML filter missing. Executing raw {side} trade.")
                             await self.place_trade('CALL' if buy_triggered else 'PUT')
                     else:
-                        self.log("Signal processed: No UT Bot entries found for this candle.")
+                        self.log(f"Analysis complete for candle {candle_time}: No UT Bot entries found.")
 
                 await asyncio.sleep(10)
 

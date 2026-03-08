@@ -20,12 +20,14 @@ class ModelManager:
         full_msg = f"[ModelManager] {message}"
         logging.info(full_msg)
         # Ensure it appears in terminal/logs
+        print(full_msg, flush=True)
         if self.socketio:
             self.socketio.emit('log', f"[System] {message}")
             self.socketio.emit('training_progress', {'message': message})
 
     async def initialize_models(self):
         """Loads models from disk."""
+        print("Starting ModelManager initialization...", flush=True)
         self.log("Initializing models from disk...")
         for symbol in self.symbols:
             self.models[symbol] = {}
