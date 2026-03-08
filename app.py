@@ -11,7 +11,15 @@ from deriv_api import DerivAPI
 from strategy_utils import ut_bot, Backtester, calculate_max_consecutive_losses, simulate_financials
 from indicators import add_indicators
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+def get_log_level():
+    try:
+        with open('config.json', 'r') as f:
+            c = json.load(f)
+            return logging.DEBUG if c.get('log_level') == 'DEBUG' else logging.INFO
+    except:
+        return logging.INFO
+
+logging.basicConfig(level=get_log_level(), format='%(asctime)s %(levelname)s %(message)s')
 
 app = Flask(__name__)
 # Standard Flask-SocketIO initialization

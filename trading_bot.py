@@ -25,12 +25,13 @@ class TradingBot:
         self.log_history = []
         self.max_logs = 100
 
-    def log(self, message):
+    def log(self, message, level=logging.INFO):
         timestamp = time.strftime('%H:%M:%S', time.gmtime())
         full_log = f"{timestamp} | {message}"
-        logging.info(full_log)
+        logging.log(level, f"[TradingBot] {full_log}")
         # Ensure it appears in terminal
-        print(f"[TradingBot] {full_log}", flush=True)
+        if level >= logging.INFO:
+            print(f"[TradingBot] {full_log}", flush=True)
         self.log_history.append(full_log)
         if len(self.log_history) > self.max_logs:
             self.log_history.pop(0)
@@ -107,6 +108,8 @@ class TradingBot:
 
     async def get_ml_filter(self, symbol, strategy_idx):
         ml = model_manager.get_model(symbol, strategy_idx)
+        if not ml:
+            self.log(f"DEBUG: Model for {symbol} Strategy {strategy_idx} status is: {model_manager.get_model_status(symbol, strategy_idx)}", level=logging.DEBUG)
         return ml
 
     def reset_metrics(self):
@@ -177,18 +180,32 @@ class TradingBot:
                     last_heartbeat = now
 
                 # Fetch recent candles (need at least 200 for indicators like EMA 200)
-                # Set a 45s timeout for data fetch
-                response = await asyncio.wait_for(self.api.ticks_history({
-                    'ticks_history': symbol,
-                    'end': 'latest',
-                    'count': 500,
-                    'granularity': 300,
-                    'style': 'candles'
-                }), timeout=45)
+                # Set a 30s timeout for data fetch. Reduced count to 300 for stability.
+                try:
+                    response = await asyncio.wait_for(self.api.ticks_history({
+                        'ticks_history': symbol,
+                        'end': 'latest',
+                        'count': 300,
+                        'granularity': 300,
+                        'style': 'candles'
+                    }), timeout=30)
+                except asyncio.TimeoutError:
+                    self.log("Market Data Error: ticks_history timed out. Attempting reconnection...")
+                    await self.api.disconnect()
+                    await asyncio.sleep(2)
+                    if not await self.connect():
+                        self.log("Reconnection failed. Will retry in 10s.")
+                        await asyncio.sleep(10)
+                    continue
 
                 if 'candles' not in response or len(response.get('candles', [])) < 100:
                     count = len(response.get('candles', [])) if 'candles' in response else "N/A"
                     self.log(f"Market Data Warning: Insufficient candles returned for {symbol} (Count: {count}). Retrying...")
+                    # If empty, might be connection issue
+                    if count == 0 or count == "N/A":
+                        await self.api.disconnect()
+                        await asyncio.sleep(2)
+                        await self.connect()
                     await asyncio.sleep(10)
                     continue
 
@@ -221,6 +238,7 @@ class TradingBot:
                     if buy_triggered or sell_triggered:
                         side = 'BUY' if buy_triggered else 'SELL'
                         self.log(f"UT Bot {side} signal detected. Verifying with Neural Filter...")
+                        self.log(f"Raw Indicator Data (Signal Candle): {raw_sig.to_dict()}", level=logging.DEBUG)
 
                         # ML Filter verification
                         ml = await self.get_ml_filter(symbol, strategy_idx)
