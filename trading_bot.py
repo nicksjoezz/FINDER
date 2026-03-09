@@ -4,6 +4,7 @@ import numpy as np
 import time
 import traceback
 import logging
+from datetime import datetime
 from deriv_api import DerivAPI
 from strategy_utils import ut_bot
 from indicators import add_indicators
@@ -14,32 +15,49 @@ class TradingBot:
         self.socketio = socketio
         self.is_running = False
         self.main_task = None
+        self.api = None
         self.config = {}
+
+        # State metrics
         self.balance = 0.0
         self.wins = 0
         self.losses = 0
         self.total_trades = 0
-        self.api = None
-        self.last_candle_epoch = 0
-        self.active_contracts = {} # contract_id -> {'side', 'entry_time', 'stake'}
+
+        # Bot internals
+        self.active_contracts = {} # cid -> {'side', 'stake'}
         self.log_history = []
         self.max_logs = 100
         self.candles_df = pd.DataFrame()
         self.subscriptions = []
+        self.is_primed = False
+        self.lock = asyncio.Lock()
+
+        # Candle building state
+        self.current_candle = None # {epoch, open, high, low, close}
 
     def log(self, message, level=logging.INFO):
-        timestamp = time.strftime('%H:%M:%S', time.gmtime())
+        timestamp = datetime.utcnow().strftime('%H:%M:%S')
         full_log = f"{timestamp} | {message}"
-        logging.log(level, f"[TradingBot] {full_log}")
-        if level >= logging.INFO:
-            print(f"[TradingBot] {full_log}", flush=True)
+        # Print to terminal
+        print(f"[TradingBot] {full_log}", flush=True)
+        # Emit to UI
+        try:
+            self.socketio.emit('log', message)
+        except:
+            pass
+        # Store in history
         self.log_history.append(full_log)
         if len(self.log_history) > self.max_logs:
             self.log_history.pop(0)
-        self.socketio.emit('log', message)
+        # Standard logger
+        logging.log(level, f"[TradingBot] {message}")
 
     def update_status(self):
-        self.socketio.emit('status_update', self.get_state())
+        try:
+            self.socketio.emit('status_update', self.get_state())
+        except:
+            pass
 
     def get_state(self):
         return {
@@ -52,218 +70,25 @@ class TradingBot:
             'last_trained': model_manager.last_trained
         }
 
-    async def connect(self):
-        try:
-            app_id = self.config.get('app_id', '62845')
-            if self.api:
-                await self.cleanup_api()
-
-            self.api = DerivAPI(app_id=app_id)
-            self.log(f"Attempting API Authentication (App ID: {app_id})...")
-            auth = await asyncio.wait_for(self.api.authorize(self.config['api_token']), timeout=30)
-            self.balance = float(auth['authorize']['balance'])
-            self.log(f"AUTHENTICATED: Wallet balance is ${self.balance:.2f}")
-            self.update_status()
-
-            await self.start_subscriptions()
-            return True
-        except Exception as e:
-            self.log(f"CONNECTION FAILED: {e}")
-            return False
-
-    async def cleanup_api(self):
-        self.log("Cleaning up existing API connection and subscriptions...")
-        for sub in self.subscriptions:
-            try:
-                sub.dispose()
-            except:
-                pass
-        self.subscriptions = []
-
-        if self.api:
-            try:
-                # Disconnect can sometimes hang if tasks are pending
-                await asyncio.wait_for(self.api.disconnect(), timeout=10)
-            except:
-                pass
-            self.api = None
-
-    async def start_subscriptions(self):
-        try:
-            # 1. Balance Subscription
-            bal_sub = await self.api.subscribe({'balance': 1, 'subscribe': 1})
-            bal_sub.subscribe(self.handle_balance_update)
-            self.subscriptions.append(bal_sub)
-
-            # 2. Contract Updates Subscription
-            poc_sub = await self.api.subscribe({'proposal_open_contract': 1, 'subscribe': 1})
-            poc_sub.subscribe(self.handle_contract_update)
-            self.subscriptions.append(poc_sub)
-
-            # 3. Candles Subscription (using ticks_history with subscribe: 1)
-            symbol = self.config['symbol']
-            ohlc_sub = await self.api.subscribe({
-                'ticks_history': symbol,
-                'subscribe': 1,
-                'end': 'latest',
-                'granularity': 300,
-                'style': 'candles'
-            })
-            ohlc_sub.subscribe(self.handle_ohlc_update)
-            self.subscriptions.append(ohlc_sub)
-
-            self.log(f"Real-time subscriptions active for {symbol}.")
-        except Exception as e:
-            self.log(f"Subscription error: {e}")
-
-    def handle_balance_update(self, data):
-        if 'balance' in data:
-            self.balance = float(data['balance']['balance'])
-            self.update_status()
-
-    def handle_contract_update(self, data):
-        if 'proposal_open_contract' in data:
-            contract = data['proposal_open_contract']
-            if contract['is_sold']:
-                status = contract['status'] # won, lost
-                profit = float(contract['profit'])
-                contract_id = contract['contract_id']
-
-                if contract_id in self.active_contracts:
-                    side = self.active_contracts[contract_id]['side']
-                    if status == 'won':
-                        self.wins += 1
-                        self.log(f"PROFIT: {side} trade won! +${profit:.2f}")
-                    else:
-                        self.losses += 1
-                        self.log(f"LOSS: {side} trade lost. -${abs(profit):.2f}")
-
-                    del self.active_contracts[contract_id]
-                    self.update_status()
-
-    def handle_ohlc_update(self, data):
-        ohlc = None
-        if 'ohlc' in data:
-            ohlc = data['ohlc']
-        elif 'ohlc_update' in data: # sometimes the key varies or it's nested
-            ohlc = data['ohlc_update']
-        elif 'candles' in data: # handle the first response of the subscription
-            for c in data['candles']:
-                self.process_single_candle(c)
-            return
-
-        if not ohlc: return
-
-        # Key names might vary between 'ohlc' and 'candles' format
-        epoch = int(ohlc.get('open_time', ohlc.get('epoch')))
-
-        new_candle = {
-            'epoch': epoch,
-            'open': float(ohlc['open']),
-            'high': float(ohlc['high']),
-            'low': float(ohlc['low']),
-            'close': float(ohlc['close'])
-        }
-        self.process_single_candle(new_candle)
-
-    def process_single_candle(self, new_candle):
-        epoch = int(new_candle['epoch'])
-
-        if self.candles_df.empty:
-            # Should be bootstrapped by main_loop first, but safety check
-            self.candles_df = pd.DataFrame([new_candle])
-            return
-
-        # Update last candle or append new one
-        last_idx = self.candles_df.index[-1]
-        if epoch == self.candles_df.at[last_idx, 'epoch']:
-            # Still same candle, update it
-            for key in ['open', 'high', 'low', 'close']:
-                self.candles_df.at[last_idx, key] = new_candle[key]
-        elif epoch > self.candles_df.at[last_idx, 'epoch']:
-            # New candle started! The PREVIOUS one is now closed.
-            closed_epoch = self.candles_df.at[last_idx, 'epoch']
-            candle_time = time.strftime('%H:%M:%S', time.gmtime(closed_epoch))
-            self.log(f"CANDLE CLOSED: {candle_time}. Triggering analysis...")
-
-            # Append the new building candle
-            self.candles_df = pd.concat([self.candles_df, pd.DataFrame([new_candle])]).iloc[-400:].reset_index(drop=True)
-
-            # Trigger analysis as a background task
-            asyncio.create_task(self.analyze_and_trade())
-
-    async def analyze_and_trade(self):
-        try:
-            symbol = self.config['symbol']
-            strategy_idx = int(self.config['strategy'])
-            strat_params = [
-                (1, 10), (2, 20), (3, 30), (1, 20), (2, 10),
-                (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)
-            ]
-            a, c = strat_params[strategy_idx-1]
-
-            # We analyze the candles EXCEPT the very last one (which is currently building)
-            df_analysis = self.candles_df.iloc[:-1].copy()
-            if len(df_analysis) < 200:
-                self.log(f"Insufficient history for analysis: {len(df_analysis)}/200")
-                return
-
-            df_analysis = add_indicators(df_analysis)
-            df_ut = ut_bot(df_analysis, a=a, c=c)
-            raw_sig = df_ut.iloc[-1]
-
-            buy_triggered = raw_sig['buy']
-            sell_triggered = raw_sig['sell']
-
-            if buy_triggered or sell_triggered:
-                side = 'BUY' if buy_triggered else 'SELL'
-                self.log(f"SIGNAL: UT Bot {side} detected. Checking Neural Filter...")
-
-                ml = await self.get_ml_filter(symbol, strategy_idx)
-                if ml:
-                    df_ml = ml.filter_signals(df_ut)
-                    ml_sig = df_ml.iloc[-1]
-                    if ml_sig['buy'] or ml_sig['sell']:
-                        self.log(f"Neural Filter v.{ml.trained_at} PASSED. Placing trade.")
-                        await self.place_trade('CALL' if buy_triggered else 'PUT')
-                    else:
-                        self.log(f"Neural Filter BLOCKED {side} signal.")
-                else:
-                    self.log(f"Neural Filter missing. Executing raw {side} trade.")
-                    await self.place_trade('CALL' if buy_triggered else 'PUT')
-            else:
-                # Heartbeat of analysis to confirm it ran
-                # self.log(f"Analysis complete: No entry signals found.", level=logging.DEBUG)
-                pass
-
-        except Exception as e:
-            self.log(f"Critical error in analysis task: {e}")
-            print(traceback.format_exc())
-
-    async def get_ml_filter(self, symbol, strategy_idx):
-        return model_manager.get_model(symbol, strategy_idx)
-
-    def reset_metrics(self):
-        self.wins = 0
-        self.losses = 0
-        self.total_trades = 0
-        self.log_history = []
-        self.active_contracts = {}
-        self.last_candle_epoch = 0
-        self.candles_df = pd.DataFrame()
-
     async def start(self, config):
-        self.log("Initializing bot for live trading...")
-        self.reset_metrics()
-        self.config = config
-        self.is_running = True
-        if await self.connect():
-            self.main_task = asyncio.create_task(self.main_loop())
-        else:
-            self.is_running = False
-            self.update_status()
+        async with self.lock:
+            if self.is_running:
+                self.log("Bot already running. Stopping previous instance...")
+                await self._stop_internal()
+
+            self.config = config
+            self.reset_metrics()
+            self.is_running = True
+            self.log("Initializing high-fidelity trading engine...")
+            self.main_task = asyncio.create_task(self.main_execution_loop())
 
     async def stop(self):
+        async with self.lock:
+            await self._stop_internal()
+            self.log("Trading engine shut down.")
+            self.update_status()
+
+    async def _stop_internal(self):
         self.is_running = False
         if self.main_task:
             self.main_task.cancel()
@@ -272,15 +97,80 @@ class TradingBot:
             except asyncio.CancelledError:
                 pass
             self.main_task = None
-
         await self.cleanup_api()
-        self.log("Bot halted.")
-        self.update_status()
 
-    async def main_loop(self):
+    def reset_metrics(self):
+        self.wins = 0
+        self.losses = 0
+        self.total_trades = 0
+        self.log_history = []
+        self.active_contracts = {}
+        self.candles_df = pd.DataFrame()
+        self.is_primed = False
+        self.current_candle = None
+
+    async def cleanup_api(self):
+        self.log("Cleaning up API resources...")
+        for sub in self.subscriptions:
+            try: sub.dispose()
+            except: pass
+        self.subscriptions = []
+
+        if self.api:
+            try:
+                await asyncio.wait_for(self.api.disconnect(), timeout=10)
+            except: pass
+            self.api = None
+        self.is_primed = False
+
+    async def main_execution_loop(self):
         try:
+            while self.is_running:
+                if not self.api or not self.api.connected:
+                    self.log("Establishing connection with Deriv...")
+                    if not await self.establish_connection():
+                        self.log("Connection failed. Retrying in 15 seconds...")
+                        await asyncio.sleep(15)
+                        continue
+
+                # Keep-alive and connection monitoring
+                try:
+                    await asyncio.wait_for(self.api.ping({'ping': 1}), timeout=5)
+                except:
+                    self.log("Heartbeat loss. Re-establishing connection...")
+                    await self.cleanup_api()
+                    continue
+
+                await asyncio.sleep(30)
+
+        except asyncio.CancelledError:
+            self.log("Main loop cancelled.")
+        except Exception as e:
+            err_msg = f"Fatal Loop Error: {type(e).__name__}: {e}"
+            self.log(err_msg)
+            print(traceback.format_exc(), flush=True)
+        finally:
+            self.is_running = False
+            self.update_status()
+
+    async def establish_connection(self):
+        try:
+            await self.cleanup_api()
+
+            app_id = self.config.get('app_id', '62845')
+            token = self.config.get('api_token')
             symbol = self.config['symbol']
-            # Bootstrap historical data
+
+            self.api = DerivAPI(app_id=app_id)
+            self.log(f"Authenticating (App ID: {app_id})...")
+
+            # 1. Authorize
+            auth = await asyncio.wait_for(self.api.authorize(token), timeout=20)
+            self.balance = float(auth['authorize']['balance'])
+            self.log(f"Authenticated. Wallet Balance: ${self.balance:.2f}")
+
+            # 2. Bootstrap History (300 candles)
+            # Use raw send to avoid subscription manager issues for pure historical fetch
             self.log(f"Bootstrapping historical data for {symbol}...")
             history = await asyncio.wait_for(self.api.ticks_history({
                 'ticks_history': symbol,
@@ -292,51 +182,163 @@ class TradingBot:
 
             if 'candles' in history:
                 self.candles_df = pd.DataFrame(history['candles'])
-                self.log(f"Loaded {len(self.candles_df)} historical candles.")
+                # Initialize current_candle from the last historical one
+                last = history['candles'][-1]
+                self.current_candle = {
+                    'epoch': int(last['epoch']),
+                    'open': float(last['open']),
+                    'high': float(last['high']),
+                    'low': float(last['low']),
+                    'close': float(last['close'])
+                }
+                self.log(f"History Primed: {len(self.candles_df)} candles loaded.")
             else:
-                self.log("Failed to bootstrap history. Monitoring subscriptions only.")
+                self.log(f"Historical fetch failed: {history.get('error', {}).get('message', 'Unknown error')}")
+                return False
 
-            last_heartbeat = 0
-            while self.is_running:
-                # Connection health check
-                try:
-                    await asyncio.wait_for(self.api.ping({'ping': 1}), timeout=5)
-                except:
-                    self.log("WebSocket Ping failed. Attempting recovery...")
-                    if not await self.connect():
-                        await asyncio.sleep(10)
-                        continue
+            # 3. Core Subscriptions
+            self.log("Activating live stream subscriptions...")
 
-                now = time.time()
-                if now - last_heartbeat > 60:
-                    self.log(f"Bot Active: Real-time stream for {symbol} is healthy.")
-                    last_heartbeat = now
+            bal_sub = await self.api.subscribe({'balance': 1})
+            bal_sub.subscribe(self.handle_balance_update)
+            self.subscriptions.append(bal_sub)
 
-                await asyncio.sleep(10)
+            poc_sub = await self.api.subscribe({'proposal_open_contract': 1})
+            poc_sub.subscribe(self.handle_contract_update)
+            self.subscriptions.append(poc_sub)
 
-        except asyncio.CancelledError:
-            self.log("Background monitoring task terminated.")
+            # 4. Ticks Subscription for real-time candle building
+            tick_sub = await self.api.subscribe({'ticks': symbol})
+            tick_sub.subscribe(self.handle_tick_update)
+            self.subscriptions.append(tick_sub)
+
+            self.is_primed = True
+            self.log(f"System Ready: monitoring {symbol} via real-time tick stream.")
+            self.update_status()
+            return True
+
         except Exception as e:
-            self.log(f"Main loop encountered a fatal error: {e}")
-            print(traceback.format_exc())
-        finally:
-            self.is_running = False
+            self.log(f"Connection Setup Error: {e}")
+            return False
+
+    def handle_balance_update(self, data):
+        if 'balance' in data:
+            self.balance = float(data['balance']['balance'])
+            self.update_status()
+
+    def handle_contract_update(self, data):
+        if 'proposal_open_contract' in data:
+            contract = data['proposal_open_contract']
+            if contract['is_sold']:
+                status = contract['status']
+                profit = float(contract['profit'])
+                cid = contract['contract_id']
+                if cid in self.active_contracts:
+                    side = self.active_contracts[cid]['side']
+                    if status == 'won':
+                        self.wins += 1
+                        self.log(f"PROFIT: {side} trade won! +${profit:.2f}")
+                    else:
+                        self.losses += 1
+                        self.log(f"LOSS: {side} trade lost. -${abs(profit):.2f}")
+                    del self.active_contracts[cid]
+                    self.update_status()
+
+    def handle_tick_update(self, data):
+        if not self.is_primed or 'tick' not in data: return
+
+        tick = data['tick']
+        price = float(tick['quote'])
+        epoch = int(tick['epoch'])
+
+        # 5m boundary
+        candle_start = (epoch // 300) * 300
+
+        if not self.current_candle:
+            self.current_candle = {'epoch': candle_start, 'open': price, 'high': price, 'low': price, 'close': price}
+            return
+
+        if candle_start == self.current_candle['epoch']:
+            # Update current candle
+            self.current_candle['high'] = max(self.current_candle['high'], price)
+            self.current_candle['low'] = min(self.current_candle['low'], price)
+            self.current_candle['close'] = price
+        elif candle_start > self.current_candle['epoch']:
+            # CANDLE CLOSED
+            # 1. Finalize the closed candle in our historical dataframe
+            closed_candle = self.current_candle.copy()
+            self.log(f"CANDLE COMPLETED: {datetime.utcfromtimestamp(closed_candle['epoch']).strftime('%H:%M:%S')}. Analyzing signals...")
+
+            # Sync with candles_df (Update last or Append)
+            if not self.candles_df.empty and self.candles_df.iloc[-1]['epoch'] == closed_candle['epoch']:
+                for k in ['open','high','low','close']:
+                    self.candles_df.iloc[-1, self.candles_df.columns.get_loc(k)] = closed_candle[k]
+            else:
+                self.candles_df = pd.concat([self.candles_df, pd.DataFrame([closed_candle])]).iloc[-400:].reset_index(drop=True)
+
+            # 2. Trigger analysis
+            asyncio.create_task(self.analyze_and_trade(self.candles_df.copy()))
+
+            # 3. Start new candle
+            self.current_candle = {'epoch': candle_start, 'open': price, 'high': price, 'low': price, 'close': price}
+
+    async def analyze_and_trade(self, df):
+        try:
+            if not self.is_running: return
+
+            symbol = self.config['symbol']
+            strategy_idx = int(self.config['strategy'])
+            params = [(1, 10), (2, 20), (3, 30), (1, 20), (2, 10), (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)]
+            a, c = params[strategy_idx-1]
+
+            if len(df) < 201:
+                # self.log(f"History still building... ({len(df)}/200)")
+                return
+
+            # Apply indicators to history
+            df_ind = add_indicators(df)
+            df_ut = ut_bot(df_ind, a=a, c=c)
+
+            # Signal on the last completed candle
+            sig = df_ut.iloc[-1]
+            buy_triggered = sig['buy']
+            sell_triggered = sig['sell']
+
+            if buy_triggered or sell_triggered:
+                side = 'BUY' if buy_triggered else 'SELL'
+                self.log(f"SIGNAL: {side} detected. Passing to Neural Filter...")
+
+                ml = model_manager.get_model(symbol, strategy_idx)
+                if ml:
+                    df_ml = ml.filter_signals(df_ut)
+                    ml_sig = df_ml.iloc[-1]
+                    if ml_sig['buy'] or ml_sig['sell']:
+                        self.log("NEURAL FILTER: PASSED. Executing market order.")
+                        await self.place_trade('CALL' if buy_triggered else 'PUT')
+                    else:
+                        self.log("NEURAL FILTER: BLOCKED (Low probability score).")
+                else:
+                    self.log("Neural Filter offline. Executing raw signal.")
+                    await self.place_trade('CALL' if buy_triggered else 'PUT')
+
+        except Exception as e:
+            self.log(f"Analysis process failed: {e}")
+            print(traceback.format_exc(), flush=True)
 
     async def place_trade(self, side):
         try:
-            # Check for existing active trades for this symbol
+            # Overlap protection
             if any(c['side'] == side for c in self.active_contracts.values()):
-                self.log(f"Active {side} trade already exists. Avoiding duplicate entry.")
+                self.log(f"Skipping overlapping {side} trade.")
                 return
 
             stake_pc = float(self.config.get('trade_pc', 1))
-            amount = self.balance * (stake_pc / 100.0)
-            amount = round(max(amount, 0.35), 2)
+            amount = round(max(self.balance * (stake_pc / 100.0), 0.35), 2)
 
-            self.log(f"EXECUTION: {side} trade triggered. Stake: ${amount:.2f}")
+            self.log(f"PLACING {side} ORDER - Stake: ${amount:.2f}")
 
-            # 3 candles = 15 minutes
-            proposal = await asyncio.wait_for(self.api.buy({
+            # Duration 15m (3 candles)
+            resp = await asyncio.wait_for(self.api.buy({
                 "buy": 1,
                 "price": amount,
                 "parameters": {
@@ -350,16 +352,15 @@ class TradingBot:
                 }
             }), timeout=30)
 
-            if 'buy' in proposal:
-                contract_id = proposal['buy']['contract_id']
+            if 'buy' in resp:
+                cid = resp['buy']['contract_id']
                 self.total_trades += 1
-                self.active_contracts[contract_id] = {'side': side, 'stake': amount}
-                self.log(f"ORDER PLACED: {side} | ID: {contract_id}")
+                self.active_contracts[cid] = {'side': side, 'stake': amount}
+                self.log(f"ORDER SUCCESS: {side} ID {cid} is now active.")
             else:
-                err = proposal.get('error', {}).get('message', 'Unknown execution error')
+                err = resp.get('error', {}).get('message', 'Unknown API Error')
                 self.log(f"ORDER FAILED: {err}")
 
             self.update_status()
-
         except Exception as e:
-            self.log(f"Trade execution error: {e}")
+            self.log(f"Execution failed: {e}")

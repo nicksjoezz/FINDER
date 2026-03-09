@@ -8,69 +8,790 @@ https://eventlet.readthedocs.io/en/latest/asyncio/migration.html
 
   import eventlet
 Server initialized for eventlet.
-2026-03-09 02:26:12,174 Server initialized for eventlet.
+2026-03-09 07:25:41,619 Server initialized for eventlet.
 Starting background worker thread...
 Background worker thread started.
 Starting ModelManager initialization...
 [ModelManager] Initializing models from disk...
 emitting event "log" to all [/]
-2026-03-09 02:26:12,182 emitting event "log" to all [/]
+2026-03-09 07:25:41,624 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:12,182 emitting event "training_progress" to all [/]
+2026-03-09 07:25:41,624 emitting event "training_progress" to all [/]
 [ModelManager] Disk initialization complete.
 emitting event "log" to all [/]
-2026-03-09 02:26:15,652 emitting event "log" to all [/]
+2026-03-09 07:25:43,472 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:15,653 emitting event "training_progress" to all [/]
+2026-03-09 07:25:43,472 emitting event "training_progress" to all [/]
 [ModelManager] Starting startup data synchronization...
 emitting event "log" to all [/]
-2026-03-09 02:26:15,653 emitting event "log" to all [/]
+2026-03-09 07:25:43,472 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:15,653 emitting event "training_progress" to all [/]
+2026-03-09 07:25:43,472 emitting event "training_progress" to all [/]
 [ModelManager] Syncing market data for R_100...
 emitting event "log" to all [/]
-2026-03-09 02:26:15,654 emitting event "log" to all [/]
+2026-03-09 07:25:43,473 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:15,654 emitting event "training_progress" to all [/]
-[R_100] Fetching forward up to 2026-03-09 02:26:15
-Completed update for R_100. Total: 105206
+2026-03-09 07:25:43,473 emitting event "training_progress" to all [/]
+[R_100] Fetching forward up to 2026-03-09 07:25:43
+Completed update for R_100. Total: 105266
 [ModelManager] Syncing market data for R_75...
 emitting event "log" to all [/]
-2026-03-09 02:26:21,864 emitting event "log" to all [/]
+2026-03-09 07:25:48,864 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:21,864 emitting event "training_progress" to all [/]
-[R_75] Fetching forward up to 2026-03-09 02:26:21
-Completed update for R_75. Total: 105205
+2026-03-09 07:25:48,864 emitting event "training_progress" to all [/]
+[R_75] Fetching forward up to 2026-03-09 07:25:48
+Completed update for R_75. Total: 105265
 [ModelManager] Syncing market data for R_50...
 emitting event "log" to all [/]
-2026-03-09 02:26:27,670 emitting event "log" to all [/]
+2026-03-09 07:25:54,108 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:27,671 emitting event "training_progress" to all [/]
-[R_50] Fetching forward up to 2026-03-09 02:26:27
-Completed update for R_50. Total: 105205
+2026-03-09 07:25:54,109 emitting event "training_progress" to all [/]
+[R_50] Fetching forward up to 2026-03-09 07:25:54
+Completed update for R_50. Total: 105265
 [ModelManager] Syncing market data for R_25...
 emitting event "log" to all [/]
-2026-03-09 02:26:33,158 emitting event "log" to all [/]
+2026-03-09 07:25:59,192 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:33,159 emitting event "training_progress" to all [/]
-[R_25] Fetching forward up to 2026-03-09 02:26:33
-Completed update for R_25. Total: 105204
+2026-03-09 07:25:59,193 emitting event "training_progress" to all [/]
+[R_25] Fetching forward up to 2026-03-09 07:25:59
+Completed update for R_25. Total: 105264
 [ModelManager] Syncing market data for R_10...
 emitting event "log" to all [/]
-2026-03-09 02:26:38,517 emitting event "log" to all [/]
+2026-03-09 07:26:04,000 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:38,517 emitting event "training_progress" to all [/]
-[R_10] Fetching forward up to 2026-03-09 02:26:38
-Completed update for R_10. Total: 105203
+2026-03-09 07:26:04,001 emitting event "training_progress" to all [/]
+[R_10] Fetching forward up to 2026-03-09 07:26:04
+Completed update for R_10. Total: 105263
 emitting event "training_complete" to all [/]
-2026-03-09 02:26:43,943 emitting event "training_complete" to all [/]
-[ModelManager] Startup synchronization finished at 2026-03-09 02:26:43 UTC. All systems ready.
+2026-03-09 07:26:08,995 emitting event "training_complete" to all [/]
+[ModelManager] Startup synchronization finished at 2026-03-09 07:26:08 UTC. All systems ready.
 emitting event "log" to all [/]
-2026-03-09 02:26:43,943 emitting event "log" to all [/]
+2026-03-09 07:26:08,995 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:43,943 emitting event "training_progress" to all [/]
-[ModelManager] Next full update scheduled in 21.6 hours.
+2026-03-09 07:26:08,995 emitting event "training_progress" to all [/]
+[ModelManager] Next full update scheduled in 16.6 hours.
 emitting event "log" to all [/]
-2026-03-09 02:26:43,943 emitting event "log" to all [/]
+2026-03-09 07:26:08,996 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-09 02:26:43,943 emitting event "training_progress" to all [/]
+2026-03-09 07:26:08,996 emitting event "training_progress" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet OPEN data {'sid': 'J09J67jCF3Ie77EpAAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2026-03-09 07:29:51,323 J09J67jCF3Ie77EpAAAA: Sending packet OPEN data {'sid': 'J09J67jCF3Ie77EpAAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+J09J67jCF3Ie77EpAAAA: Received packet MESSAGE data 0
+2026-03-09 07:29:51,339 J09J67jCF3Ie77EpAAAA: Received packet MESSAGE data 0
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 0{"sid":"mLiMYW2uXVOyi3wkAAAB"}
+2026-03-09 07:29:51,341 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 0{"sid":"mLiMYW2uXVOyi3wkAAAB"}
+J09J67jCF3Ie77EpAAAA: Received request to upgrade to websocket
+2026-03-09 07:29:51,344 J09J67jCF3Ie77EpAAAA: Received request to upgrade to websocket
+J09J67jCF3Ie77EpAAAA: Upgrade to websocket successful
+2026-03-09 07:29:51,359 J09J67jCF3Ie77EpAAAA: Upgrade to websocket successful
+[TradingBot] 07:29:53 | Initializing high-fidelity trading engine...
+emitting event "log" to all [/]
+2026-03-09 07:29:53,613 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Initializing high-fidelity trading engine..."]
+2026-03-09 07:29:53,614 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Initializing high-fidelity trading engine..."]
+[TradingBot] 07:29:53 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:29:53,614 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Establishing connection with Deriv..."]
+2026-03-09 07:29:53,614 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Establishing connection with Deriv..."]
+[TradingBot] 07:29:53 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:29:53,614 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Cleaning up API resources..."]
+2026-03-09 07:29:53,614 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Cleaning up API resources..."]
+[TradingBot] 07:29:53 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:29:53,615 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Authenticating (App ID: 1089)..."]
+2026-03-09 07:29:53,615 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Authenticating (App ID: 1089)..."]
+[TradingBot] 07:29:54 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:29:54,321 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Authenticated. Wallet Balance: $332.75"]
+2026-03-09 07:29:54,321 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Authenticated. Wallet Balance: $332.75"]
+[TradingBot] 07:29:54 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:29:54,321 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Bootstrapping historical data for R_50..."]
+2026-03-09 07:29:54,321 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Bootstrapping historical data for R_50..."]
+[TradingBot] 07:29:54 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:29:54,556 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","History Primed: 300 candles loaded."]
+2026-03-09 07:29:54,557 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","History Primed: 300 candles loaded."]
+[TradingBot] 07:29:54 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:29:54,557 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Activating live stream subscriptions..."]
+2026-03-09 07:29:54,557 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","Activating live stream subscriptions..."]
+[TradingBot] 07:29:54 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:29:54,561 emitting event "log" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","System Ready: monitoring R_50 via real-time tick stream."]
+2026-03-09 07:29:54,561 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["log","System Ready: monitoring R_50 via real-time tick stream."]
+emitting event "status_update" to all [/]
+2026-03-09 07:29:54,561 emitting event "status_update" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["status_update",{"active":true,"balance":"332.75","wins":0,"losses":0,"total_trades":0,"config":{"api_token":"381klIwm4Mr8BTT","app_id":"1089","fetch_days":"365","symbol":"R_50","strategy":"1","trade_pc":"1","log_level":"DEBUG"},"last_trained":"2026-03-09 07:26:08 UTC"}]
+2026-03-09 07:29:54,561 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["status_update",{"active":true,"balance":"332.75","wins":0,"losses":0,"total_trades":0,"config":{"api_token":"381klIwm4Mr8BTT","app_id":"1089","fetch_days":"365","symbol":"R_50","strategy":"1","trade_pc":"1","log_level":"DEBUG"},"last_trained":"2026-03-09 07:26:08 UTC"}]
+emitting event "status_update" to all [/]
+2026-03-09 07:29:54,695 emitting event "status_update" to all [/]
+J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["status_update",{"active":true,"balance":"332.75","wins":0,"losses":0,"total_trades":0,"config":{"api_token":"381klIwm4Mr8BTT","app_id":"1089","fetch_days":"365","symbol":"R_50","strategy":"1","trade_pc":"1","log_level":"DEBUG"},"last_trained":"2026-03-09 07:26:08 UTC"}]
+2026-03-09 07:29:54,695 J09J67jCF3Ie77EpAAAA: Sending packet MESSAGE data 2["status_update",{"active":true,"balance":"332.75","wins":0,"losses":0,"total_trades":0,"config":{"api_token":"381klIwm4Mr8BTT","app_id":"1089","fetch_days":"365","symbol":"R_50","strategy":"1","trade_pc":"1","log_level":"DEBUG"},"last_trained":"2026-03-09 07:26:08 UTC"}]
+J09J67jCF3Ie77EpAAAA: Sending packet PING data None
+2026-03-09 07:30:16,325 J09J67jCF3Ie77EpAAAA: Sending packet PING data None
+J09J67jCF3Ie77EpAAAA: Received packet PONG data
+2026-03-09 07:30:16,327 J09J67jCF3Ie77EpAAAA: Received packet PONG data
+[TradingBot] 07:30:29 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:30:29,659 emitting event "log" to all [/]
+[TradingBot] 07:30:29 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:30:29,659 emitting event "log" to all [/]
+[TradingBot] 07:30:29 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:30:29,730 emitting event "log" to all [/]
+[TradingBot] 07:30:29 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:30:29,730 emitting event "log" to all [/]
+[TradingBot] 07:30:29 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:30:29,730 emitting event "log" to all [/]
+[TradingBot] 07:30:30 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:30:30,235 emitting event "log" to all [/]
+[TradingBot] 07:30:30 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:30:30,235 emitting event "log" to all [/]
+[TradingBot] 07:30:30 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:30:30,461 emitting event "log" to all [/]
+[TradingBot] 07:30:30 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:30:30,461 emitting event "log" to all [/]
+[TradingBot] 07:30:30 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:30:30,463 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:30:30,463 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:30:30,570 emitting event "status_update" to all [/]
+[TradingBot] 07:31:05 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:31:05,525 emitting event "log" to all [/]
+[TradingBot] 07:31:05 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:31:05,525 emitting event "log" to all [/]
+[TradingBot] 07:31:05 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:31:05,569 emitting event "log" to all [/]
+[TradingBot] 07:31:05 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:31:05,569 emitting event "log" to all [/]
+[TradingBot] 07:31:05 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:31:05,569 emitting event "log" to all [/]
+[TradingBot] 07:31:06 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:31:06,150 emitting event "log" to all [/]
+[TradingBot] 07:31:06 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:31:06,150 emitting event "log" to all [/]
+[TradingBot] 07:31:06 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:31:06,380 emitting event "log" to all [/]
+[TradingBot] 07:31:06 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:31:06,380 emitting event "log" to all [/]
+[TradingBot] 07:31:06 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:31:06,382 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:31:06,382 emitting event "status_update" to all [/]
+[TradingBot] 07:31:41 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:31:41,453 emitting event "log" to all [/]
+[TradingBot] 07:31:41 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:31:41,453 emitting event "log" to all [/]
+[TradingBot] 07:31:41 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:31:41,501 emitting event "log" to all [/]
+[TradingBot] 07:31:41 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:31:41,501 emitting event "log" to all [/]
+[TradingBot] 07:31:41 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:31:41,501 emitting event "log" to all [/]
+[TradingBot] 07:31:41 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:31:41,973 emitting event "log" to all [/]
+[TradingBot] 07:31:41 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:31:41,973 emitting event "log" to all [/]
+[TradingBot] 07:31:42 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:31:42,280 emitting event "log" to all [/]
+[TradingBot] 07:31:42 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:31:42,280 emitting event "log" to all [/]
+[TradingBot] 07:31:42 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:31:42,282 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:31:42,282 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:31:42,393 emitting event "status_update" to all [/]
+[TradingBot] 07:32:17 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:32:17,353 emitting event "log" to all [/]
+[TradingBot] 07:32:17 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:32:17,353 emitting event "log" to all [/]
+[TradingBot] 07:32:17 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:32:17,402 emitting event "log" to all [/]
+[TradingBot] 07:32:17 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:32:17,403 emitting event "log" to all [/]
+[TradingBot] 07:32:17 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:32:17,403 emitting event "log" to all [/]
+[TradingBot] 07:32:17 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:32:17,889 emitting event "log" to all [/]
+[TradingBot] 07:32:17 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:32:17,889 emitting event "log" to all [/]
+[TradingBot] 07:32:18 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:32:18,141 emitting event "log" to all [/]
+[TradingBot] 07:32:18 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:32:18,141 emitting event "log" to all [/]
+[TradingBot] 07:32:18 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:32:18,143 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:32:18,143 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:32:18,258 emitting event "status_update" to all [/]
+[TradingBot] 07:32:53 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:32:53,215 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:32:53,215 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:32:53,280 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:32:53,280 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:32:53,281 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:32:53,755 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:32:53,756 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:32:53,950 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:32:53,950 emitting event "log" to all [/]
+[TradingBot] 07:32:53 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:32:53,954 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:32:53,954 emitting event "status_update" to all [/]
+[TradingBot] 07:33:29 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:33:29,176 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:33:29,176 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:33:29,232 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:33:29,232 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:33:29,232 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:33:29,758 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:33:29,758 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:33:29,968 emitting event "log" to all [/]
+[TradingBot] 07:33:29 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:33:29,968 emitting event "log" to all [/]
+2026-03-09 07:33:29,970 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,970 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,970 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:33:29,971 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+[TradingBot] 07:33:29 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:33:29,982 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:33:29,982 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:33:30,282 emitting event "status_update" to all [/]
+[TradingBot] 07:34:05 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:34:05,225 emitting event "log" to all [/]
+[TradingBot] 07:34:05 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:34:05,225 emitting event "log" to all [/]
+[TradingBot] 07:34:05 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:34:05,283 emitting event "log" to all [/]
+[TradingBot] 07:34:05 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:34:05,283 emitting event "log" to all [/]
+[TradingBot] 07:34:05 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:34:05,283 emitting event "log" to all [/]
+[TradingBot] 07:34:05 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:34:05,890 emitting event "log" to all [/]
+[TradingBot] 07:34:05 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:34:05,891 emitting event "log" to all [/]
+[TradingBot] 07:34:06 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:34:06,177 emitting event "log" to all [/]
+[TradingBot] 07:34:06 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:34:06,177 emitting event "log" to all [/]
+[TradingBot] 07:34:06 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:34:06,178 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:34:06,179 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:34:06,293 emitting event "status_update" to all [/]
+[TradingBot] 07:34:41 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:34:41,271 emitting event "log" to all [/]
+[TradingBot] 07:34:41 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:34:41,272 emitting event "log" to all [/]
+[TradingBot] 07:34:41 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:34:41,334 emitting event "log" to all [/]
+[TradingBot] 07:34:41 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:34:41,334 emitting event "log" to all [/]
+[TradingBot] 07:34:41 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:34:41,335 emitting event "log" to all [/]
+[TradingBot] 07:34:41 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:34:41,887 emitting event "log" to all [/]
+[TradingBot] 07:34:41 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:34:41,887 emitting event "log" to all [/]
+[TradingBot] 07:34:42 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:34:42,153 emitting event "log" to all [/]
+[TradingBot] 07:34:42 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:34:42,153 emitting event "log" to all [/]
+[TradingBot] 07:34:42 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:34:42,155 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:34:42,155 emitting event "status_update" to all [/]
+[TradingBot] 07:35:17 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:35:17,321 emitting event "log" to all [/]
+[TradingBot] 07:35:17 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:35:17,321 emitting event "log" to all [/]
+[TradingBot] 07:35:17 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:35:17,380 emitting event "log" to all [/]
+[TradingBot] 07:35:17 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:35:17,381 emitting event "log" to all [/]
+[TradingBot] 07:35:17 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:35:17,381 emitting event "log" to all [/]
+[TradingBot] 07:35:17 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:35:17,855 emitting event "log" to all [/]
+[TradingBot] 07:35:17 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:35:17,855 emitting event "log" to all [/]
+[TradingBot] 07:35:18 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:35:18,209 emitting event "log" to all [/]
+[TradingBot] 07:35:18 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:35:18,210 emitting event "log" to all [/]
+[TradingBot] 07:35:18 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:35:18,211 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:35:18,211 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:35:18,320 emitting event "status_update" to all [/]
+[TradingBot] 07:35:53 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:35:53,268 emitting event "log" to all [/]
+[TradingBot] 07:35:53 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:35:53,269 emitting event "log" to all [/]
+[TradingBot] 07:35:53 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:35:53,412 emitting event "log" to all [/]
+[TradingBot] 07:35:53 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:35:53,413 emitting event "log" to all [/]
+[TradingBot] 07:35:53 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:35:53,413 emitting event "log" to all [/]
+[TradingBot] 07:35:54 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:35:54,107 emitting event "log" to all [/]
+[TradingBot] 07:35:54 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:35:54,108 emitting event "log" to all [/]
+[TradingBot] 07:35:54 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:35:54,305 emitting event "log" to all [/]
+[TradingBot] 07:35:54 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:35:54,305 emitting event "log" to all [/]
+[TradingBot] 07:35:54 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:35:54,306 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:35:54,307 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:35:54,418 emitting event "status_update" to all [/]
+[TradingBot] 07:36:29 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:36:29,372 emitting event "log" to all [/]
+[TradingBot] 07:36:29 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:36:29,373 emitting event "log" to all [/]
+[TradingBot] 07:36:29 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:36:29,419 emitting event "log" to all [/]
+[TradingBot] 07:36:29 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:36:29,420 emitting event "log" to all [/]
+[TradingBot] 07:36:29 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:36:29,420 emitting event "log" to all [/]
+[TradingBot] 07:36:29 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:36:29,912 emitting event "log" to all [/]
+[TradingBot] 07:36:29 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:36:29,912 emitting event "log" to all [/]
+[TradingBot] 07:36:30 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:36:30,144 emitting event "log" to all [/]
+[TradingBot] 07:36:30 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:36:30,144 emitting event "log" to all [/]
+[TradingBot] 07:36:30 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:36:30,146 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:36:30,146 emitting event "status_update" to all [/]
+[TradingBot] 07:37:05 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:37:05,223 emitting event "log" to all [/]
+[TradingBot] 07:37:05 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:37:05,223 emitting event "log" to all [/]
+[TradingBot] 07:37:05 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:37:05,267 emitting event "log" to all [/]
+[TradingBot] 07:37:05 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:37:05,267 emitting event "log" to all [/]
+[TradingBot] 07:37:05 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:37:05,268 emitting event "log" to all [/]
+[TradingBot] 07:37:05 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:37:05,811 emitting event "log" to all [/]
+[TradingBot] 07:37:05 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:37:05,811 emitting event "log" to all [/]
+[TradingBot] 07:37:06 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:37:06,139 emitting event "log" to all [/]
+[TradingBot] 07:37:06 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:37:06,139 emitting event "log" to all [/]
+[TradingBot] 07:37:06 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:37:06,141 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:37:06,141 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:37:06,289 emitting event "status_update" to all [/]
+[TradingBot] 07:37:11 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:37:11,144 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:37:11,144 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:37:11,200 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:37:11,201 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:37:11,201 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:37:11,715 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:37:11,715 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:37:11,957 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:37:11,957 emitting event "log" to all [/]
+[TradingBot] 07:37:11 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:37:11,959 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:37:11,959 emitting event "status_update" to all [/]
+2026-03-09 07:37:11,963 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,963 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,963 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,964 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,964 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,964 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,964 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,964 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,964 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,965 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,965 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,965 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,965 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+2026-03-09 07:37:11,965 Task was destroyed but it is pending!
+task: <Task pending name='deriv_api:subs manager: process_response' coro=<DerivAPI.add_task.<locals>.wrap_coro() running at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/deriv_api/deriv_api.py:442> wait_for=<Future pending cb=[to_future_.<locals>.to_future.<locals>.<lambda>() at /home/jules/.pyenv/versions/3.12.12/lib/python3.12/site-packages/reactivex/operators/_tofuture.py:60, Task.task_wakeup()]>>
+emitting event "status_update" to all [/]
+2026-03-09 07:37:12,138 emitting event "status_update" to all [/]
+[TradingBot] 07:37:47 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:37:47,122 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:37:47,122 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:37:47,171 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:37:47,171 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:37:47,172 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:37:47,629 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:37:47,630 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:37:47,833 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:37:47,833 emitting event "log" to all [/]
+[TradingBot] 07:37:47 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:37:47,834 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:37:47,835 emitting event "status_update" to all [/]
+[TradingBot] 07:38:22 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:38:22,905 emitting event "log" to all [/]
+[TradingBot] 07:38:22 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:38:22,905 emitting event "log" to all [/]
+[TradingBot] 07:38:22 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:38:22,984 emitting event "log" to all [/]
+[TradingBot] 07:38:22 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:38:22,985 emitting event "log" to all [/]
+[TradingBot] 07:38:22 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:38:22,985 emitting event "log" to all [/]
+[TradingBot] 07:38:23 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:38:23,480 emitting event "log" to all [/]
+[TradingBot] 07:38:23 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:38:23,480 emitting event "log" to all [/]
+[TradingBot] 07:38:23 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:38:23,693 emitting event "log" to all [/]
+[TradingBot] 07:38:23 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:38:23,694 emitting event "log" to all [/]
+[TradingBot] 07:38:23 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:38:23,695 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:38:23,695 emitting event "status_update" to all [/]
+[TradingBot] 07:38:58 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:38:58,762 emitting event "log" to all [/]
+[TradingBot] 07:38:58 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:38:58,762 emitting event "log" to all [/]
+[TradingBot] 07:38:58 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:38:58,822 emitting event "log" to all [/]
+[TradingBot] 07:38:58 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:38:58,822 emitting event "log" to all [/]
+[TradingBot] 07:38:58 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:38:58,823 emitting event "log" to all [/]
+[TradingBot] 07:38:59 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:38:59,321 emitting event "log" to all [/]
+[TradingBot] 07:38:59 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:38:59,321 emitting event "log" to all [/]
+[TradingBot] 07:38:59 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:38:59,516 emitting event "log" to all [/]
+[TradingBot] 07:38:59 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:38:59,517 emitting event "log" to all [/]
+[TradingBot] 07:38:59 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:38:59,518 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:38:59,518 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:38:59,609 emitting event "status_update" to all [/]
+[TradingBot] 07:39:34 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:39:34,584 emitting event "log" to all [/]
+[TradingBot] 07:39:34 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:39:34,584 emitting event "log" to all [/]
+[TradingBot] 07:39:34 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:39:34,638 emitting event "log" to all [/]
+[TradingBot] 07:39:34 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:39:34,639 emitting event "log" to all [/]
+[TradingBot] 07:39:34 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:39:34,639 emitting event "log" to all [/]
+[TradingBot] 07:39:35 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:39:35,210 emitting event "log" to all [/]
+[TradingBot] 07:39:35 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:39:35,211 emitting event "log" to all [/]
+[TradingBot] 07:39:35 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:39:35,404 emitting event "log" to all [/]
+[TradingBot] 07:39:35 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:39:35,404 emitting event "log" to all [/]
+[TradingBot] 07:39:35 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:39:35,405 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:39:35,405 emitting event "status_update" to all [/]
+[TradingBot] 07:40:10 | Heartbeat loss. Re-establishing connection...
+emitting event "log" to all [/]
+2026-03-09 07:40:10,473 emitting event "log" to all [/]
+[TradingBot] 07:40:10 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:40:10,473 emitting event "log" to all [/]
+[TradingBot] 07:40:10 | Establishing connection with Deriv...
+emitting event "log" to all [/]
+2026-03-09 07:40:10,605 emitting event "log" to all [/]
+[TradingBot] 07:40:10 | Cleaning up API resources...
+emitting event "log" to all [/]
+2026-03-09 07:40:10,606 emitting event "log" to all [/]
+[TradingBot] 07:40:10 | Authenticating (App ID: 1089)...
+emitting event "log" to all [/]
+2026-03-09 07:40:10,606 emitting event "log" to all [/]
+[TradingBot] 07:40:11 | Authenticated. Wallet Balance: $332.75
+emitting event "log" to all [/]
+2026-03-09 07:40:11,224 emitting event "log" to all [/]
+[TradingBot] 07:40:11 | Bootstrapping historical data for R_50...
+emitting event "log" to all [/]
+2026-03-09 07:40:11,224 emitting event "log" to all [/]
+[TradingBot] 07:40:11 | History Primed: 300 candles loaded.
+emitting event "log" to all [/]
+2026-03-09 07:40:11,449 emitting event "log" to all [/]
+[TradingBot] 07:40:11 | Activating live stream subscriptions...
+emitting event "log" to all [/]
+2026-03-09 07:40:11,449 emitting event "log" to all [/]
+[TradingBot] 07:40:11 | System Ready: monitoring R_50 via real-time tick stream.
+emitting event "log" to all [/]
+2026-03-09 07:40:11,451 emitting event "log" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:40:11,452 emitting event "status_update" to all [/]
+emitting event "status_update" to all [/]
+2026-03-09 07:40:11,567 emitting event "status_update" to all [/]

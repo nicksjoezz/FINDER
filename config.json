@@ -1,9 +1,9 @@
 {
-    "api_token": "",
+    "api_token": "381klIwm4Mr8BTT",
     "app_id": "1089",
-    "symbol": "R_100",
+    "fetch_days": "365",
+    "symbol": "R_50",
     "strategy": "1",
-    "trade_pc": 1,
-    "fetch_days": 365,
+    "trade_pc": "1",
     "log_level": "DEBUG"
 }
