@@ -24,6 +24,7 @@ def ut_bot(df, a=1, c=10):
     xATRTrailingStop = np.zeros(len(df))
 
     for i in range(1, len(df)):
+        if i == 0: continue
         if close_vals[i] > xATRTrailingStop[i-1] and close_vals[i-1] > xATRTrailingStop[i-1]:
             xATRTrailingStop[i] = max(xATRTrailingStop[i-1], close_vals[i] - nloss_vals[i])
         elif close_vals[i] < xATRTrailingStop[i-1] and close_vals[i-1] < xATRTrailingStop[i-1]:
@@ -66,7 +67,7 @@ class Backtester:
 
     def run(self):
         trades = []
-        df = self.df
+        df = self.df.reset_index(drop=True)
 
         for i in range(len(df) - self.exit_candles - 1):
             if df['buy'].iloc[i]:
@@ -160,19 +161,30 @@ def calculate_max_consecutive_losses(wins_series):
 def simulate_financials(trades_df, initial_balance=1000, risk_pc=1, win_payout=0.95):
     """
     Simulates account growth based on trades.
+    Using dynamic compounding stake based on CURRENT balance.
+    winners gain +95% while losses -100% of risk per trade
     """
     if trades_df.empty:
-        return initial_balance, 0
+        return initial_balance, 0, 0
 
     balance = initial_balance
-    risk_pc = risk_pc / 100.0
+    max_consec_losses = calculate_max_consecutive_losses(trades_df['win'])
 
     for win in trades_df['win']:
-        stake = balance * risk_pc
+        # Dynamic stake based on current balance
+        stake = balance * (float(risk_pc) / 100.0)
+        # Minimum stake check (Deriv min is 0.35)
+        stake = max(stake, 0.35)
+
         if win:
             balance += stake * win_payout
         else:
             balance -= stake
 
+        # Avoid account going below zero
+        if balance < 0:
+            balance = 0
+            break
+
     total_profit = balance - initial_balance
-    return balance, total_profit
+    return balance, total_profit, max_consec_losses

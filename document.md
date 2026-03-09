@@ -58,7 +58,7 @@ The system achieves high win rates by combining two distinct layers of logic:
 *   **Payout Structure (Rise/Fall):**
     *   **Win:** +95% of stake.
     *   **Loss:** -100% of stake.
-*   **Compounding Simulation:** The system simulates dynamic staking based on a percentage of the current balance, allowing for realistic exponential growth projections during backtests.
+*   **Dynamic Compounding:** The system utilizes compounding staking based on a percentage of the current balance for both live trading and backtesting simulation.
 
 ## 6. System Design for Production
 

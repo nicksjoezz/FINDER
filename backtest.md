@@ -21,21 +21,21 @@ The system processes the data and displays a comparison table with the following
 | Metric | Description |
 | :--- | :--- |
 | **Strategy** | The name of the strategy (Strategy 1 to 10). |
-| **ML Filter** | Shows if the Random Forest filter was active. It requires at least **200 historical signals** to train successfully. |
-| **Win Rate** | The percentage of trades that resulted in a profit. |
+| **Neural Accuracy** | The win rate achieved by the ML-filtered strategy. |
+| **Max Consec. Losses** | The longest streak of consecutive losing trades observed. |
 | **Trades** | The total number of signals confirmed by both UT Bot and the ML Filter. |
 | **Final Balance** | The simulated account balance after all trades are completed. |
-| **Total Profit** | The net gain or loss in dollars. |
-| **Max Consec. Losses** | The longest "losing streak" observed during the period. |
+| **Projected PnL** | The net gain or loss in dollars. |
 
 ## 4. Financial Simulation Logic (Rise/Fall)
 
 The backtester provides a realistic simulation of Deriv Rise/Fall options using the following logic:
 - **Win Payout (+95%):** For every winning trade, the profit is calculated as 95% of the stake.
 - **Loss (-100%):** For every losing trade, the entire stake is lost.
-- **Dynamic Staking:** The stake for each trade is calculated as a percentage of the **current** account balance at that moment, simulating compounding growth or decline.
+- **Dynamic Compounding:** The stake for each trade is calculated as a percentage of the **available balance at the time of the trade**. This simulates realistic account growth and decline.
 
-## 4. How Machine Learning works in Backtesting
+
+## 5. How Machine Learning works in Backtesting
 
 ### Deep Training & Model Retention Architecture
 The system uses a centralized `ModelManager` to ensure that backtesting and live trading are perfectly synchronized:
@@ -49,7 +49,7 @@ You won't see `.pkl` or `.model` files in the folder. This is intentional:
 1.  **Adaptability:** The market changes constantly. A model trained on data from 6 months ago might be "stale." By training on-the-fly, the bot always stays current.
 2.  **Memory-Only:** Training 100 mini-coaches takes only a few seconds. Keeping them in memory is faster and keeps the project folder clean.
 
-## 5. Technical Implementation
+## 6. Technical Implementation
 
 ### Data Retrieval and Caching
 The backtester uses an intelligent, two-tier caching system for maximum efficiency:
