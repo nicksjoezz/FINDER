@@ -8,529 +8,69 @@ https://eventlet.readthedocs.io/en/latest/asyncio/migration.html
 
   import eventlet
 Server initialized for eventlet.
-2026-03-08 19:01:28,475 Server initialized for eventlet.
+2026-03-09 02:26:12,174 Server initialized for eventlet.
 Starting background worker thread...
 Background worker thread started.
 Starting ModelManager initialization...
 [ModelManager] Initializing models from disk...
 emitting event "log" to all [/]
-2026-03-08 19:01:28,483 emitting event "log" to all [/]
+2026-03-09 02:26:12,182 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:01:28,483 emitting event "training_progress" to all [/]
+2026-03-09 02:26:12,182 emitting event "training_progress" to all [/]
 [ModelManager] Disk initialization complete.
 emitting event "log" to all [/]
-2026-03-08 19:01:29,412 emitting event "log" to all [/]
+2026-03-09 02:26:15,652 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:01:29,413 emitting event "training_progress" to all [/]
+2026-03-09 02:26:15,653 emitting event "training_progress" to all [/]
 [ModelManager] Starting startup data synchronization...
 emitting event "log" to all [/]
-2026-03-08 19:01:29,413 emitting event "log" to all [/]
+2026-03-09 02:26:15,653 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:01:29,413 emitting event "training_progress" to all [/]
+2026-03-09 02:26:15,653 emitting event "training_progress" to all [/]
 [ModelManager] Syncing market data for R_100...
 emitting event "log" to all [/]
-2026-03-08 19:01:29,419 emitting event "log" to all [/]
+2026-03-09 02:26:15,654 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:01:29,419 emitting event "training_progress" to all [/]
-[R_100] Fetching forward up to 2026-03-08 19:01:29
-[R_100] Fetching backward up to 2026-02-19 10:25:00
-[R_100] Fetching backward up to 2026-02-02 01:49:59
-[R_100] Fetching backward up to 2026-01-15 17:09:59
-[R_100] Fetching backward up to 2025-12-29 08:29:59
-[R_100] Fetching backward up to 2025-12-11 23:49:59
-[R_100] Fetching backward up to 2025-11-24 15:09:59
-[R_100] Fetching backward up to 2025-11-07 06:29:59
-[R_100] Fetching backward up to 2025-10-20 21:49:59
-[R_100] Fetching backward up to 2025-10-03 13:09:59
-[R_100] Fetching backward up to 2025-09-16 04:29:59
-[R_100] Fetching backward up to 2025-08-29 19:49:59
-[R_100] Fetching backward up to 2025-08-12 11:09:59
-[R_100] Fetching backward up to 2025-07-26 02:29:59
-[R_100] Fetching backward up to 2025-07-08 17:49:59
-[R_100] Fetching backward up to 2025-06-21 09:09:59
-[R_100] Fetching backward up to 2025-06-04 00:29:59
-[R_100] Fetching backward up to 2025-05-17 15:49:59
-[R_100] Fetching backward up to 2025-04-30 07:09:59
-[R_100] Fetching backward up to 2025-04-12 22:29:59
-[R_100] Fetching backward up to 2025-03-26 13:49:59
-[R_100] Fetching backward up to 2025-03-09 05:09:59
-[R_100] Fetching backward up to 2025-03-08 19:03:41
-Completed update for R_100. Total: 105117
-[ModelManager] Training model: R_100 Strat 2...
-emitting event "log" to all [/]
-2026-03-08 19:03:47,883 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:03:47,883 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 2 ready.
-emitting event "log" to all [/]
-2026-03-08 19:04:02,819 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:02,819 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_100 Strat 3...
-emitting event "log" to all [/]
-2026-03-08 19:04:02,903 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:02,903 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 3 ready.
-emitting event "log" to all [/]
-2026-03-08 19:04:14,728 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:14,728 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_100 Strat 5...
-emitting event "log" to all [/]
-2026-03-08 19:04:14,809 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:14,810 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 5 ready.
-emitting event "log" to all [/]
-2026-03-08 19:04:29,264 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:29,264 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_100 Strat 6...
-emitting event "log" to all [/]
-2026-03-08 19:04:29,347 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:29,347 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 6 ready.
-emitting event "log" to all [/]
-2026-03-08 19:04:41,143 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:41,143 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_100 Strat 8...
-emitting event "log" to all [/]
-2026-03-08 19:04:41,226 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:41,226 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 8 ready.
-emitting event "log" to all [/]
-2026-03-08 19:04:59,573 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:59,573 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_100 Strat 9...
-emitting event "log" to all [/]
-2026-03-08 19:04:59,655 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:04:59,656 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 9 ready.
-emitting event "log" to all [/]
-2026-03-08 19:05:12,406 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:05:12,407 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_100 Strat 10...
-emitting event "log" to all [/]
-2026-03-08 19:05:12,496 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:05:12,497 emitting event "training_progress" to all [/]
-[ModelManager] Model R_100 Strat 10 ready.
-emitting event "log" to all [/]
-2026-03-08 19:05:30,587 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:05:30,588 emitting event "training_progress" to all [/]
+2026-03-09 02:26:15,654 emitting event "training_progress" to all [/]
+[R_100] Fetching forward up to 2026-03-09 02:26:15
+Completed update for R_100. Total: 105206
 [ModelManager] Syncing market data for R_75...
 emitting event "log" to all [/]
-2026-03-08 19:05:30,744 emitting event "log" to all [/]
+2026-03-09 02:26:21,864 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:05:30,745 emitting event "training_progress" to all [/]
-[R_75] Fetching forward up to 2026-03-08 19:05:30
-[R_75] Fetching backward up to 2026-02-19 10:30:00
-[R_75] Fetching backward up to 2026-02-02 01:54:59
-[R_75] Fetching backward up to 2026-01-15 17:14:59
-[R_75] Fetching backward up to 2025-12-29 08:34:59
-[R_75] Fetching backward up to 2025-12-11 23:54:59
-[R_75] Fetching backward up to 2025-11-24 15:14:59
-[R_75] Fetching backward up to 2025-11-07 06:34:59
-[R_75] Fetching backward up to 2025-10-20 21:54:59
-[R_75] Fetching backward up to 2025-10-03 13:14:59
-[R_75] Fetching backward up to 2025-09-16 04:34:59
-[R_75] Fetching backward up to 2025-08-29 19:54:59
-[R_75] Fetching backward up to 2025-08-12 11:14:59
-[R_75] Fetching backward up to 2025-07-26 02:34:59
-[R_75] Fetching backward up to 2025-07-08 17:54:59
-[R_75] Fetching backward up to 2025-06-21 09:14:59
-[R_75] Fetching backward up to 2025-06-04 00:34:59
-[R_75] Fetching backward up to 2025-05-17 15:54:59
-[R_75] Fetching backward up to 2025-04-30 07:14:59
-[R_75] Fetching backward up to 2025-04-12 22:34:59
-[R_75] Fetching backward up to 2025-03-26 13:54:59
-[R_75] Fetching backward up to 2025-03-09 05:14:59
-[R_75] Fetching backward up to 2025-03-08 19:06:58
-Completed update for R_75. Total: 105117
-[ModelManager] Training model: R_75 Strat 2...
-emitting event "log" to all [/]
-2026-03-08 19:07:06,964 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:07:06,965 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 2 ready.
-emitting event "log" to all [/]
-2026-03-08 19:07:22,515 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:07:22,515 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_75 Strat 3...
-emitting event "log" to all [/]
-2026-03-08 19:07:22,603 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:07:22,603 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 3 ready.
-emitting event "log" to all [/]
-2026-03-08 19:07:35,986 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:07:35,986 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_75 Strat 5...
-emitting event "log" to all [/]
-2026-03-08 19:07:36,067 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:07:36,067 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 5 ready.
-emitting event "log" to all [/]
-2026-03-08 19:07:50,736 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:07:50,736 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_75 Strat 6...
-emitting event "log" to all [/]
-2026-03-08 19:07:50,815 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:07:50,815 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 6 ready.
-emitting event "log" to all [/]
-2026-03-08 19:08:02,550 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:08:02,550 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_75 Strat 8...
-emitting event "log" to all [/]
-2026-03-08 19:08:02,626 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:08:02,626 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 8 ready.
-emitting event "log" to all [/]
-2026-03-08 19:08:16,952 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:08:16,952 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_75 Strat 9...
-emitting event "log" to all [/]
-2026-03-08 19:08:17,031 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:08:17,031 emitting event "training_progress" to all [/]
-[ModelManager] Model R_75 Strat 9 ready.
-emitting event "log" to all [/]
-2026-03-08 19:08:28,699 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:08:28,699 emitting event "training_progress" to all [/]
+2026-03-09 02:26:21,864 emitting event "training_progress" to all [/]
+[R_75] Fetching forward up to 2026-03-09 02:26:21
+Completed update for R_75. Total: 105205
 [ModelManager] Syncing market data for R_50...
 emitting event "log" to all [/]
-2026-03-08 19:08:28,853 emitting event "log" to all [/]
+2026-03-09 02:26:27,670 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:08:28,854 emitting event "training_progress" to all [/]
-[R_50] Fetching forward up to 2026-03-08 19:08:28
-[R_50] Fetching backward up to 2026-02-19 10:30:00
-[R_50] Fetching backward up to 2026-02-02 01:54:59
-[R_50] Fetching backward up to 2026-01-15 17:14:59
-[R_50] Fetching backward up to 2025-12-29 08:34:59
-[R_50] Fetching backward up to 2025-12-11 23:54:59
-[R_50] Fetching backward up to 2025-11-24 15:14:59
-[R_50] Fetching backward up to 2025-11-07 06:34:59
-[R_50] Fetching backward up to 2025-10-20 21:54:59
-[R_50] Fetching backward up to 2025-10-03 13:14:59
-[R_50] Fetching backward up to 2025-09-16 04:34:59
-[R_50] Fetching backward up to 2025-08-29 19:54:59
-[R_50] Fetching backward up to 2025-08-12 11:14:59
-[R_50] Fetching backward up to 2025-07-26 02:34:59
-[R_50] Fetching backward up to 2025-07-08 17:54:59
-[R_50] Fetching backward up to 2025-06-21 09:14:59
-[R_50] Fetching backward up to 2025-06-04 00:34:59
-[R_50] Fetching backward up to 2025-05-17 15:54:59
-[R_50] Fetching backward up to 2025-04-30 07:14:59
-[R_50] Fetching backward up to 2025-04-12 22:34:59
-[R_50] Fetching backward up to 2025-03-26 13:54:59
-[R_50] Fetching backward up to 2025-03-09 05:14:59
-[R_50] Fetching backward up to 2025-03-08 19:09:52
-Completed update for R_50. Total: 105117
-[ModelManager] Training model: R_50 Strat 2...
-emitting event "log" to all [/]
-2026-03-08 19:09:59,173 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:09:59,174 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 2 ready.
-emitting event "log" to all [/]
-2026-03-08 19:10:14,311 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:14,311 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_50 Strat 3...
-emitting event "log" to all [/]
-2026-03-08 19:10:14,399 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:14,399 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 3 ready.
-emitting event "log" to all [/]
-2026-03-08 19:10:26,238 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:26,239 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_50 Strat 5...
-emitting event "log" to all [/]
-2026-03-08 19:10:26,324 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:26,324 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 5 ready.
-emitting event "log" to all [/]
-2026-03-08 19:10:40,843 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:40,843 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_50 Strat 6...
-emitting event "log" to all [/]
-2026-03-08 19:10:40,935 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:40,935 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 6 ready.
-emitting event "log" to all [/]
-2026-03-08 19:10:52,701 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:52,701 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_50 Strat 8...
-emitting event "log" to all [/]
-2026-03-08 19:10:52,790 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:10:52,790 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 8 ready.
-emitting event "log" to all [/]
-2026-03-08 19:11:11,619 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:11:11,620 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_50 Strat 9...
-emitting event "log" to all [/]
-2026-03-08 19:11:11,709 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:11:11,710 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 9 ready.
-emitting event "log" to all [/]
-2026-03-08 19:11:23,751 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:11:23,752 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_50 Strat 10...
-emitting event "log" to all [/]
-2026-03-08 19:11:23,839 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:11:23,839 emitting event "training_progress" to all [/]
-[ModelManager] Model R_50 Strat 10 ready.
-emitting event "log" to all [/]
-2026-03-08 19:11:42,147 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:11:42,147 emitting event "training_progress" to all [/]
+2026-03-09 02:26:27,671 emitting event "training_progress" to all [/]
+[R_50] Fetching forward up to 2026-03-09 02:26:27
+Completed update for R_50. Total: 105205
 [ModelManager] Syncing market data for R_25...
 emitting event "log" to all [/]
-2026-03-08 19:11:42,353 emitting event "log" to all [/]
+2026-03-09 02:26:33,158 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:11:42,354 emitting event "training_progress" to all [/]
-[R_25] Fetching forward up to 2026-03-08 19:11:42
-[R_25] Fetching backward up to 2026-02-19 10:35:00
-[R_25] Fetching backward up to 2026-02-02 01:59:59
-[R_25] Fetching backward up to 2026-01-15 17:19:59
-[R_25] Fetching backward up to 2025-12-29 08:39:59
-[R_25] Fetching backward up to 2025-12-11 23:59:59
-[R_25] Fetching backward up to 2025-11-24 15:19:59
-[R_25] Fetching backward up to 2025-11-07 06:39:59
-[R_25] Fetching backward up to 2025-10-20 21:59:59
-[R_25] Fetching backward up to 2025-10-03 13:19:59
-[R_25] Fetching backward up to 2025-09-16 04:39:59
-[R_25] Fetching backward up to 2025-08-29 19:59:59
-[R_25] Fetching backward up to 2025-08-12 11:19:59
-[R_25] Fetching backward up to 2025-07-26 02:39:59
-[R_25] Fetching backward up to 2025-07-08 17:59:59
-[R_25] Fetching backward up to 2025-06-21 09:19:59
-[R_25] Fetching backward up to 2025-06-04 00:39:59
-[R_25] Fetching backward up to 2025-05-17 15:59:59
-[R_25] Fetching backward up to 2025-04-30 07:19:59
-[R_25] Fetching backward up to 2025-04-12 22:39:59
-[R_25] Fetching backward up to 2025-03-26 13:59:59
-[R_25] Fetching backward up to 2025-03-09 05:19:59
-[R_25] Fetching backward up to 2025-03-08 19:13:13
-Completed update for R_25. Total: 105117
-[ModelManager] Training model: R_25 Strat 2...
-emitting event "log" to all [/]
-2026-03-08 19:13:20,227 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:13:20,228 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 2 ready.
-emitting event "log" to all [/]
-2026-03-08 19:13:34,678 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:13:34,678 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_25 Strat 3...
-emitting event "log" to all [/]
-2026-03-08 19:13:34,757 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:13:34,757 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 3 ready.
-emitting event "log" to all [/]
-2026-03-08 19:13:46,308 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:13:46,308 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_25 Strat 5...
-emitting event "log" to all [/]
-2026-03-08 19:13:46,383 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:13:46,384 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 5 ready.
-emitting event "log" to all [/]
-2026-03-08 19:14:00,718 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:00,718 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_25 Strat 6...
-emitting event "log" to all [/]
-2026-03-08 19:14:00,801 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:00,801 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 6 ready.
-emitting event "log" to all [/]
-2026-03-08 19:14:12,420 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:12,420 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_25 Strat 8...
-emitting event "log" to all [/]
-2026-03-08 19:14:12,505 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:12,506 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 8 ready.
-emitting event "log" to all [/]
-2026-03-08 19:14:27,018 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:27,018 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_25 Strat 9...
-emitting event "log" to all [/]
-2026-03-08 19:14:27,103 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:27,103 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 9 ready.
-emitting event "log" to all [/]
-2026-03-08 19:14:38,897 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:38,897 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_25 Strat 10...
-emitting event "log" to all [/]
-2026-03-08 19:14:38,975 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:38,976 emitting event "training_progress" to all [/]
-[ModelManager] Model R_25 Strat 10 ready.
-emitting event "log" to all [/]
-2026-03-08 19:14:56,295 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:14:56,295 emitting event "training_progress" to all [/]
+2026-03-09 02:26:33,159 emitting event "training_progress" to all [/]
+[R_25] Fetching forward up to 2026-03-09 02:26:33
+Completed update for R_25. Total: 105204
 [ModelManager] Syncing market data for R_10...
 emitting event "log" to all [/]
-2026-03-08 19:14:56,456 emitting event "log" to all [/]
+2026-03-09 02:26:38,517 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:14:56,456 emitting event "training_progress" to all [/]
-[R_10] Fetching forward up to 2026-03-08 19:14:56
-[R_10] Fetching backward up to 2026-02-19 10:35:00
-[R_10] Fetching backward up to 2026-02-02 01:59:59
-[R_10] Fetching backward up to 2026-01-15 17:19:59
-[R_10] Fetching backward up to 2025-12-29 08:39:59
-[R_10] Fetching backward up to 2025-12-11 23:59:59
-[R_10] Fetching backward up to 2025-11-24 15:19:59
-[R_10] Fetching backward up to 2025-11-07 06:39:59
-[R_10] Fetching backward up to 2025-10-20 21:59:59
-[R_10] Fetching backward up to 2025-10-03 13:19:59
-[R_10] Fetching backward up to 2025-09-16 04:39:59
-[R_10] Fetching backward up to 2025-08-29 19:59:59
-[R_10] Fetching backward up to 2025-08-12 11:19:59
-[R_10] Fetching backward up to 2025-07-26 02:39:59
-[R_10] Fetching backward up to 2025-07-08 17:59:59
-[R_10] Fetching backward up to 2025-06-21 09:19:59
-[R_10] Fetching backward up to 2025-06-04 00:39:59
-[R_10] Fetching backward up to 2025-05-17 15:59:59
-[R_10] Fetching backward up to 2025-04-30 07:19:59
-[R_10] Fetching backward up to 2025-04-12 22:39:59
-[R_10] Fetching backward up to 2025-03-26 13:59:59
-[R_10] Fetching backward up to 2025-03-09 05:19:59
-[R_10] Fetching backward up to 2025-03-08 19:16:42
-Completed update for R_10. Total: 105117
-[ModelManager] Training model: R_10 Strat 2...
-emitting event "log" to all [/]
-2026-03-08 19:16:48,983 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:16:48,984 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 2 ready.
-emitting event "log" to all [/]
-2026-03-08 19:17:03,787 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:03,787 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_10 Strat 3...
-emitting event "log" to all [/]
-2026-03-08 19:17:03,878 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:03,878 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 3 ready.
-emitting event "log" to all [/]
-2026-03-08 19:17:16,057 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:16,057 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_10 Strat 5...
-emitting event "log" to all [/]
-2026-03-08 19:17:16,153 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:16,153 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 5 ready.
-emitting event "log" to all [/]
-2026-03-08 19:17:34,255 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:34,255 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_10 Strat 6...
-emitting event "log" to all [/]
-2026-03-08 19:17:34,353 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:34,353 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 6 ready.
-emitting event "log" to all [/]
-2026-03-08 19:17:46,081 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:46,081 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_10 Strat 8...
-emitting event "log" to all [/]
-2026-03-08 19:17:46,163 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:17:46,163 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 8 ready.
-emitting event "log" to all [/]
-2026-03-08 19:18:00,631 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:18:00,631 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_10 Strat 9...
-emitting event "log" to all [/]
-2026-03-08 19:18:00,707 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:18:00,708 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 9 ready.
-emitting event "log" to all [/]
-2026-03-08 19:18:12,440 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:18:12,440 emitting event "training_progress" to all [/]
-[ModelManager] Training model: R_10 Strat 10...
-emitting event "log" to all [/]
-2026-03-08 19:18:12,519 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:18:12,519 emitting event "training_progress" to all [/]
-[ModelManager] Model R_10 Strat 10 ready.
-emitting event "log" to all [/]
-2026-03-08 19:18:29,730 emitting event "log" to all [/]
-emitting event "training_progress" to all [/]
-2026-03-08 19:18:29,730 emitting event "training_progress" to all [/]
+2026-03-09 02:26:38,517 emitting event "training_progress" to all [/]
+[R_10] Fetching forward up to 2026-03-09 02:26:38
+Completed update for R_10. Total: 105203
 emitting event "training_complete" to all [/]
-2026-03-08 19:18:29,882 emitting event "training_complete" to all [/]
-[ModelManager] Startup synchronization finished at 2026-03-08 19:18:29 UTC. All systems ready.
+2026-03-09 02:26:43,943 emitting event "training_complete" to all [/]
+[ModelManager] Startup synchronization finished at 2026-03-09 02:26:43 UTC. All systems ready.
 emitting event "log" to all [/]
-2026-03-08 19:18:29,882 emitting event "log" to all [/]
+2026-03-09 02:26:43,943 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:18:29,882 emitting event "training_progress" to all [/]
-[ModelManager] Next full update scheduled in 4.8 hours.
+2026-03-09 02:26:43,943 emitting event "training_progress" to all [/]
+[ModelManager] Next full update scheduled in 21.6 hours.
 emitting event "log" to all [/]
-2026-03-08 19:18:29,882 emitting event "log" to all [/]
+2026-03-09 02:26:43,943 emitting event "log" to all [/]
 emitting event "training_progress" to all [/]
-2026-03-08 19:18:29,882 emitting event "training_progress" to all [/]
-fE-rsB8F1LzRMdA2AAAA: Sending packet OPEN data {'sid': 'fE-rsB8F1LzRMdA2AAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-2026-03-08 19:25:18,507 fE-rsB8F1LzRMdA2AAAA: Sending packet OPEN data {'sid': 'fE-rsB8F1LzRMdA2AAAA', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
-fE-rsB8F1LzRMdA2AAAA: Received packet MESSAGE data 0
-2026-03-08 19:25:18,537 fE-rsB8F1LzRMdA2AAAA: Received packet MESSAGE data 0
-fE-rsB8F1LzRMdA2AAAA: Sending packet MESSAGE data 0{"sid":"mwYp5JGnn32pECP-AAAB"}
-2026-03-08 19:25:18,538 fE-rsB8F1LzRMdA2AAAA: Sending packet MESSAGE data 0{"sid":"mwYp5JGnn32pECP-AAAB"}
-fE-rsB8F1LzRMdA2AAAA: Received request to upgrade to websocket
-2026-03-08 19:25:18,549 fE-rsB8F1LzRMdA2AAAA: Received request to upgrade to websocket
-fE-rsB8F1LzRMdA2AAAA: Upgrade to websocket successful
-2026-03-08 19:25:18,569 fE-rsB8F1LzRMdA2AAAA: Upgrade to websocket successful
+2026-03-09 02:26:43,943 emitting event "training_progress" to all [/]

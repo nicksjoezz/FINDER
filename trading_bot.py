@@ -100,9 +100,15 @@ class TradingBot:
             poc_sub.subscribe(self.handle_contract_update)
             self.subscriptions.append(poc_sub)
 
-            # 3. OHLC Subscription
+            # 3. Candles Subscription (using ticks_history with subscribe: 1)
             symbol = self.config['symbol']
-            ohlc_sub = await self.api.subscribe({'ohlc': symbol, 'subscribe': 1, 'granularity': 300})
+            ohlc_sub = await self.api.subscribe({
+                'ticks_history': symbol,
+                'subscribe': 1,
+                'end': 'latest',
+                'granularity': 300,
+                'style': 'candles'
+            })
             ohlc_sub.subscribe(self.handle_ohlc_update)
             self.subscriptions.append(ohlc_sub)
 
@@ -136,9 +142,20 @@ class TradingBot:
                     self.update_status()
 
     def handle_ohlc_update(self, data):
-        if 'ohlc' not in data: return
-        ohlc = data['ohlc']
-        epoch = int(ohlc['open_time'])
+        ohlc = None
+        if 'ohlc' in data:
+            ohlc = data['ohlc']
+        elif 'ohlc_update' in data: # sometimes the key varies or it's nested
+            ohlc = data['ohlc_update']
+        elif 'candles' in data: # handle the first response of the subscription
+            for c in data['candles']:
+                self.process_single_candle(c)
+            return
+
+        if not ohlc: return
+
+        # Key names might vary between 'ohlc' and 'candles' format
+        epoch = int(ohlc.get('open_time', ohlc.get('epoch')))
 
         new_candle = {
             'epoch': epoch,
@@ -147,6 +164,10 @@ class TradingBot:
             'low': float(ohlc['low']),
             'close': float(ohlc['close'])
         }
+        self.process_single_candle(new_candle)
+
+    def process_single_candle(self, new_candle):
+        epoch = int(new_candle['epoch'])
 
         if self.candles_df.empty:
             # Should be bootstrapped by main_loop first, but safety check
