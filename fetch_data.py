@@ -2,84 +2,102 @@ import asyncio
 import pandas as pd
 from deriv_api import DerivAPI
 import os
+import json
 from datetime import datetime, timedelta
 import sys
 
-async def get_historical_data(symbol, start_time, end_time, granularity):
-    api = DerivAPI(app_id=1089)
+CONFIG_FILE = 'config.json'
 
-    all_candles = []
-    current_end = end_time
-
-    # Target approx 2 years of 5m data = 2 * 365 * 24 * 60 / 5 = 210,240 candles
-    target_count = 211000
-
-    while len(all_candles) < target_count and current_end > start_time:
-        sys.stderr.write(f"Fetching data for {symbol} up to {datetime.fromtimestamp(current_end)}\n")
+def load_fetch_config():
+    if os.path.exists(CONFIG_FILE):
         try:
-            response = await api.ticks_history({
-                'ticks_history': symbol,
-                'end': str(current_end),
-                'adjust_start_time': 1,
-                'count': 5000,
-                'granularity': granularity,
-                'style': 'candles'
-            })
+            with open(CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+                return int(config.get('fetch_days', 730)), config.get('app_id', '1089')
+        except:
+            pass
+    return 730, '1089'
 
-            if 'error' in response:
-                sys.stderr.write(f"API Error for {symbol}: {response['error']}\n")
-                break
+async def update_symbol_data(symbol, data_dir='data'):
+    fetch_days, app_id = load_fetch_config()
+    filepath = os.path.join(data_dir, f"{symbol}_5m_2y.csv")
+    granularity = 300
+    os.makedirs(data_dir, exist_ok=True)
 
-            if 'candles' not in response:
-                sys.stderr.write(f"No candles in response for {symbol}: {response}\n")
-                break
-
-            candles = response['candles']
-            if not candles:
-                sys.stderr.write(f"Empty candles list for {symbol}\n")
-                break
-
-            all_candles.extend(candles[::-1])
-
-            # The earliest candle in this batch
-            new_end = candles[0]['epoch'] - 1
-            if new_end >= current_end:
-                break
-            current_end = new_end
-
-            sys.stderr.write(f"  Got {len(candles)} candles. Total: {len(all_candles)}\n")
-
-            await asyncio.sleep(0.3) # Faster fetching
-
+    df = pd.DataFrame()
+    if os.path.exists(filepath):
+        try:
+            df = pd.read_csv(filepath)
+            if not df.empty:
+                df = df.drop_duplicates(subset=['epoch']).sort_values('epoch')
         except Exception as e:
-            sys.stderr.write(f"An error occurred for {symbol}: {e}\n")
-            break
+            sys.stderr.write(f"Error reading {filepath}: {e}. Starting fresh.\n")
+
+    end_time = int(datetime.now().timestamp())
+    start_time = int((datetime.now() - timedelta(days=fetch_days)).timestamp())
+
+    api = DerivAPI(app_id=app_id)
+
+    async def fetch_and_save(current_start, current_end, direction='backward'):
+        nonlocal df
+        while current_end > current_start:
+            sys.stderr.write(f"[{symbol}] Fetching {direction} up to {datetime.fromtimestamp(current_end)}\n")
+            try:
+                # Add 60s timeout to ticks_history call
+                response = await asyncio.wait_for(api.ticks_history({
+                    'ticks_history': symbol,
+                    'end': str(current_end),
+                    'adjust_start_time': 1,
+                    'count': 5000,
+                    'granularity': granularity,
+                    'style': 'candles'
+                }), timeout=60)
+
+                if 'error' in response:
+                    sys.stderr.write(f"API Error: {response['error']}\n")
+                    break
+
+                candles = response.get('candles', [])
+                if not candles:
+                    sys.stderr.write(f"No more candles available for {symbol}.\n")
+                    break
+
+                df_new = pd.DataFrame(candles)
+                df = pd.concat([df, df_new]).drop_duplicates(subset=['epoch']).sort_values('epoch')
+
+                cutoff = int((datetime.now() - timedelta(days=fetch_days + 1)).timestamp())
+                df = df[df['epoch'] >= cutoff]
+
+                df.to_csv(filepath, index=False)
+
+                new_end = int(candles[0]['epoch']) - 1
+                if new_end >= current_end: break
+                current_end = new_end
+
+                if current_end < current_start: break
+                await asyncio.sleep(0.5)
+
+            except Exception as e:
+                sys.stderr.write(f"Fetch error: {e}. Retrying...\n")
+                await asyncio.sleep(5)
+                continue
+
+    last_recorded = int(df['epoch'].max()) if not df.empty else start_time
+    if end_time - last_recorded > granularity:
+        await fetch_and_save(last_recorded, end_time, direction='forward')
+
+    earliest_recorded = int(df['epoch'].min()) if not df.empty else end_time
+    if earliest_recorded > start_time:
+        await fetch_and_save(start_time, earliest_recorded, direction='backward')
 
     await api.disconnect()
-
-    if not all_candles:
-        return pd.DataFrame()
-
-    df = pd.DataFrame(all_candles)
-    df = df.drop_duplicates(subset=['epoch']).sort_values('epoch')
+    sys.stderr.write(f"Completed update for {symbol}. Total: {len(df)}\n")
     return df
 
 async def main():
     symbols = ['R_100', 'R_75', 'R_50', 'R_25', 'R_10']
-    granularity = 300 # 5 minutes
-
-    end_time = int(datetime.now().timestamp())
-    start_time = int((datetime.now() - timedelta(days=735)).timestamp())
-
-    os.makedirs('data', exist_ok=True)
-
     for symbol in symbols:
-        df = await get_historical_data(symbol, start_time, end_time, granularity)
-        if not df.empty:
-            df.to_csv(f'data/{symbol}_5m_2y.csv', index=False)
-            sys.stderr.write(f"Saved {len(df)} candles for {symbol}\n")
-        else:
-            sys.stderr.write(f"Failed to fetch data for {symbol}\n")
+        await update_symbol_data(symbol)
 
 if __name__ == "__main__":
     asyncio.run(main())

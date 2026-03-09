@@ -1,40 +1,57 @@
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO
-import json
-import os
-import asyncio
-import threading
-from trading_bot import TradingBot
-import pandas as pd
+import json, os, asyncio, threading, pandas as pd, logging
 from datetime import datetime, timedelta
+from trading_bot import TradingBot
+from model_manager import model_manager
 from deriv_api import DerivAPI
-from strategy_utils import ut_bot, Backtester, calculate_max_consecutive_losses
+from strategy_utils import ut_bot, Backtester, calculate_max_consecutive_losses, simulate_financials
 from indicators import add_indicators
 
+def get_log_level():
+    try:
+        with open('config.json', 'r') as f:
+            c = json.load(f)
+            return logging.DEBUG if c.get('log_level') == 'DEBUG' else logging.INFO
+    except:
+        return logging.INFO
+
+logging.basicConfig(level=get_log_level(), format='%(asctime)s %(levelname)s %(message)s')
+
 app = Flask(__name__)
-socketio = SocketIO(app)
+# Standard Flask-SocketIO initialization
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*", logger=True, engineio_logger=True)
 bot = TradingBot(socketio)
+CONFIG_FILE = 'config.json'
 
-SETTINGS_FILE = 'settings.json'
+def load_config():
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, 'r') as f:
+                data = json.load(f)
+                # Ensure all keys exist
+                defaults = {"api_token": "", "app_id": "99999", "symbol": "R_100", "strategy": "1", "trade_pc": 1, "fetch_days": 730}
+                for k, v in defaults.items():
+                    if k not in data: data[k] = v
+                return data
+        except: pass
+    return {"api_token": "", "app_id": "99999", "symbol": "R_100", "strategy": "1", "trade_pc": 1, "fetch_days": 730}
 
-def load_settings():
-    if os.path.exists(SETTINGS_FILE):
-        with open(SETTINGS_FILE, 'r') as f:
-            return json.load(f)
-    return {}
-
-def save_settings(settings):
-    with open(SETTINGS_FILE, 'w') as f:
-        json.dump(settings, f)
+def save_config(config):
+    with open(CONFIG_FILE, 'w') as f: json.dump(config, f, indent=4)
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index(): return render_template('index.html')
+
+@app.route('/get_config')
+def get_configs(): return jsonify(load_config())
 
 @app.route('/save_settings', methods=['POST'])
 def save_configs():
-    settings = request.json
-    save_settings(settings)
+    save_config(request.json)
     return jsonify({'status': 'success'})
 
 @app.route('/toggle_bot', methods=['POST'])
@@ -42,82 +59,115 @@ def toggle_bot():
     if bot.is_running:
         asyncio.run_coroutine_threadsafe(bot.stop(), bot_loop)
     else:
-        settings = load_settings()
-        if not settings.get('api_token'):
-            return jsonify({'status': 'error', 'message': 'Missing API Token'})
-        asyncio.run_coroutine_threadsafe(bot.start(settings), bot_loop)
+        c = load_config()
+        if not c.get('api_token'): return jsonify({'status': 'error', 'message': 'No API Token'})
+        asyncio.run_coroutine_threadsafe(bot.start(c), bot_loop)
     return jsonify({'status': 'success'})
 
+@app.route('/get_system_status')
+def get_sys_status():
+    return jsonify({
+        'is_initial_training': model_manager.is_initial_training,
+        'last_trained': model_manager.last_trained,
+        'bot_state': bot.get_state(),
+        'logs': bot.log_history
+    })
+
 async def get_bt_data(symbol, days):
-    # Caching logic
-    cache_file = f"data/cache_{symbol}_{days}d.csv"
-    if os.path.exists(cache_file):
-        # Check if cache is fresh (less than 1 hour old)
-        if (datetime.now().timestamp() - os.path.getmtime(cache_file)) < 3600:
-            return pd.read_csv(cache_file)
+    fp = os.path.join('data', f"{symbol}_5m_2y.csv")
+    ts = int((datetime.now() - timedelta(days=int(days))).timestamp())
 
-    api = DerivAPI(app_id=1089)
-    end = int(datetime.now().timestamp())
-    start = end - (int(days) * 86400)
+    if os.path.exists(fp):
+        try:
+            df = pd.read_csv(fp)
+            if not df.empty and df['epoch'].min() <= ts:
+                return df[df['epoch'] >= ts]
+        except: pass
 
-    all_candles = []
+    c = load_config()
+    api = DerivAPI(app_id=c.get('app_id', '99999'))
+    end, candles = int(datetime.now().timestamp()), []
     curr = end
-    while curr > start:
-        resp = await api.ticks_history({
-            'ticks_history': symbol,
-            'end': str(curr),
-            'count': 5000,
-            'granularity': 300,
-            'style': 'candles'
-        })
-        if 'candles' not in resp or not resp['candles']: break
-        all_candles.extend(resp['candles'][::-1])
-        curr = resp['candles'][0]['epoch'] - 1
-        if len(all_candles) > (int(days) * 288 + 500): break
-        await asyncio.sleep(0.1)
-
+    while curr > ts:
+        try:
+            r = await api.ticks_history({'ticks_history': symbol, 'end': str(curr), 'count': 5000, 'granularity': 300, 'style': 'candles'})
+            if 'candles' not in r or not r['candles']: break
+            candles.extend(r['candles'][::-1])
+            curr = r['candles'][0]['epoch'] - 1
+            if len(candles) > (int(days) * 288 + 500): break
+        except: break
     await api.disconnect()
-    df = pd.DataFrame(all_candles).drop_duplicates(subset=['epoch']).sort_values('epoch')
-    os.makedirs('data', exist_ok=True)
-    df.to_csv(cache_file, index=False)
-    return df
+    if not candles: return pd.DataFrame()
+    return pd.DataFrame(candles).drop_duplicates(subset=['epoch']).sort_values('epoch')
 
 @app.route('/run_backtest', methods=['POST'])
 def run_bt():
-    data = request.json
-    days = data['days']
-    symbol = data['symbol']
+    d = request.json
+    try:
+        future = asyncio.run_coroutine_threadsafe(get_bt_data(d['symbol'], d['days']), bot_loop)
+        df_raw = future.result(timeout=60)
+    except Exception as e:
+        return jsonify({'error': str(e), 'results': []})
 
-    # Run async data fetch in the bot loop
-    future = asyncio.run_coroutine_threadsafe(get_bt_data(symbol, days), bot_loop)
-    df = future.result()
+    if df_raw.empty: return jsonify({'results': []})
 
-    df = add_indicators(df)
-    results = []
-    strat_params = [
-        (1, 10), (2, 20), (3, 30), (1, 20), (2, 10),
-        (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)
-    ]
+    df = add_indicators(df_raw)
+    res = []
+    params = [(1, 10), (2, 20), (3, 30), (1, 20), (2, 10), (3, 20), (1, 30), (2, 30), (3, 10), (1.5, 15)]
 
-    for i, (a, c) in enumerate(strat_params):
+    balance = float(d.get('balance', 1000))
+    # Use risk from request if available, else from config
+    risk_pc = float(d.get('risk_pc', load_config().get('trade_pc', 1)))
+
+    for i, (a, c) in enumerate(params):
+        s_idx = i + 1
         df_sig = ut_bot(df, a=a, c=c)
-        trades = Backtester(df_sig).run()
-        if not trades.empty:
-            results.append({
-                'name': f"Strategy {i+1}",
-                'win_rate': trades['win'].mean(),
-                'trades': len(trades),
-                'max_losses': int(calculate_max_consecutive_losses(trades['win']))
-            })
 
-    return jsonify({'results': results})
+        # Raw results
+        tr_raw = Backtester(df_sig).run()
+        raw_bal, raw_prof, raw_mcl = simulate_financials(tr_raw, balance, risk_pc)
+
+        # ML Filtered results
+        m_status = model_manager.get_model_status(d['symbol'], s_idx)
+        ml = model_manager.get_model(d['symbol'], s_idx)
+
+        if ml:
+            df_filtered = ml.filter_signals(df_sig)
+            tr_ml = Backtester(df_filtered).run()
+            ml_bal, ml_prof, ml_mcl = simulate_financials(tr_ml, balance, risk_pc)
+        else:
+            tr_ml = pd.DataFrame()
+            ml_bal, ml_prof, ml_mcl = 0.0, 0.0, 0
+
+        res.append({
+            'name': f"Strategy {s_idx}",
+            'params': f"a={a}, c={c}",
+            'raw': {
+                'win_rate': float(tr_raw['win'].mean()) if not tr_raw.empty else 0,
+                'trades': int(len(tr_raw)),
+                'final_balance': float(raw_bal),
+                'max_consec_losses': int(raw_mcl)
+            },
+            'ml': {
+                'status': m_status,
+                'win_rate': float(tr_ml['win'].mean()) if not tr_ml.empty else 0,
+                'trades': int(len(tr_ml)),
+                'final_balance': float(ml_bal),
+                'max_consec_losses': int(ml_mcl)
+            }
+        })
+    return jsonify({'results': res})
 
 def start_bot_loop(loop):
     asyncio.set_event_loop(loop)
+    loop.create_task(model_manager.daily_update_loop())
     loop.run_forever()
 
+bot_loop = asyncio.new_event_loop()
+model_manager.socketio = socketio
+print("Starting background worker thread...", flush=True)
+threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True).start()
+print("Background worker thread started.", flush=True)
+
 if __name__ == '__main__':
-    bot_loop = asyncio.new_event_loop()
-    t = threading.Thread(target=start_bot_loop, args=(bot_loop,), daemon=True)
-    t.start()
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True, allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=False)

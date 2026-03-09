@@ -18,26 +18,30 @@ def ut_bot(df, a=1, c=10):
     # src = close
     src = df['close']
 
-    # xATRTrailingStop
+    # ATR Trailing Stop calculation using numpy for safety and speed
+    close_vals = df['close'].values
+    nloss_vals = df['nLoss'].values
     xATRTrailingStop = np.zeros(len(df))
+
     for i in range(1, len(df)):
-        if src[i] > xATRTrailingStop[i-1] and src[i-1] > xATRTrailingStop[i-1]:
-            xATRTrailingStop[i] = max(xATRTrailingStop[i-1], src[i] - df['nLoss'][i])
-        elif src[i] < xATRTrailingStop[i-1] and src[i-1] < xATRTrailingStop[i-1]:
-            xATRTrailingStop[i] = min(xATRTrailingStop[i-1], src[i] + df['nLoss'][i])
-        elif src[i] > xATRTrailingStop[i-1]:
-            xATRTrailingStop[i] = src[i] - df['nLoss'][i]
+        if i == 0: continue
+        if close_vals[i] > xATRTrailingStop[i-1] and close_vals[i-1] > xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = max(xATRTrailingStop[i-1], close_vals[i] - nloss_vals[i])
+        elif close_vals[i] < xATRTrailingStop[i-1] and close_vals[i-1] < xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = min(xATRTrailingStop[i-1], close_vals[i] + nloss_vals[i])
+        elif close_vals[i] > xATRTrailingStop[i-1]:
+            xATRTrailingStop[i] = close_vals[i] - nloss_vals[i]
         else:
-            xATRTrailingStop[i] = src[i] + df['nLoss'][i]
+            xATRTrailingStop[i] = close_vals[i] + nloss_vals[i]
 
     df['xATRTrailingStop'] = xATRTrailingStop
 
-    # pos
+    # Position tracking
     pos = np.zeros(len(df))
     for i in range(1, len(df)):
-        if src[i-1] < xATRTrailingStop[i-1] and src[i] > xATRTrailingStop[i-1]:
+        if close_vals[i-1] < xATRTrailingStop[i-1] and close_vals[i] > xATRTrailingStop[i-1]:
             pos[i] = 1
-        elif src[i-1] > xATRTrailingStop[i-1] and src[i] < xATRTrailingStop[i-1]:
+        elif close_vals[i-1] > xATRTrailingStop[i-1] and close_vals[i] < xATRTrailingStop[i-1]:
             pos[i] = -1
         else:
             pos[i] = pos[i-1]
@@ -63,7 +67,7 @@ class Backtester:
 
     def run(self):
         trades = []
-        df = self.df
+        df = self.df.reset_index(drop=True)
 
         for i in range(len(df) - self.exit_candles - 1):
             if df['buy'].iloc[i]:
@@ -153,3 +157,34 @@ def calculate_max_consecutive_losses(wins_series):
         else:
             current_losses = 0
     return max_losses
+
+def simulate_financials(trades_df, initial_balance=1000, risk_pc=1, win_payout=0.95):
+    """
+    Simulates account growth based on trades.
+    Using dynamic compounding stake based on CURRENT balance.
+    winners gain +95% while losses -100% of risk per trade
+    """
+    if trades_df.empty:
+        return initial_balance, 0, 0
+
+    balance = initial_balance
+    max_consec_losses = calculate_max_consecutive_losses(trades_df['win'])
+
+    for win in trades_df['win']:
+        # Dynamic stake based on current balance
+        stake = balance * (float(risk_pc) / 100.0)
+        # Minimum stake check (Deriv min is 0.35)
+        stake = max(stake, 0.35)
+
+        if win:
+            balance += stake * win_payout
+        else:
+            balance -= stake
+
+        # Avoid account going below zero
+        if balance < 0:
+            balance = 0
+            break
+
+    total_profit = balance - initial_balance
+    return balance, total_profit, max_consec_losses

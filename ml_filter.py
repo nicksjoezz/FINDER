@@ -4,72 +4,114 @@ import ta
 from sklearn.ensemble import RandomForestClassifier
 from strategy_utils import ut_bot, Backtester
 from indicators import add_indicators
+import joblib
+import os
+
+from datetime import datetime
 
 class MLFilter:
     def __init__(self):
         self.model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
         self.is_trained = False
+        self.trained_at = None
+        self.feature_cols = ['rsi', 'macd_diff', 'adx', 'bb_pct', 'ema_dist']
 
-    def prepare_features(self, df, indices):
-        features = []
-        for idx in indices:
-            f = {
-                'rsi': df['rsi'].iloc[idx],
-                'macd_diff': df['macd_diff'].iloc[idx],
-                'adx': df['adx'].iloc[idx],
-                'bb_pband': (df['close'].iloc[idx] - df['bb_lband'].iloc[idx]) / (df['bb_hband'].iloc[idx] - df['bb_lband'].iloc[idx] + 1e-9),
-                'ema_dist': (df['close'].iloc[idx] - df['ema_200'].iloc[idx]) / df['close'].iloc[idx]
-            }
-            features.append(list(f.values()))
-        return np.array(features)
+    def prepare_features(self, df, positional_indices):
+        # positional_indices must be positional indices (0 to len(df)-1)
+        valid_indices = [idx for idx in positional_indices if 0 <= idx < len(df)]
+        if not valid_indices:
+            return np.zeros((0, len(self.feature_cols)))
+
+        # Ensure required columns exist
+        if 'bb_pct' not in df.columns:
+            df = df.copy()
+            df['bb_pct'] = (df['close'] - df['bb_lband']) / (df['bb_hband'] - df['bb_lband'] + 1e-9)
+            df['ema_dist'] = (df['close'] - df['ema_200']) / df['close']
+
+        feature_data = df.iloc[valid_indices][['rsi', 'macd_diff', 'adx', 'bb_pct', 'ema_dist']]
+        feature_data = feature_data.fillna(0)
+
+        return feature_data.values
 
     def train(self, df, trades):
-        df = add_indicators(df)
+        if trades.empty:
+            return False
 
-        # Match trades to candle indices
-        # signal at i, entry at i+1
+        # Reset index to ensure positional indexing matches
+        df = df.reset_index(drop=True)
+
+        if 'bb_pct' not in df.columns:
+            df['bb_pct'] = (df['close'] - df['bb_lband']) / (df['bb_hband'] - df['bb_lband'] + 1e-9)
+            df['ema_dist'] = (df['close'] - df['ema_200']) / df['close']
+
         epoch_to_idx = {epoch: idx for idx, epoch in enumerate(df['epoch'])}
-
-        X_indices = []
-        y = []
+        X_indices, y = [], []
 
         for _, trade in trades.iterrows():
-            entry_idx = epoch_to_idx.get(trade['entry_time'])
-            if entry_idx is None or entry_idx == 0: continue
+            entry_epoch = trade['entry_time']
+            if entry_epoch not in epoch_to_idx: continue
+            entry_idx = epoch_to_idx[entry_epoch]
+
             signal_idx = entry_idx - 1
+            if signal_idx < 0: continue
+
+            if pd.isna(df.iloc[signal_idx][['rsi', 'macd_diff', 'adx', 'bb_pct', 'ema_dist']]).any():
+                continue
 
             X_indices.append(signal_idx)
             y.append(1 if trade['win'] else 0)
 
-        if len(y) < 200: return False
+        if len(y) < 200:
+            return False
 
         X = self.prepare_features(df, X_indices)
         self.model.fit(X, y)
         self.is_trained = True
+        self.trained_at = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
         return True
 
     def filter_signals(self, df):
         if not self.is_trained: return df
+        # We must NOT reset index of the original df because it might be used elsewhere
+        # Instead, we work with a copy and reset its index for positional logic
+        df_work = df.copy().reset_index(drop=True)
 
-        df = add_indicators(df).copy()
+        if 'bb_pct' not in df_work.columns:
+            df_work['bb_pct'] = (df_work['close'] - df_work['bb_lband']) / (df_work['bb_hband'] - df_work['bb_lband'] + 1e-9)
+            df_work['ema_dist'] = (df_work['close'] - df_work['ema_200']) / df_work['close']
 
-        # We only care about rows where there is a UT Bot signal
-        buy_indices = df.index[df['buy']].tolist()
-        sell_indices = df.index[df['sell']].tolist()
+        for side in ['buy', 'sell']:
+            # Get positional indices where signal is true
+            indices = df_work.index[df_work[side]].tolist()
+            if not indices: continue
 
-        if buy_indices:
-            X_buy = self.prepare_features(df, buy_indices)
-            preds_buy = self.model.predict(X_buy)
-            # Only keep signals where ML predicts a Win
-            for i, idx in enumerate(buy_indices):
-                if preds_buy[i] == 0:
-                    df.at[idx, 'buy'] = False
+            features = self.prepare_features(df_work, indices)
+            if len(features) == 0: continue
 
-        if sell_indices:
-            X_sell = self.prepare_features(df, sell_indices)
-            preds_sell = self.model.predict(X_sell)
-            for i, idx in enumerate(sell_indices):
-                if preds_sell[i] == 0:
-                    df.at[idx, 'sell'] = False
+            preds = self.model.predict(features)
+            for i, idx in enumerate(indices):
+                if preds[i] == 0:
+                    df_work.at[idx, side] = False
 
-        return df
+        # Restore the original index labels if they were important
+        # Actually, Backtester uses the df as is.
+        # But to be safe, we return the df with same index labels as input.
+        df_work.index = df.index
+        return df_work
+
+    def save(self, filepath):
+        joblib.dump({'model': self.model, 'trained_at': self.trained_at}, filepath)
+
+    def load(self, filepath):
+        if os.path.exists(filepath):
+            try:
+                data = joblib.load(filepath)
+                if isinstance(data, dict):
+                    self.model = data['model']
+                    self.trained_at = data.get('trained_at')
+                else:
+                    self.model = data
+                self.is_trained = True
+                return True
+            except: pass
+        return False

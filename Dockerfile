@@ -12,4 +12,5 @@ EXPOSE 5000
 
 # Command to run the application
 # We use eventlet with gunicorn for SocketIO support
-CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:5000", "app:app"]
+# Added --timeout 300 to handle long initial training periods
+CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--timeout", "300", "--bind", "0.0.0.0:5000", "app:app"]

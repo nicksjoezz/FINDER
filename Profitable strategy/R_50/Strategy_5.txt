@@ -1,9 +1,9 @@
 Symbol: R_50
 Strategy: Strategy_5
 Description: UT Bot (2, 10) + ML Filter
-Overall Win Rate: 95.16%
-Total Trades: 910
-Training History: 35000 candles (~121.5 days)
+Overall Win Rate: 83.85%
+Total Trades: 3096
+Training History: 105117 candles (~365.0 days)
 Note: Training history represents the maximum available depth provided by the Deriv API for 5m synthetic index candles at the time of research.
 
 Strategy Configuration:
@@ -22,6 +22,10 @@ The model is trained to recognize 'Loss' patterns in the raw UT Bot signals and 
 
 60-Day Performance Intervals for R_50:
                 start                 end  win_rate  total_trades  max_consecutive_losses
-0 2025-11-01 17:55:00 2025-12-31 17:55:00  0.955032           467                       1
-1 2025-12-31 17:55:00 2026-03-01 17:55:00  0.946636           431                       2
-2 2026-03-01 17:55:00 2026-04-30 17:55:00  1.000000            12                       0
+0 2025-03-03 23:45:00 2025-05-02 23:45:00  0.839483           542                       4
+1 2025-05-02 23:45:00 2025-07-01 23:45:00  0.828185           518                       4
+2 2025-07-01 23:45:00 2025-08-30 23:45:00  0.843564           505                       3
+3 2025-08-30 23:45:00 2025-10-29 23:45:00  0.826531           490                       3
+4 2025-10-29 23:45:00 2025-12-28 23:45:00  0.849505           505                       4
+5 2025-12-28 23:45:00 2026-02-26 23:45:00  0.836401           489                       5
+6 2026-02-26 23:45:00 2026-04-27 23:45:00  0.914894            47                       1

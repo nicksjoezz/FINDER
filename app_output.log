@@ -1,0 +1,76 @@
+/app/app.py:1: DeprecationWarning:
+Eventlet is deprecated. It is currently being maintained in bugfix mode, and
+we strongly recommend against using it for new projects.
+
+If you are already using Eventlet, we recommend migrating to a different
+framework.  For more detail see
+https://eventlet.readthedocs.io/en/latest/asyncio/migration.html
+
+  import eventlet
+Server initialized for eventlet.
+2026-03-09 02:26:12,174 Server initialized for eventlet.
+Starting background worker thread...
+Background worker thread started.
+Starting ModelManager initialization...
+[ModelManager] Initializing models from disk...
+emitting event "log" to all [/]
+2026-03-09 02:26:12,182 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:12,182 emitting event "training_progress" to all [/]
+[ModelManager] Disk initialization complete.
+emitting event "log" to all [/]
+2026-03-09 02:26:15,652 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:15,653 emitting event "training_progress" to all [/]
+[ModelManager] Starting startup data synchronization...
+emitting event "log" to all [/]
+2026-03-09 02:26:15,653 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:15,653 emitting event "training_progress" to all [/]
+[ModelManager] Syncing market data for R_100...
+emitting event "log" to all [/]
+2026-03-09 02:26:15,654 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:15,654 emitting event "training_progress" to all [/]
+[R_100] Fetching forward up to 2026-03-09 02:26:15
+Completed update for R_100. Total: 105206
+[ModelManager] Syncing market data for R_75...
+emitting event "log" to all [/]
+2026-03-09 02:26:21,864 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:21,864 emitting event "training_progress" to all [/]
+[R_75] Fetching forward up to 2026-03-09 02:26:21
+Completed update for R_75. Total: 105205
+[ModelManager] Syncing market data for R_50...
+emitting event "log" to all [/]
+2026-03-09 02:26:27,670 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:27,671 emitting event "training_progress" to all [/]
+[R_50] Fetching forward up to 2026-03-09 02:26:27
+Completed update for R_50. Total: 105205
+[ModelManager] Syncing market data for R_25...
+emitting event "log" to all [/]
+2026-03-09 02:26:33,158 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:33,159 emitting event "training_progress" to all [/]
+[R_25] Fetching forward up to 2026-03-09 02:26:33
+Completed update for R_25. Total: 105204
+[ModelManager] Syncing market data for R_10...
+emitting event "log" to all [/]
+2026-03-09 02:26:38,517 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:38,517 emitting event "training_progress" to all [/]
+[R_10] Fetching forward up to 2026-03-09 02:26:38
+Completed update for R_10. Total: 105203
+emitting event "training_complete" to all [/]
+2026-03-09 02:26:43,943 emitting event "training_complete" to all [/]
+[ModelManager] Startup synchronization finished at 2026-03-09 02:26:43 UTC. All systems ready.
+emitting event "log" to all [/]
+2026-03-09 02:26:43,943 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:43,943 emitting event "training_progress" to all [/]
+[ModelManager] Next full update scheduled in 21.6 hours.
+emitting event "log" to all [/]
+2026-03-09 02:26:43,943 emitting event "log" to all [/]
+emitting event "training_progress" to all [/]
+2026-03-09 02:26:43,943 emitting event "training_progress" to all [/]
